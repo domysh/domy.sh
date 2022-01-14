@@ -1,0 +1,72 @@
+@use "../../styles/glob" as *;
+
+.box{
+    padding: 20px;
+}
+
+.postimage{
+    max-width: 150px;
+    max-height: 150px;
+}
+
+.head{
+    @extend .center-flex;
+    padding-bottom: 10px;
+    .metahead{
+        @extend .center-flex;
+        @include media-breakpoint-down(md){
+            display: none;
+        }
+    }
+}
+
+.bottom{
+    @extend .center-flex;
+    display: none;
+    @include media-breakpoint-down(md){
+        display: flex;
+    }
+}
+
+.star_icon{
+    color: #f9c74f;
+    margin: 8px;
+}
+.title{
+    margin: 0;
+}
+
+.description{
+    text-align: left;
+}
+
+.date{
+    font-weight: bold;
+    border-bottom: 1px solid #FFF;
+}
+
+.datend{
+    display: inline;
+    @media only screen and (max-width: 350px) {
+        display: none;
+    }
+}
+
+.category{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin:5px;
+    text-decoration: none;
+    color: #FFF;
+    font-weight: bold;
+    transition: opacity .2s;
+    @extend .center-flex;
+    @extend .no-undeline-animation;
+    &:hover{
+        transition: opacity .2s;
+        color:#FFF;
+        opacity: 0.6;
+    }
+    margin-left: 10px;
+}

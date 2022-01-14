@@ -1,0 +1,35 @@
+@use "../../styles/glob" as *;
+
+$dashedline: 3px;
+$dashedlinecolor: #444;
+
+.line{
+    width: 0px;
+    border-right: $dashedline solid $dashedlinecolor;
+    height: 100%;
+    @include media-breakpoint-down(sm){
+        width: 100%;
+        height: 0;
+        border-right: none;
+        border-top: $dashedline solid $dashedlinecolor;
+        margin: 0 15px;
+    }
+}
+
+.categoryicon{
+    margin: 20px;
+    font-size: 250%;
+    @include media-breakpoint-down(sm){
+        margin: 20px 5px;
+    }
+    cursor: pointer;
+}
+
+.linecontainer{
+    width: 100%;
+    height: 100%;
+    @extend .center-flex;
+    @include media-breakpoint-up(sm){
+        flex-direction: column;
+    }
+}

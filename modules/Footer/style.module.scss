@@ -1,0 +1,32 @@
+@use "../../styles/glob" as *;
+
+.main_footer{
+    background-color: #0A0A0A;
+    @extend .center-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.footer_logo{
+    padding: 20px 30px;
+    max-width: 200px;
+    max-height: 200px;
+    @include media-breakpoint-down(sm){
+        display: none;
+    }
+}
+
+.social_wrapper{
+    margin: 20px 0;
+}
+
+.text_spacer{
+    flex-grow: 1;
+    @include media-breakpoint-down(md){
+        display: none;
+    }
+}
+.text{
+    text-align: center;
+    margin: 20px 30px;
+}

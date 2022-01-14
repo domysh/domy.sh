@@ -1,0 +1,47 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+@mixin background_darker($image,$opacity: 0.5) {
+    background: linear-gradient(
+        rgba(0, 0, 0, $opacity), 
+        rgba(0, 0, 0, $opacity)
+    ), $image;
+}
+
+.center-flex{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.left-center-flex{
+    @extend .center-flex;
+    align-items: left;
+}
+
+
+$main-color: #111;
+
+@mixin title {
+    font-family: 'Anton', sans-serif;
+}
+
+@mixin normal_font {
+    font-family: 'Nunito', sans-serif;
+}
+
+.small-margin-container{
+    max-width: 100vw;
+    margin: 0 25px;
+    @include media-breakpoint-down(sm){
+        margin: 0 10px;
+    }
+    @include media-breakpoint-up(md){
+        margin: 0 70px;
+    }
+}
+
+.no-undeline-animation{
+    &::before{display: none;}
+}

@@ -1,0 +1,16 @@
+@use "../../styles/glob" as *;
+
+.box{
+    padding: 20px;
+    margin: 40px 0;
+    cursor: pointer;
+}
+
+.title{
+    margin-bottom: 15px;
+}
+
+.description{
+    text-align: left;
+}
+

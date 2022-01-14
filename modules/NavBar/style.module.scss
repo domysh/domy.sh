@@ -1,0 +1,16 @@
+@use "../../styles/glob" as *;
+
+.navbar{
+    padding: 5px 0;
+    @extend .small-margin-container;
+}
+
+.onBottom{
+    background: rgba(16,16,16,0.95) !important;
+}
+.onTop{
+    background: rgba(0,0,0,0.8) !important;
+}
+
+
+

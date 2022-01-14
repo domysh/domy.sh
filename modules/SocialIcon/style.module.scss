@@ -1,0 +1,29 @@
+@use "../../styles/glob" as *;
+
+.list{
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    transition: all .1s;
+    @extend .center-flex;
+    > *{
+        transition: all .1s;
+        font-size: 20px;
+    }
+
+    &:hover{
+        opacity: .8;
+    }
+}
+
+.link{
+    flex-flow: row wrap;
+    @extend .center-flex;
+    > *{
+        text-decoration: none;
+        margin: 8px;
+        @extend .no-undeline-animation;
+    }
+}
+
+
