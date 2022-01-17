@@ -1,4 +1,4 @@
-FROM node:16-buster
+FROM node:16
 
 #React project copy
 RUN mkdir /app
@@ -8,4 +8,4 @@ ADD package-lock.json .
 RUN npm install
 COPY . .
 RUN npm run build
-ENTRYPOINT [ "npm","start"]
+ENTRYPOINT [ "npm","start" ]

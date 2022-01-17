@@ -23,7 +23,7 @@ export function DefaultLayout({ infos, children }: {infos:PublicInfo, children:a
                 <link itemProp="image" href="/favicon.ico" />
                 <meta property="og:image" content="/favicon.ico" />
             </Head>
-            <NavBar id="main-navbar" infos={infos} />
+            <NavBar infos={infos} />
             <Header infos={infos} />
             <Container>
                 {children}

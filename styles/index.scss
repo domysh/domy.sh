@@ -89,6 +89,10 @@ img.twemoji {
     
 }
 
+.navbar-brand{
+    @extend .no-undeline-animation;
+}
+
 .navbar-toggler:focus{
     outline: none;
     box-shadow: none;
