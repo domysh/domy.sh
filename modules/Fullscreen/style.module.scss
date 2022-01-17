@@ -1,0 +1,31 @@
+@use "../../styles/glob" as *;
+
+
+.overlay{
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    position: absolute;
+    z-index: 10000;
+    &.center{
+        @extend .center-flex;
+    }
+}
+
+.fullscreen_hide{
+    overflow: hidden;
+    max-height: 100vh;
+}
+
+.no_visible{
+    display: none;
+}
+
+.blur_effect{
+    filter:blur(8px);
+}
+
+.center{
+    @extend .center-flex;
+}

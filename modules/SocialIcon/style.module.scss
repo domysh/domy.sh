@@ -1,6 +1,6 @@
 @use "../../styles/glob" as *;
 
-.list{
+.link{
     width: 38px;
     height: 38px;
     border-radius: 50%;
@@ -14,15 +14,15 @@
     &:hover{
         opacity: .8;
     }
+    @extend .no-undeline-animation;
 }
 
-.link{
+.list{
     flex-flow: row wrap;
     @extend .center-flex;
     > *{
         text-decoration: none;
         margin: 8px;
-        @extend .no-undeline-animation;
     }
 }
 

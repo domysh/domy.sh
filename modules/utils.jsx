@@ -1,10 +1,11 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useEffect } from "react";
 import Twemoji from "react-twemoji"
+import spacerStyle from "./styles/Spacer.module.scss"
+import { marked } from 'marked';
 
 export const Spacer = () => {
-    return <div className="spacer" />
+    return <div className={spacerStyle.spacer} />
 }
 
 export const LoremIpsum = () => {return (<>
@@ -28,23 +29,6 @@ export const EmojiRender = ({children}) => {
     )
 }
 
-export const FullScreen = ({ children, center=true }) => {
-    useEffect(() => {
-        const body = document.getElementsByTagName("body")[0]
-        body.classList.add("fullscreen-hide")
-        window.scrollTo(0,0)
-        return () => {
-            body.classList.remove("fullscreen-hide")
-        }
-    },[])
-
-    return (
-        <div className={`fullscreen-overlay${center?" center":""}`}>
-            {children}
-        </div>
-    );
-}
-
 export const getCategory = ( infos, categoryCode ) => {
     for (const ele of infos.categories)
         if (ele._id === categoryCode) return ele
@@ -52,6 +36,7 @@ export const getCategory = ( infos, categoryCode ) => {
 }
 
 import sideLineStyle from "./styles/SideLine.module.scss"
+import { useState } from "react";
 
 export const SideLine = ({ icon, color, category_id }) => {
     return <>
@@ -69,4 +54,19 @@ export const NoBots = () => {
     return <Head>
         <meta name="robots" content="noindex"></meta>
     </Head>
+}
+
+let random_incremental_value = 0;
+
+export const rndId = () => {
+    random_incremental_value++;
+    const [res] = useState("sequential_unique_id_"+random_incremental_value)
+    return res
+}
+
+
+export const marktext_to_plain = (marktext) => {
+    let htmlObject = document.createElement('div');
+    htmlObject.innerHTML = marked.parse(marktext)
+    return htmlObject.innerText
 }

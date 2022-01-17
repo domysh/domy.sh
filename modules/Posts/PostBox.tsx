@@ -25,48 +25,13 @@ export const getStrDate = (isodata:string, isodatatoskip?:string) => {
     return "" 
 }
 
-export const PostBox = ({ post, infos, category }: { post:Post, infos:PublicInfo, category?:Category }) => {
-    
-    const currentCategory = category?category:getCategory(infos,post.category)
-    
+export const starRender = (post:Post) => {
     const starTooltip = (props:any) => (
         <Tooltip id={post._id+"_star_tooltip"} {...props}>
           I'm an important step!
         </Tooltip>
     );
-
-    const categoryTooltip = (props:any) => (
-        <Tooltip id={post._id+"_category_tooltip"} {...props}>
-          {currentCategory.name}
-        </Tooltip>
-    );
-
-    const color = currentCategory.color?currentCategory.color:categoryIconColor;
-
-    let date_str = getStrDate(post.date);
-    let date_str_end = null;
-    let end_date = getStrDate(post.end_date,post.date)
-    date_str_end = end_date==""?"":` - ${end_date}`
-
-    const date = <div className={style.date}>
-                    {date_str}
-                    <div className={style.datend}>{date_str_end}</div>
-                </div>
-    
-    const categoryContent = <OverlayTrigger
-            placement="top"
-            delay={{ show: 250, hide: 400 }}
-            overlay={categoryTooltip}>
-            {({ ref, ...triggerHandler }) => (
-                <Link href={`/c/${currentCategory._id}`} >
-                    <a ref={ref} {...triggerHandler} className={style.category} style={{backgroundColor:color}}>
-                        <i className={currentCategory.icon?currentCategory.icon:"fab fa-cuttlefish"} />
-                    </a>
-                </Link>
-            )}
-        </OverlayTrigger>
-
-    const star = post.star?
+    return post.star?
         <OverlayTrigger
             placement="left"
             delay={{ show: 250, hide: 400 }}
@@ -74,7 +39,48 @@ export const PostBox = ({ post, infos, category }: { post:Post, infos:PublicInfo
             <i className={`fas fa-star ${style.star_icon}`} /> 
         </OverlayTrigger>:
         <i className={`far fa-star ${style.star_icon}`} />
+}
 
+export const categoryButtonRender = (category:Category) => {
+    const color = category.color?category.color:categoryIconColor;
+    const categoryTooltip = (props:any) => (
+        <Tooltip id={category._id+"_category_tooltip"} {...props}>
+          {category.name}
+        </Tooltip>
+    );
+    return <OverlayTrigger
+            placement="top"
+            delay={{ show: 250, hide: 400 }}
+            overlay={categoryTooltip}>
+            {({ ref, ...triggerHandler }) => (
+                <Link href={`/c/${category._id}`} >
+                    <a ref={ref} {...triggerHandler} className={style.category} style={{backgroundColor:color}}>
+                        <i className={category.icon?category.icon:"fab fa-cuttlefish"} />
+                    </a>
+                </Link>
+            )}
+        </OverlayTrigger>
+}
+
+export const dateRender = (post:Post) => {
+    const date_str = getStrDate(post.date);
+    let date_str_end = null;
+    let end_date = getStrDate(post.end_date,post.date)
+    date_str_end = end_date==""?"":` - ${end_date}`
+
+    return <div className={style.date}>
+                {date_str}
+                <div className={style.datend}>{date_str_end}</div>
+            </div>
+}
+
+export const PostBox = ({ post, infos }: { post:Post, infos:PublicInfo }) => {
+    
+    
+    const date = dateRender(post)
+    const currentCategory = getCategory(infos,post.category)
+    const categoryContent = categoryButtonRender(currentCategory)
+    const star = starRender(post)
     const description = <ReactMarkdown unwrapDisallowed allowedElements={["a"]} >
                             {post.description}
                         </ReactMarkdown>

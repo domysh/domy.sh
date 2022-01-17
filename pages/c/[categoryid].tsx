@@ -4,7 +4,7 @@ import { PostList } from '../../modules/Posts'
 import { sprops } from '../../js/db'
 import { Post, PublicInfo } from '../../modules/interfaces'
 import { tojsonlike } from '../../js/utils'
-import { getCategory, Spacer } from '../../modules/utils'
+import { getCategory } from '../../modules/utils'
 import { Error404 } from '../../modules/Errors'
 
 const Render = ({ infos, posts, categoryid }: { infos:PublicInfo, posts:Post[], categoryid:string }) => {

@@ -1,0 +1,9 @@
+@use "../../styles/glob" as *;
+
+.spacer{
+    padding-top: 40px;
+    background: $main-color;
+    @include media-breakpoint-down(sm){
+        padding-top: 25px;
+    }
+}

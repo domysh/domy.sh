@@ -13,7 +13,6 @@ html, body, #root {
     margin: 0;
     padding: 0;
     width: 100%;
-    height: 100%;
     background-color: $main-color;
     color: #FFF;
     @include normal_font();
@@ -71,14 +70,6 @@ img.twemoji {
     vertical-align: -0.1em;
 }
 
-.spacer{
-    padding-top: 40px;
-    background: $main-color;
-    @include media-breakpoint-down(sm){
-        padding-top: 25px;
-    }
-}
-
 .nav-link{
     padding: 15px;
     margin-right:15px;
@@ -103,25 +94,6 @@ img.twemoji {
     box-shadow: none;
 }
 
-.fullscreen-hide{
-    overflow: hidden;
-    max-height: 100vh;
-    z-index: -1;
-}
-
-.fullscreen-overlay{
-    background: $main-color;
-    height: 100vh;
-    width: 100vw;
-    top: 0;
-    left: 0;
-    position: absolute;
-    z-index: 10000;
-    &.center{
-        @extend .center-flex;
-    }
-}
-
 .flex-fullwidth{
     flex-grow: 1;
 }
@@ -132,4 +104,8 @@ hr {
 
 h1, h2, h3, h4, h5, h6{
     @include title();
+}
+
+.row-no-margin {
+    margin: 0;
 }

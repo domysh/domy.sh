@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Button } from "react-bootstrap"
-import { EmojiRender, FullScreen } from "../utils"
+import { EmojiRender } from "../utils"
+import { FullScreen } from "../Fullscreen"
 import style from "./style.module.scss"
 
 export const Error404 = () => {
@@ -30,8 +31,8 @@ export const Error404 = () => {
 }
 
 export const Loading = () => {
-    return <FullScreen center>
-        <div className={style.error_code} style={{opacity:".5"}}>
+    return <FullScreen center transparent>
+        <div className={style.error_code} style={{opacity:".8"}}>
             <div className={style.cog_wheel} style={{animationDuration:"2.5s"}}>
                 <div className={style.cog}>
                     <div className={style.top} />

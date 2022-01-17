@@ -16,7 +16,7 @@ const PostListElement = ({ post, infos }: { post:Post, infos:PublicInfo }) => {
         </Col>
 
         <Col xs={12} sm={10}>
-            <PostBox infos={infos} category={currentCategory} key={post._id} post={post} />
+            <PostBox infos={infos} key={post._id} post={post} />
         </Col>
     </Row>
 }

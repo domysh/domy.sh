@@ -1,14 +1,17 @@
-import { Button } from "react-bootstrap";
-import { LoginRequired, logout } from "../modules/Auth";
+import { sprops } from "../js/db";
+import { AdminPage } from "../modules/Admin";
+import { LoginRequired } from "../modules/Auth";
+import { PublicProps } from "../modules/interfaces";
 import { NoBots } from "../modules/utils";
 
 
-export default function Render() {
-
+export default function Render({ infos }:PublicProps) {
     return <>
     <NoBots />
     <LoginRequired>
-        Loggined! <Button variant="danger" onClick={logout}>Log Out</Button>
+        <AdminPage infos={infos} />
     </LoginRequired>
     </>
 }
+
+export const getServerSideProps = sprops()
