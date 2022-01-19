@@ -2,8 +2,6 @@ import { Collection, Db, MongoClient } from "mongodb"
 import { GetServerSidePropsContext, PreviewData } from "next"
 import { ParsedUrlQuery } from "querystring"
 import { Category, LinkObject, MetaInfo, Page, PageInfo, PublicInfo } from "../modules/interfaces"
-import { randomBytes } from "crypto"
-import { getSession } from "next-auth/react"
 
 export const DB = async (operations:(db:Db)=>any) => {
     const conn = new MongoClient(process.env.MONGO as string)

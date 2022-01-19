@@ -1,11 +1,12 @@
-import { PublicProps } from "../interfaces";
+import { PublicInfo } from "../interfaces";
 import style from "./style.module.scss"
 import { logout } from "../Auth";
 import { CircleBtn } from "./CircleBtn"
+import { EditMetas } from "./Panes";
 
-export const Header = ({ infos }:PublicProps) => {
+export const Header = ({ infos, popupShow }:{ infos:PublicInfo, popupShow:(e:JSX.Element|null)=>void}) => {
     const siteinfo_edit = () => {
-        alert("I wanna edit the site's informations")
+        popupShow(<EditMetas infos={infos} close={()=>{popupShow(null)}} />)
     }
 
     return <>

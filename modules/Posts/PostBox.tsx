@@ -1,10 +1,9 @@
 import Link from "next/link"
 import React from "react"
 import { OverlayTrigger, Tooltip } from "react-bootstrap"
-import ReactMarkdown from "react-markdown"
 import style from "./style.module.scss"
 import { Category, Post, PublicInfo } from "../interfaces"
-import { getCategory } from "../utils"
+import { getCategory, MdPost } from "../utils"
 import { categoryIconColor } from "."
 
 const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
@@ -25,6 +24,11 @@ export const getStrDate = (isodata:string, isodatatoskip?:string) => {
     return "" 
 }
 
+export const Star = React.forwardRef(({star, ...props}:{star:boolean},ref) => {
+    return star?<i ref={ref} className={`fas fa-star ${style.star_icon}`} {...props} />:
+        <i ref={ref} className={`far fa-star ${style.star_icon}`} {...props} />
+})
+
 export const starRender = (post:Post) => {
     const starTooltip = (props:any) => (
         <Tooltip id={post._id+"_star_tooltip"} {...props}>
@@ -36,9 +40,8 @@ export const starRender = (post:Post) => {
             placement="left"
             delay={{ show: 250, hide: 400 }}
             overlay={starTooltip}>
-            <i className={`fas fa-star ${style.star_icon}`} /> 
-        </OverlayTrigger>:
-        <i className={`far fa-star ${style.star_icon}`} />
+            <Star star={post.star} />
+        </OverlayTrigger>:<Star star={post.star} />
 }
 
 export const categoryButtonRender = (category:Category) => {
@@ -81,9 +84,7 @@ export const PostBox = ({ post, infos }: { post:Post, infos:PublicInfo }) => {
     const currentCategory = getCategory(infos,post.category)
     const categoryContent = categoryButtonRender(currentCategory)
     const star = starRender(post)
-    const description = <ReactMarkdown unwrapDisallowed allowedElements={["a"]} >
-                            {post.description}
-                        </ReactMarkdown>
+    const description = <MdPost>{post.description}</MdPost>
 
     return <div className={style.box} id={post._id}>
         <div className={style.head}>

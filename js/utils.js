@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb";
+import Validator from "validatorjs"
 
 function isDict(v) {
     return typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
@@ -33,3 +34,23 @@ export const tojsonlike = (data) => {
     }
 }
 
+export const jsonextract = (data, ...params) => {
+    let res = {}
+    params.map( (k) => {
+        if (data[k] != null)
+            res[k] = data[k]
+    })
+    return res
+}
+
+
+export const validData = (data,rules) => {
+    data = jsonextract(data, ...Object.keys(rules))
+    const valid = new Validator(data, {
+        site_name:"string",
+        footer:"string",
+        description:"string",
+        name:"string"
+    });
+    return {data,valid:valid.passes()}
+}

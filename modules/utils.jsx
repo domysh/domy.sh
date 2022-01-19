@@ -3,6 +3,9 @@ import Link from "next/link";
 import Twemoji from "react-twemoji"
 import spacerStyle from "./styles/Spacer.module.scss"
 import { marked } from 'marked';
+import sideLineStyle from "./styles/SideLine.module.scss"
+import { useState } from "react";
+import ReactMarkdown from "react-markdown";
 
 export const Spacer = () => {
     return <div className={spacerStyle.spacer} />
@@ -34,9 +37,6 @@ export const getCategory = ( infos, categoryCode ) => {
         if (ele._id === categoryCode) return ele
     return null
 }
-
-import sideLineStyle from "./styles/SideLine.module.scss"
-import { useState } from "react";
 
 export const SideLine = ({ icon, color, category_id }) => {
     return <>
@@ -70,3 +70,8 @@ export const marktext_to_plain = (marktext) => {
     htmlObject.innerHTML = marked.parse(marktext)
     return htmlObject.innerText
 }
+
+export const MdPost = ({ children }) => <EmojiRender>
+    <ReactMarkdown unwrapDisallowed disallowedElements={["p"]} >
+        {children}
+    </ReactMarkdown></EmojiRender>

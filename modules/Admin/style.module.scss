@@ -78,3 +78,28 @@
         padding-bottom: 30px;
     }
 }
+
+.panewindow{
+    width: 80%;
+    height: 90%;
+    background-color: #222E;
+    border: 5px solid #ef476f;
+    padding: 50px;
+    border-radius: 30px;
+}
+
+.panewindow_header > i{
+    float: right;
+    font-size: 120%;
+    cursor: pointer;
+    margin-top: -10px;
+    padding: 20px;
+}
+
+.mdeditor{
+    height: 60%;
+}
+
+.donebtn{
+    float: left;
+}
