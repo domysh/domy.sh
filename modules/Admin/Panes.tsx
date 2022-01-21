@@ -1,14 +1,14 @@
-import { Button, Container, FormControl, InputGroup } from "react-bootstrap"
+import { Button, Container, Form, FormControl, InputGroup } from "react-bootstrap"
 import style from "./style.module.scss"
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from 'next/dynamic';
 import 'react-markdown-editor-lite/lib/index.css';
 import ReactMarkdown from "react-markdown";
-import { MdPost } from "../utils";
-import { useContext, useState } from "react";
+import { getCategory, MdPost } from "../utils";
+import { useContext, useEffect, useState } from "react";
 import { Post } from "../interfaces";
-import { Star } from "../Posts";
+import { CategoryButton, PostDate, Star } from "../Posts";
 import { EmojiRender } from "../EmojiRender";
 import { InfosContext } from "../Context/Infos";
 import Popup from "reactjs-popup";
@@ -102,9 +102,33 @@ const currentDate = (res:Date|null=null, hideMonth=false) => {
     return res.toISOString()
 }
 
+
+
+const PostDatePicker = ({ name, defaultValue, onChange }:{ name:string, defaultValue:string, onChange:(v:string) => void }) => {
+    const defaultDate = new Date(defaultValue)
+    const [month, setMonth] = useState(defaultDate.getMinutes()===1?"hide":(defaultDate.getMonth()+1).toString())
+    const [year, setYear] = useState(defaultDate.getFullYear().toString())
+    useEffect(()=>{
+        onChange(new Date(parseInt(year),(month === "hide")?0:parseInt(month)-1, 1,0,(month === "hide")?1:0,0,0).toISOString())
+    },[year,month])
+    return <>
+        <InputGroup.Text>
+            <b>{name}</b>
+        </InputGroup.Text>
+        <InputGroup.Text>
+            Month
+        </InputGroup.Text>
+        <Form.Select onChange={ (v) => {setMonth((v.target as HTMLSelectElement).value)} }>
+            {["hide",1,2,3,4,5,6,7,8,9,10,11,12].map((o)=><option value={o} selected={o.toString() === month}>{o}</option>)}
+        </Form.Select>
+        <FormControl defaultValue={year} onChange={(v)=>setYear((v.target as HTMLInputElement).value)} />
+    
+    </>
+}
+
 export const EditPost = ({ post }:{ post?:Post }) => {
     const [actualDate] = useState(currentDate())
-
+    const infos = useContext(InfosContext)
     const [title, setTitle] = useState<string>(post?post.title:"")
     const [description, setDescription] = useState<string>(post?post.description:"")
     const [category, setCategory] = useState<string>(post?post.category:"")
@@ -138,11 +162,29 @@ export const EditPost = ({ post }:{ post?:Post }) => {
         </h1>
         <div style={{marginTop:"40px"}} />
         <Container style={{height:"100%"}}>
-            <InputGroup className="mb-3" onChange={(v)=>{setTitle((v.target as HTMLInputElement).value)}}>
-                <InputGroup.Text id="input-title"><b>Title</b></InputGroup.Text>
-                <FormControl aria-describedby="input-title" defaultValue={post?post.title:""} />
+            <InputGroup className="mb-3">
+                <InputGroup.Text><b>Title</b></InputGroup.Text>
+                <FormControl defaultValue={title} onChange={(v)=>{setTitle((v.target as HTMLInputElement).value)}} />
+                <InputGroup.Text>
+                    <CategoryButton category={getCategory(category)} />
+                </InputGroup.Text>
+                <Form.Select onChange={ (v) => {setCategory((v.target as HTMLSelectElement).value)} }>
+                    <option value="">Select a category</option>
+                    {infos.categories.map((o,k)=><option value={o._id} selected={o._id === category}>{o.name}</option>)}
+                </Form.Select>
                 <InputGroup.Text onClick={()=>{setStar(!star)}}><Star star={star} /></InputGroup.Text>
             </InputGroup>
+
+            <InputGroup className="mb-3">
+
+                <PostDatePicker name="From:" defaultValue={date} onChange={(v)=>{setDate(v)}} />
+                <PostDatePicker name="To:" defaultValue={end_date} onChange={(v)=>{setEndDate(v)}} />
+                <InputGroup.Text>
+                    <PostDate post_date={date} post_end_date={end_date} />
+                </InputGroup.Text>
+            </InputGroup>
+
+            
             <MdEditor
                 className={style.mdeditor}
                 renderHTML={(v) => <MdPost>{v}</MdPost>}

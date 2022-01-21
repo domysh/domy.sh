@@ -5,7 +5,7 @@ import { Category, LinkObject, Page, Post, PublicInfo } from "../interfaces";
 import { CircleBtn } from "./CircleBtn";
 import style from "./style.module.scss"
 import { marktext_to_plain } from "../utils";
-import { categoryButtonRender, dateRender, Star } from "../Posts";
+import { CategoryButton, PostDate, Star } from "../Posts";
 import { SocialIcon } from "../SocialIcon";
 import { EditPost, PanePopup } from "./Panes";
 import { InfosContext } from "../Context/Infos";
@@ -84,7 +84,7 @@ const ListPost = ({ values }:{ values: Post[] }) => {
         return <PanePopup show={<EditPost post={post} />}>
             {open => <ListElement 
                 title={post.title}
-                metas={<>{dateRender(post)} <Star star={post.star} /></>}
+                metas={<><PostDate post_date={post.date} post_end_date={post.end_date} /> <Star star={post.star} /></>}
                 text={marktext_to_plain(post.description)}
                 onClick={open}
             />}
@@ -131,7 +131,7 @@ const ListCategory = ({ values }:{ values: Category[] }) => {
         return <PanePopup show={<>Please, I wanna edit this category: {category.name}</>}>
             {open => <ListElement 
                 title={category.name}
-                metas={categoryButtonRender(category)}
+                metas={<CategoryButton category={category} />}
                 text={category.description}
                 onClick={open}
             />}

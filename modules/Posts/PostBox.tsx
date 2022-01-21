@@ -29,11 +29,12 @@ export const Star = React.forwardRef<HTMLElement,{star:boolean}>(({star, ...prop
         <i className={`far fa-star ${style.star_icon}`} ref={ref} {...props} />
 })
 
-export const categoryButtonRender = (category:Category) => {
-    const color = category.color?category.color:categoryIconColor;
+export const CategoryButton = ({ category }:{ category?:Category }) => {
+    let categ:Category = category?category:{_id:"", name:"", description:"", highlighted:false}
+    const color = categ.color?categ.color:categoryIconColor;
     const categoryTooltip = (props:any) => (
-        <Tooltip id={category._id+"_category_tooltip"} {...props}>
-          {category.name}
+        <Tooltip id={categ._id+"_category_tooltip"} {...props}>
+          {categ.name}
         </Tooltip>
     );
     return <OverlayTrigger
@@ -41,19 +42,19 @@ export const categoryButtonRender = (category:Category) => {
             delay={{ show: 250, hide: 400 }}
             overlay={categoryTooltip}>
             {({ ref, ...triggerHandler }) => (
-                <Link href={`/c/${category._id}`} >
+                <Link href={`/c/${categ._id}`} >
                     <a ref={ref} {...triggerHandler} className={style.category} style={{backgroundColor:color}}>
-                        <i className={category.icon?category.icon:"fab fa-cuttlefish"} />
+                        <i className={categ.icon?categ.icon:"fab fa-cuttlefish"} />
                     </a>
                 </Link>
             )}
         </OverlayTrigger>
 }
 
-export const dateRender = (post:Post) => {
-    const date_str = getStrDate(post.date);
+export const PostDate = ({post_date,post_end_date}:{post_date:string,post_end_date:string}) => {
+    const date_str = getStrDate(post_date);
     let date_str_end = null;
-    let end_date = getStrDate(post.end_date,post.date)
+    let end_date = getStrDate(post_end_date,post_date)
     date_str_end = end_date==""?"":` - ${end_date}`
 
     return <div className={style.date}>
@@ -64,10 +65,9 @@ export const dateRender = (post:Post) => {
 
 export const PostBox = ({ post }: { post:Post }) => {
     
-    
-    const date = dateRender(post)
+    const date = <PostDate post_date={post.date} post_end_date={post.end_date} />
     const currentCategory = getCategory(post.category)
-    const categoryContent = categoryButtonRender(currentCategory)
+    const categoryContent = <CategoryButton category={currentCategory} />
     const star = <Star star={post.star} />
     const description = <MdPost>{post.description}</MdPost>
 

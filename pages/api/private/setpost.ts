@@ -12,11 +12,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (req.method === 'POST') {
         const validate = validData(req.body, {
-            site_name:"string",
-            footer:"string",
+            _id:"string",
+            title:"string",
             description:"string",
-            name:"string"
+            category:"string",
+            star:"boolean",
+            date:"string",
+            end_date:"string"
         });
+        let request = validate.data
         if (validate.valid){
             await db.collection("static").updateOne({_id:"meta"},{$set:validate.data})
             return res.status(200).json({status:"ok"})
