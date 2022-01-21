@@ -8,6 +8,7 @@ import { InfosContext } from "./Context/Infos";
 import { useContext, useState } from "react";
 import { Category, PublicInfo } from "./interfaces";
 import { EmojiRender } from "./EmojiRender"
+import { fakeIcon } from "./Posts";
 
 export const Spacer = () => {
     return <div className={spacerStyle.spacer} />
@@ -33,7 +34,7 @@ export const getCategory = ( categoryCode:string ) => {
 export const getCategoryWithInfos = (categoryCode:string, infos:PublicInfo) => {
     for (const ele of infos.categories)
         if (ele._id === categoryCode) return ele
-    return null as unknown as Category
+    return fakeIcon
 }
 
 export const SideLine = ({ icon, color, category_id }:{ icon:string, color:string, category_id:string }) => {

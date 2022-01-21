@@ -4,7 +4,7 @@ import { Error404, Loading } from "../Errors";
 import { Category, LinkObject, Page, Post, PublicInfo } from "../interfaces";
 import { CircleBtn } from "./CircleBtn";
 import style from "./style.module.scss"
-import { marktext_to_plain } from "../utils";
+import { getCategory, marktext_to_plain, rndId } from "../utils";
 import { CategoryButton, PostDate, Star } from "../Posts";
 import { SocialIcon } from "../SocialIcon";
 import { EditPost, PanePopup } from "./Panes";
@@ -79,67 +79,69 @@ const emptyListMsg = <div className="center-flex" style={{paddingTop:"100px"}}>
     <u><h2>No content available!</h2></u>
 </div>
 
+const listRender = (Tag:(props:{ value:any })=>JSX.Element,values:any[]) => {
+    return <div className={style.list}>
+        {values.length===0?emptyListMsg:values.map( (o,i) =>  <div key={rndId()}><Tag value={o} />{i!==values.length-1?<hr />:null}</div>)}
+    </div>
+}
+
 const ListPost = ({ values }:{ values: Post[] }) => {
-    const PostElement = ({post}:{post:Post}) => {
-        return <PanePopup show={<EditPost post={post} />}>
+    const PostElement = ({value}:{value:Post}) => {
+        return <PanePopup show={<EditPost post={value} />}>
             {open => <ListElement 
-                title={post.title}
-                metas={<><PostDate post_date={post.date} post_end_date={post.end_date} /> <Star star={post.star} /></>}
-                text={marktext_to_plain(post.description)}
+                title={value.title}
+                metas={<>
+                    <PostDate post_date={value.date} post_end_date={value.end_date} />
+                    <CategoryButton category={getCategory(value.category)} />
+                    <Star star={value.star} />
+                </>}
+                text={marktext_to_plain(value.description)}
                 onClick={open}
             />}
         </PanePopup>
     }
-    return <div className={style.list}>
-        {values.length===0?emptyListMsg:values.map( (o,i) =>  <><PostElement post={o} key={o._id} />{i!==values.length-1?<hr />:null}</>)}
-    </div>
+    return listRender(PostElement,values)
 }
 
 const ListPage = ({ values }:{ values: Page[] }) => {
-    const PageElement = ({page}:{page:Page}) => {
-        return <PanePopup show={<>Please, I wanna edit static page /{page._id}</>}>
+    const PageElement = ({ value }:{value:Page}) => {
+        return <PanePopup show={<>Please, I wanna edit static page /{value._id}</>}>
             {open => <ListElement 
-                title={page.name}
-                metas={<code>{"/"+page._id}</code>}
-                text={marktext_to_plain(page.content)}
+                title={value.name}
+                metas={<code>{"/"+value._id}</code>}
+                text={marktext_to_plain(value.content)}
                 onClick={open}
             />}
         </PanePopup>
     }
-    return <div className={style.list}>
-        {values.length===0?emptyListMsg:values.map( (o,i) =>  <><PageElement page={o} key={`static_page_${i}`} />{i!==values.length-1?<hr />:null}</>)}
-    </div>
+    return listRender(PageElement,values)
 }
 
 const ListLink = ({ values }:{ values: LinkObject[] }) => {
-    const LinkElement = ({link}:{link:LinkObject}) => {
-        return <PanePopup show={<>Please, I wanna edit the link of {link.name}</>}>
+    const LinkElement = ({value}:{value:LinkObject}) => {
+        return <PanePopup show={<>Please, I wanna edit the link of {value.name}</>}>
             {open => <ListElement 
-                title={link.name}
-                metas={<SocialIcon link={link} />}
+                title={value.name}
+                metas={<SocialIcon link={value} />}
                 onClick={open}
             />}
         </PanePopup>
     }
-    return <div className={style.list}>
-        {values.length===0?emptyListMsg:values.map( (o,i) =>  <><LinkElement link={o} key={`link_${i}`} />{i!==values.length-1?<hr />:null}</>)}
-    </div>
+    return listRender(LinkElement,values)
 }
 
 const ListCategory = ({ values }:{ values: Category[] }) => {
-    const CategoryElement = ({category}:{category:Category}) => {
-        return <PanePopup show={<>Please, I wanna edit this category: {category.name}</>}>
+    const CategoryElement = ({value}:{value:Category}) => {
+        return <PanePopup show={<>Please, I wanna edit this category: {value.name}</>}>
             {open => <ListElement 
-                title={category.name}
-                metas={<CategoryButton category={category} />}
-                text={category.description}
+                title={value.name}
+                metas={<CategoryButton category={value} />}
+                text={value.description}
                 onClick={open}
             />}
         </PanePopup>
     }
-    return <div className={style.list}>
-        {values.length===0?emptyListMsg:values.map( (o,i) =>  <><CategoryElement category={o} key={`category_${i}`} />{i!==values.length-1?<hr />:null}</>)}
-    </div>
+    return listRender(CategoryElement,values)
 }
 
 

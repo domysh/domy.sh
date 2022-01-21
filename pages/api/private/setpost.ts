@@ -3,6 +3,7 @@ import { getSession } from "next-auth/react"
 
 import { validData } from "../../../js/utils"
 import { NextApiRequest, NextApiResponse } from "next"
+import { ObjectId } from "mongodb"
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const db = await DB()
@@ -13,17 +14,39 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (req.method === 'POST') {
         const validate = validData(req.body, {
             _id:"string",
-            title:"string",
-            description:"string",
-            category:"string",
-            star:"boolean",
-            date:"string",
-            end_date:"string"
+            title:"required|string",
+            description:"required|string",
+            category:"required|string",
+            star:"required|boolean",
+            date:"required|string",
+            end_date:"required|string"
         });
-        let request = validate.data
         if (validate.valid){
-            await db.collection("static").updateOne({_id:"meta"},{$set:validate.data})
-            return res.status(200).json({status:"ok"})
+            let request = validate.data
+            try{
+                request.date = new Date(request.date)
+                request.end_date = new Date(request.end_date)
+            }catch(err){
+                return res.status(400).json({status:"Invalid Date format!"})
+            }
+
+            if (request.title === ""){
+                return res.status(400).json({status:"A title is required!"})
+            }
+
+            if (request._id == null){
+                await db.collection("posts").insertOne(request)
+                return res.status(200).json({status:"ok"})
+            }else{
+                try{
+                    request._id = new ObjectId(request._id)
+                }catch(err){
+                    return res.status(400).json({status:"Invalid Post ID"})
+                }
+                await db.collection("posts").updateOne({_id:request._id},{$set:request})
+                return res.status(200).json({status:"ok"})
+            }
+            
         }
         return res.status(400).json({status:"Bad request"})
     }
