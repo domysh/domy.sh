@@ -1,26 +1,40 @@
-import { Collection, Db, MongoClient } from "mongodb"
+import { MongoClient } from "mongodb"
 import { GetServerSidePropsContext, PreviewData } from "next"
 import { ParsedUrlQuery } from "querystring"
 import { Category, LinkObject, MetaInfo, Page, PageInfo, PublicInfo } from "../modules/interfaces"
 
-export const DB = async (operations:(db:Db)=>any) => {
+export const DBpromise = (async () => {
     const conn = new MongoClient(process.env.MONGO as string)
-    conn.connect()
-    let result:any = await operations(conn.db())
-    conn.close()
-    return result
-}
+    
+    const db = (await conn.connect()).db()
+    await db.collection("static").findOneAndUpdate(
+        {_id:"meta"},
+        {$setOnInsert:{
+            name:"",
+            description:"",
+            site_name:"",
+            footer:""
+        }},
+        {upsert:true}
+    )
 
-export const DBCollection = async (collection:string,operations:(db:Collection)=>any) => {
-    return await DB( async (db) => {
-        return await operations(db.collection(collection))
-    })
-}
+    await db.collection("posts").createIndex({ category:1 })
+    await db.collection("posts").createIndex({ star:1 })
+    await db.collection("posts").createIndex({ end_date:1 })
 
+    await db.collection("pages").createIndex({ highlighted:1 })
 
-export const getPublicInfo = async (db:Db):Promise<PublicInfo> => {
+    await db.collection("categories").createIndex({ highlighted:1 })
+
+    return db
+})()
+
+export const DB = async () => await DBpromise
+
+export const getPublicInfo = async ():Promise<PublicInfo> => {
+    const db = await DB()
     let meta:MetaInfo = (await db.collection("static")
-                            .findOne({_id:"meta"})) as unknown as MetaInfo
+                    .findOne({_id:"meta"})) as unknown as MetaInfo
 
     let links:LinkObject[] = (await db.collection("links")
             .find({}).project({_id:false}).toArray()) as LinkObject[]
@@ -40,59 +54,18 @@ export const getPublicInfo = async (db:Db):Promise<PublicInfo> => {
     return { meta, links, pages, categories }
 } 
 
-export type serverSitePropsFuncWithDB
-                 = (db:Db,context:GetServerSidePropsContext<ParsedUrlQuery, PreviewData>) => Promise<{ [key: string]: any; }>
+export type serverSitePropsFunc
+                 = (context:GetServerSidePropsContext<ParsedUrlQuery, PreviewData>) => Promise<{ [key: string]: any; }>
 
-                 /*
-let secret_cache:any = null
 
-export const genSecret = () => randomBytes(48).toString("hex");
-
-export const getSecret = async (name:string) => {
-    return await DBCollection("static",async (collection) => {
-        if (secret_cache == null){
-            let res = await collection.findOne({_id:"secrets"})
-            if (res == null){
-                secret_cache = {_id:"secrets"}
-                await collection.insertOne(secret_cache)
-            }else{
-                secret_cache = res
-            }
-        }
-        if(secret_cache[name] == null){
-            secret_cache[name] = genSecret()
-            await collection.updateOne({_id:"secrets"},{"$set":{[name]: secret_cache[name]}})
-        }
-        return secret_cache[name]
-    })
-}
-*/
-export function sprops(fn?:serverSitePropsFuncWithDB) {
+export function sprops(fn?:serverSitePropsFunc) {
     return async function(context:GetServerSidePropsContext) {
-        return await DB(async (db) => {
-            let result:any = {}
-            if (fn != null)
-                result = await fn(db,context)
-            if (result.notfound != null) return { notFound:true }
-            if (result.redirect != null) return { redirect:result.redirect }
-            
-            result.infos = await getPublicInfo(db)
-            return {props:result}
-        })
-    }
-}
-
-export function sauth(fn?:serverSitePropsFuncWithDB) {
-    return async function(context:GetServerSidePropsContext) {
-        return await DB(async (db) => {
-            let result:any = {}
-            if (fn != null)
-                result = await fn(db,context)
-            if (result.notfound != null) return { notFound:true }
-            if (result.redirect != null) return { redirect:result.redirect }
-            
-            result.infos = await getPublicInfo(db)
-            return {props:result}
-        })
+        let result:any = {}
+        if (fn != null)
+            result = await fn(context)
+        if (result.notfound != null) return { notFound:true }
+        if (result.redirect != null) return { redirect:result.redirect }
+        result.infos = await getPublicInfo()
+        return {props:result}
     }
 }

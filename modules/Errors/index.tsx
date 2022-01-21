@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Button } from "react-bootstrap"
-import { EmojiRender } from "../utils"
+import { EmojiRender } from "../EmojiRender"
 import { FullScreen } from "../Fullscreen"
 import style from "./style.module.scss"
 

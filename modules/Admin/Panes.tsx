@@ -5,25 +5,42 @@ import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from 'next/dynamic';
 import 'react-markdown-editor-lite/lib/index.css';
 import ReactMarkdown from "react-markdown";
-import { EmojiRender, MdPost } from "../utils";
-import { useState } from "react";
-import { Post, PublicInfo } from "../interfaces";
-import { starRender } from "../Posts";
+import { MdPost } from "../utils";
+import { useContext, useState } from "react";
+import { Post } from "../interfaces";
+import { Star } from "../Posts";
+import { EmojiRender } from "../EmojiRender";
+import { InfosContext } from "../Context/Infos";
+import Popup from "reactjs-popup";
+import Router from 'next/router'
 
-export const PaneWindow = ({ children, close }:{ children:any, close:()=>void }) => {
-    return <div className={style.panewindow}>
-        <div className={style.panewindow_header}>
-            <i className="fas fa-times" onClick={close} />
-        </div>
-        {children}
-    </div>
+
+export const PanePopup = ({ show, children }:{ show:JSX.Element, children:(s:()=>void)=>JSX.Element }) => {
+    const [open, setOpen] = useState(false);
+    const closeModal = () => setOpen(false);
+    return (<>
+        {children(()=>{setOpen(true)})}
+        <Popup open={open} closeOnDocumentClick onClose={closeModal}>
+            <div className={style.panewindow}>
+                <div className="center-flex" style={{height:"100%"}}>
+                    <div>
+                        <div className={style.panewindow_header}>
+                            <i className="fas fa-times" onClick={closeModal} />
+                        </div>
+                        {show}
+                    </div>
+                </div>
+            </div>
+        </Popup>    
+    </>);
 }
 
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
     ssr: false,
 });
 
-export const EditMetas = ({ infos, close }:{ infos:PublicInfo, close:()=>void }) => {
+export const EditMetas = () => {
+    const infos = useContext(InfosContext)
     const [site_name, setSitename] = useState(infos.meta.site_name)
     const [description, setDescription] = useState(infos.meta.description)
     const [footer, setFooter] = useState(infos.meta.footer)
@@ -32,11 +49,6 @@ export const EditMetas = ({ infos, close }:{ infos:PublicInfo, close:()=>void })
 
     const submitData = () => {
         let request = {site_name, description, footer, name}
-        
-        infos.meta.site_name = site_name
-        infos.meta.description = description
-        infos.meta.footer = footer
-        infos.meta.name = name
 
         fetch("/api/private/setmeta",{
             method:"POST",
@@ -45,7 +57,7 @@ export const EditMetas = ({ infos, close }:{ infos:PublicInfo, close:()=>void })
             },
             body:JSON.stringify(request)
         }).then(() => {
-            close()
+            Router.reload()
         })
     }
 
@@ -57,15 +69,15 @@ export const EditMetas = ({ infos, close }:{ infos:PublicInfo, close:()=>void })
         </h1>
         <div style={{marginTop:"40px"}} />
         <Container style={{height:"100%"}}>
-            <InputGroup className="mb-3" onChange={(v)=>{setName(v.target.value)}}>
+            <InputGroup className="mb-3" onChange={(v)=>{setName((v.target as HTMLInputElement).value)}}>
                 <InputGroup.Text id="input-name"><b>Name</b></InputGroup.Text>
                 <FormControl aria-describedby="input-name" defaultValue={infos.meta.name} />
             </InputGroup>
-            <InputGroup className="mb-3" onChange={(v)=>{setSitename(v.target.value)}}>
+            <InputGroup className="mb-3" onChange={(v)=>{setSitename((v.target as HTMLInputElement).value)}}>
                 <InputGroup.Text id="input-site-name"><b>Site Name</b></InputGroup.Text>
                 <FormControl aria-describedby="input-site-name" defaultValue={infos.meta.site_name} />
             </InputGroup>
-            <InputGroup className="mb-3" onChange={(v)=>{setDescription(v.target.value)}}>
+            <InputGroup className="mb-3" onChange={(v)=>{setDescription((v.target as HTMLInputElement).value)}}>
                 <InputGroup.Text id="input-site-motd"><b>Site Motd</b></InputGroup.Text>
                 <FormControl aria-describedby="input-site-name" defaultValue={infos.meta.description} />
             </InputGroup>
@@ -79,15 +91,6 @@ export const EditMetas = ({ infos, close }:{ infos:PublicInfo, close:()=>void })
         </Container>
     </>
 }
-/*
-    _id:61da2ec65afced554554f2b7
-    description:"Scuola [superiore](https://google.com) di secondo grado"
-    category:"study"
-    title:"I.I.S.S Luigi dell'erba 2"
-    date:2000-01-01T01:01:00.000+00:00
-    star:true
-    end_date:2010-01-01T01:01:00.000+00:00
-*/
 
 const currentDate = (res:Date|null=null, hideMonth=false) => {
     if (res == null) res = new Date()
@@ -99,7 +102,7 @@ const currentDate = (res:Date|null=null, hideMonth=false) => {
     return res.toISOString()
 }
 
-export const EditPost = ({ infos, post=null, close }:{ infos:PublicInfo, post:Post|null, close:()=>void }) => {
+export const EditPost = ({ post }:{ post?:Post }) => {
     const [actualDate] = useState(currentDate())
 
     const [title, setTitle] = useState<string>(post?post.title:"")
@@ -123,23 +126,22 @@ export const EditPost = ({ infos, post=null, close }:{ infos:PublicInfo, post:Po
             },
             body:JSON.stringify(request)
         }).then(() => {
-            close()
-            location.reload()
+            Router.reload()
         })
     }
 
     return <>
         <h1 style={{ textAlign:"center" }}>
-            {post?"Edit":"Create"} Post: '{title}'
+            {post?"Editor":"Create"} Post
             {original?<Button className={style.donebtn} variant="success" disabled><i className="fas fa-check" /></Button>:
                 <Button className={style.donebtn} variant="success" onClick={submitData}><i className="fas fa-check" /></Button>}
         </h1>
         <div style={{marginTop:"40px"}} />
         <Container style={{height:"100%"}}>
-            <InputGroup className="mb-3" onChange={(v)=>{setTitle(v.target.value)}}>
+            <InputGroup className="mb-3" onChange={(v)=>{setTitle((v.target as HTMLInputElement).value)}}>
                 <InputGroup.Text id="input-title"><b>Title</b></InputGroup.Text>
                 <FormControl aria-describedby="input-title" defaultValue={post?post.title:""} />
-                <InputGroup.Text>{starRender(post)}</InputGroup.Text>
+                <InputGroup.Text onClick={()=>{setStar(!star)}}><Star star={star} /></InputGroup.Text>
             </InputGroup>
             <MdEditor
                 className={style.mdeditor}

@@ -1,10 +1,11 @@
 import Link from "next/link";
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { Container, Nav, Navbar } from "react-bootstrap";
 import { PublicProps } from "../interfaces";
 import style from "./style.module.scss"
 import { useRouter } from 'next/router';
 import { rndId } from "../utils";
+import { InfosContext } from "../Context/Infos";
 
 
 export function NavLink({ href, children, className, ...props }:{ href:string, children:any, className?:string}) {
@@ -23,8 +24,8 @@ export function NavLink({ href, children, className, ...props }:{ href:string, c
     );
 }
 
-export const NavBar = ({ infos }:PublicProps) => {
-
+export const NavBar = () => {
+    const infos = useContext(InfosContext)
     const [onTop, setOnTop] = useState(true);
 
     const id = rndId()

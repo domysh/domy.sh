@@ -80,12 +80,10 @@
 }
 
 .panewindow{
-    width: 80%;
-    height: 90%;
-    background-color: #222E;
-    border: 5px solid #ef476f;
+    width: 100vw;
+    height: 100vh;
+    background-color: #222D;
     padding: 50px;
-    border-radius: 30px;
 }
 
 .panewindow_header > i{
@@ -97,7 +95,7 @@
 }
 
 .mdeditor{
-    height: 60%;
+    height: 300px;
 }
 
 .donebtn{

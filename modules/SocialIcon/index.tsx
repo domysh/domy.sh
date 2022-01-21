@@ -1,6 +1,7 @@
-import React, { CSSProperties } from "react"
+import React, { CSSProperties, useContext } from "react"
 import style from "./style.module.scss"
 import { LinkObject } from "../interfaces"
+import { InfosContext } from "../Context/Infos"
 
 const SocialIconRow = (
     props:{icon_color?:string, color?:string, link:string, fa:string}) => {
@@ -15,10 +16,11 @@ const SocialIconRow = (
 
 export const SocialIcon = ({link}:{link:LinkObject}) => <SocialIconRow link={link.link} color={link.color} fa={link.icon} />
 
-export const SocialIcons = (props:{style?:CSSProperties, className?:string, links:LinkObject[]}) => {
+export const SocialIcons = (props:{style?:CSSProperties, className?:string}) => {
+    const links = useContext(InfosContext).links
     return(
     <div className={style.list+" "+props.className} style={props.style}>
-        {props.links.map((o,i) => <SocialIcon link={o} key={i} />)}
+        {links.map((o,i) => <SocialIcon link={o} key={i} />)}
     </div>
     );
 

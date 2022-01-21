@@ -7,6 +7,5 @@ ADD package.json .
 ADD package-lock.json .
 RUN npm install
 COPY . .
-RUN node init.js
 RUN npm run build
 ENTRYPOINT [ "npm","start" ]

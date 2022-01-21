@@ -24,25 +24,10 @@ export const getStrDate = (isodata:string, isodatatoskip?:string) => {
     return "" 
 }
 
-export const Star = React.forwardRef(({star, ...props}:{star:boolean},ref) => {
-    return star?<i ref={ref} className={`fas fa-star ${style.star_icon}`} {...props} />:
-        <i ref={ref} className={`far fa-star ${style.star_icon}`} {...props} />
+export const Star = React.forwardRef<HTMLElement,{star:boolean}>(({star, ...props},ref) => {
+    return star?<i className={`fas fa-star ${style.star_icon}`} ref={ref} {...props} />:
+        <i className={`far fa-star ${style.star_icon}`} ref={ref} {...props} />
 })
-
-export const starRender = (post:Post) => {
-    const starTooltip = (props:any) => (
-        <Tooltip id={post._id+"_star_tooltip"} {...props}>
-          I'm an important step!
-        </Tooltip>
-    );
-    return post.star?
-        <OverlayTrigger
-            placement="left"
-            delay={{ show: 250, hide: 400 }}
-            overlay={starTooltip}>
-            <Star star={post.star} />
-        </OverlayTrigger>:<Star star={post.star} />
-}
 
 export const categoryButtonRender = (category:Category) => {
     const color = category.color?category.color:categoryIconColor;
@@ -77,13 +62,13 @@ export const dateRender = (post:Post) => {
             </div>
 }
 
-export const PostBox = ({ post, infos }: { post:Post, infos:PublicInfo }) => {
+export const PostBox = ({ post }: { post:Post }) => {
     
     
     const date = dateRender(post)
-    const currentCategory = getCategory(infos,post.category)
+    const currentCategory = getCategory(post.category)
     const categoryContent = categoryButtonRender(currentCategory)
-    const star = starRender(post)
+    const star = <Star star={post.star} />
     const description = <MdPost>{post.description}</MdPost>
 
     return <div className={style.box} id={post._id}>

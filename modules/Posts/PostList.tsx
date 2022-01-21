@@ -1,11 +1,13 @@
+import { useContext } from "react";
 import { Col, Row } from "react-bootstrap";
 import { categoryIconColor } from ".";
+import { InfosContext } from "../Context/Infos";
 import { Post, PublicInfo } from "../interfaces";
 import { getCategory, SideLine } from "../utils";
 import { PostBox } from "./PostBox";
 
-const PostListElement = ({ post, infos }: { post:Post, infos:PublicInfo }) => {
-    const currentCategory = getCategory(infos,post.category)
+const PostListElement = ({ post }: { post:Post }) => {
+    const currentCategory = getCategory(post.category)
 
     return <Row>
         <Col xs={12} sm={2}>
@@ -16,13 +18,13 @@ const PostListElement = ({ post, infos }: { post:Post, infos:PublicInfo }) => {
         </Col>
 
         <Col xs={12} sm={10}>
-            <PostBox infos={infos} key={post._id} post={post} />
+            <PostBox key={post._id} post={post} />
         </Col>
     </Row>
 }
 
-export const PostList = ({ infos, posts }: { infos:PublicInfo , posts:Post[] }) => {
+export const PostList = ({ posts }: { posts:Post[] }) => {
     return <>
-        {posts.map((p) => <PostListElement infos={infos} key={p._id} post={p} />)}
+        {posts.map((p) => <PostListElement key={p._id} post={p} />)}
     </>
 }

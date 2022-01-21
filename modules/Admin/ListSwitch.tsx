@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Col, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
 import { Error404, Loading } from "../Errors";
 import { Category, LinkObject, Page, Post, PublicInfo } from "../interfaces";
 import { CircleBtn } from "./CircleBtn";
 import style from "./style.module.scss"
 import { marktext_to_plain } from "../utils";
-import { categoryButtonRender, dateRender, starRender } from "../Posts";
+import { categoryButtonRender, dateRender, Star } from "../Posts";
 import { SocialIcon } from "../SocialIcon";
-import { EditPost } from "./Panes";
+import { EditPost, PanePopup } from "./Panes";
+import { InfosContext } from "../Context/Infos";
 
 const SelectorIcon = ({ to, icon, variant, name, state }:
     { to:number, icon:string, variant:string, name:string, state:[number, (s:number)=>void]}) => {
@@ -31,19 +32,28 @@ const SelectorIcon = ({ to, icon, variant, name, state }:
 
 }
 
-const addElement = (state: [number, (s:number)=>void],popupShow:(e:JSX.Element|null)=>void) => {
+const addElement = (state: [number, (s:number)=>void]) => {
     const [pane] = state;
-    popupShow(<>Aggiungi su pannello: {pane}</>)
+    switch (pane){
+        case 0: return <EditPost />
+        case 1: return <>Page Create</>//<PageEdit />
+        case 2: return <>Link Create</>//<LinkEdit />
+        case 3: return <>Category Create</>//<CategoryEdit />
+        default: return <Error404 />
+    }
 }
 
-const ListSelector = ({ state, popupShow }:{ state: [number, (s:number)=>void], popupShow:(e:JSX.Element|null)=>void }) => {
+const ListSelector = ({ state }:{ state: [number, (s:number)=>void] }) => {
     return <>
         <div className={style.listselector}>
             <SelectorIcon state={state} icon="fas fa-file-alt" variant="primary" name="Posts" to={0} />
             <SelectorIcon state={state} icon="fas fa-code" variant="success" name="Static Pages" to={1} />
             <SelectorIcon state={state} icon="fas fa-share-alt-square" variant="warning" name="Social Links" to={2} />
             <SelectorIcon state={state} icon="fab fa-cuttlefish" variant="danger" name="Categories" to={3} />
-            <CircleBtn onClick={()=>{addElement(state,popupShow)}} icon="fas fa-plus" variant="secondary" className={style.btnlink}/>
+            <PanePopup show={addElement(state)}>
+                {open => <CircleBtn onClick={open} icon="fas fa-plus" variant="secondary" className={style.btnlink}/>}
+            </PanePopup>
+            
         </div>
     </>
 }
@@ -69,68 +79,63 @@ const emptyListMsg = <div className="center-flex" style={{paddingTop:"100px"}}>
     <u><h2>No content available!</h2></u>
 </div>
 
-const ListPost = ({ values, popupShow, infos }:{ values: Post[], popupShow:(e:JSX.Element|null)=>void, infos:PublicInfo }) => {
+const ListPost = ({ values }:{ values: Post[] }) => {
     const PostElement = ({post}:{post:Post}) => {
-
-        const edit_func = () => {
-            popupShow(<EditPost post={post} infos={infos} close={()=>{popupShow(null)}} />)
-        }
-        return <ListElement 
-            title={post.title}
-            metas={<>{dateRender(post)} {starRender(post)}</>}
-            text={marktext_to_plain(post.description)}
-            onClick={edit_func}
-        />
+        return <PanePopup show={<EditPost post={post} />}>
+            {open => <ListElement 
+                title={post.title}
+                metas={<>{dateRender(post)} <Star star={post.star} /></>}
+                text={marktext_to_plain(post.description)}
+                onClick={open}
+            />}
+        </PanePopup>
     }
     return <div className={style.list}>
         {values.length===0?emptyListMsg:values.map( (o,i) =>  <><PostElement post={o} key={o._id} />{i!==values.length-1?<hr />:null}</>)}
     </div>
 }
 
-const ListPage = ({ values, popupShow }:{ values: Page[], popupShow:(e:JSX.Element|null)=>void }) => {
+const ListPage = ({ values }:{ values: Page[] }) => {
     const PageElement = ({page}:{page:Page}) => {
-        const edit_func = () => {
-            popupShow(<>Please, I wanna edit static page /{page._id}</>)
-        }
-        return <ListElement 
-            title={page.name}
-            metas={<code>{"/"+page._id}</code>}
-            text={marktext_to_plain(page.content)}
-            onClick={edit_func}
-        />
+        return <PanePopup show={<>Please, I wanna edit static page /{page._id}</>}>
+            {open => <ListElement 
+                title={page.name}
+                metas={<code>{"/"+page._id}</code>}
+                text={marktext_to_plain(page.content)}
+                onClick={open}
+            />}
+        </PanePopup>
     }
     return <div className={style.list}>
         {values.length===0?emptyListMsg:values.map( (o,i) =>  <><PageElement page={o} key={`static_page_${i}`} />{i!==values.length-1?<hr />:null}</>)}
     </div>
 }
 
-const ListLink = ({ values, popupShow }:{ values: LinkObject[], popupShow:(e:JSX.Element|null)=>void }) => {
+const ListLink = ({ values }:{ values: LinkObject[] }) => {
     const LinkElement = ({link}:{link:LinkObject}) => {
-        const edit_func = () => {
-            popupShow(<>Please, I wanna edit the link of {link.name}</>)
-        }
-        return <ListElement 
-            title={link.name}
-            metas={<SocialIcon link={link} />}
-            onClick={edit_func}
-        />
+        return <PanePopup show={<>Please, I wanna edit the link of {link.name}</>}>
+            {open => <ListElement 
+                title={link.name}
+                metas={<SocialIcon link={link} />}
+                onClick={open}
+            />}
+        </PanePopup>
     }
     return <div className={style.list}>
         {values.length===0?emptyListMsg:values.map( (o,i) =>  <><LinkElement link={o} key={`link_${i}`} />{i!==values.length-1?<hr />:null}</>)}
     </div>
 }
 
-const ListCategory = ({ values, popupShow }:{ values: Category[], popupShow:(e:JSX.Element|null)=>void }) => {
+const ListCategory = ({ values }:{ values: Category[] }) => {
     const CategoryElement = ({category}:{category:Category}) => {
-        const edit_func = () => {
-            popupShow(<>Please, I wanna edit this category: {category.name}</>)
-        }
-        return <ListElement 
-            title={category.name}
-            metas={categoryButtonRender(category)}
-            text={category.description}
-            onClick={edit_func}
-        />
+        return <PanePopup show={<>Please, I wanna edit this category: {category.name}</>}>
+            {open => <ListElement 
+                title={category.name}
+                metas={categoryButtonRender(category)}
+                text={category.description}
+                onClick={open}
+            />}
+        </PanePopup>
     }
     return <div className={style.list}>
         {values.length===0?emptyListMsg:values.map( (o,i) =>  <><CategoryElement category={o} key={`category_${i}`} />{i!==values.length-1?<hr />:null}</>)}
@@ -138,22 +143,18 @@ const ListCategory = ({ values, popupShow }:{ values: Category[], popupShow:(e:J
 }
 
 
-const ListElements = ({ data, state, popupShow, infos }: { data: [Post[],Page[],LinkObject[],Category[]], state: number, popupShow:(e:JSX.Element|null)=>void, infos:PublicInfo}) => {
+const ListElements = ({ data, state }: { data: [Post[],Page[],LinkObject[],Category[]], state: number }) => {
     switch (state){
-        case 0:
-            return <ListPost infos={infos} values={data[state]} popupShow={popupShow} />
-        case 1:
-            return <ListPage values={data[state]} popupShow={popupShow}/>
-        case 2:
-            return <ListLink values={data[state]} popupShow={popupShow}/>
-        case 3:
-            return <ListCategory values={data[state]} popupShow={popupShow}/>
-        default:
-            return <Error404 />
+        case 0: return <ListPost values={data[state]} />
+        case 1: return <ListPage values={data[state]} />
+        case 2: return <ListLink values={data[state]} />
+        case 3: return <ListCategory values={data[state]} />
+        default: return <Error404 />
     }
 }
 
-export const ListSwitch = ({ infos, popupShow }:{ infos:PublicInfo, popupShow:(e:JSX.Element|null)=>void}) => {
+export const ListSwitch = () => {
+    const infos = useContext(InfosContext)
 
     const [pane, setPane] = useState<number>(0)
     const [data, setData] = useState<[Post[],Page[],LinkObject[],Category[]]>([[],[],[],[]])
@@ -171,10 +172,10 @@ export const ListSwitch = ({ infos, popupShow }:{ infos:PublicInfo, popupShow:(e
     return <>
         <Row className="row-no-margin">
             <Col xs={12} md={1} className="g-0">
-                <ListSelector state={[pane,setPane]} popupShow={popupShow} />
+                <ListSelector state={[pane,setPane]} />
             </Col>
             <Col xs={12} md={11} className="g-0">
-                <ListElements data={data} state={pane} infos={infos} popupShow={popupShow} />
+                <ListElements data={data} state={pane} />
             </Col>
         </Row>
         {loaded?null:<Loading />}

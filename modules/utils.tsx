@@ -1,11 +1,13 @@
 import Head from "next/head";
 import Link from "next/link";
-import Twemoji from "react-twemoji"
 import spacerStyle from "./styles/Spacer.module.scss"
 import { marked } from 'marked';
 import sideLineStyle from "./styles/SideLine.module.scss"
-import { useState } from "react";
 import ReactMarkdown from "react-markdown";
+import { InfosContext } from "./Context/Infos";
+import { useContext, useState } from "react";
+import { Category, PublicInfo } from "./interfaces";
+import { EmojiRender } from "./EmojiRender"
 
 export const Spacer = () => {
     return <div className={spacerStyle.spacer} />
@@ -24,21 +26,17 @@ export const LoremIpsum = () => {return (<>
     Quisque quis dapibus libero. Cras congue in ex vitae fringilla. Nunc efficitur felis libero, at lacinia nisi sodales ut. Fusce nec neque velit. Nam scelerisque, arcu ut ultricies vulputate, erat nulla tristique odio, quis eleifend velit ante eget velit. Suspendisse potenti. Ut id lectus a erat pretium ullamcorper. Fusce dictum, lectus eu tempus suscipit, ex diam porta metus, ac finibus risus nibh consequat odio. Quisque at augue at elit pulvinar lacinia ac nec tellus.
     Duis ultrices tincidunt lacus. Phasellus ornare euismod urna, sit amet pharetra metus egestas ut. Nulla facilisi. Aenean luctus enim lorem, eu posuere tellus mattis sit amet. Nam hendrerit efficitur lacus eget imperdiet. Vivamus ante tellus, commodo eget arcu at, egestas laoreet augue. Vestibulum efficitur dui leo, at venenatis erat aliquam quis. Vivamus arcu sapien, varius vel auctor quis, ornare vitae ligula. Proin condimentum aliquam nulla rhoncus scelerisque. Sed eu est eget dui scelerisque finibus. Etiam id facilisis nisl, sit amet tempor risus.</>);}
 
-export const EmojiRender = ({children}) => {
-    return (
-        <Twemoji options={{ className: 'twemoji', folder: 'svg', ext: '.svg'}}>
-            {children}
-        </Twemoji>
-    )
+export const getCategory = ( categoryCode:string ) => {
+    return getCategoryWithInfos(categoryCode, useContext(InfosContext))
 }
 
-export const getCategory = ( infos, categoryCode ) => {
+export const getCategoryWithInfos = (categoryCode:string, infos:PublicInfo) => {
     for (const ele of infos.categories)
         if (ele._id === categoryCode) return ele
-    return null
+    return null as unknown as Category
 }
 
-export const SideLine = ({ icon, color, category_id }) => {
+export const SideLine = ({ icon, color, category_id }:{ icon:string, color:string, category_id:string }) => {
     return <>
         <div className={sideLineStyle.linecontainer}>
             <div className={sideLineStyle.line} />
@@ -65,13 +63,13 @@ export const rndId = () => {
 }
 
 
-export const marktext_to_plain = (marktext) => {
+export const marktext_to_plain = (marktext:string) => {
     let htmlObject = document.createElement('div');
     htmlObject.innerHTML = marked.parse(marktext)
     return htmlObject.innerText
 }
 
-export const MdPost = ({ children }) => <EmojiRender>
+export const MdPost = ({ children }:{ children:any }) => <EmojiRender>
     <ReactMarkdown unwrapDisallowed disallowedElements={["p"]} >
         {children}
     </ReactMarkdown></EmojiRender>

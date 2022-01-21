@@ -1,6 +1,8 @@
+import { useContext } from "react";
 import { Col, Row } from "react-bootstrap";
 import { categoryIconColor } from ".";
-import { Category, PublicProps } from "../interfaces";
+import { InfosContext } from "../Context/Infos";
+import { Category } from "../interfaces";
 import { SideLine } from "../utils";
 import { CategoryView } from "./CategoryView";
 
@@ -18,7 +20,8 @@ const CategoryListElement = ({ category }: { category:Category }) => {
     </Row>
 }
 
-export const CategoryList = ({ infos }: PublicProps) => {
+export const CategoryList = () => {
+    const infos = useContext(InfosContext)
     return <>
         {infos.categories.map((c) => <CategoryListElement category={c} />)}
     </>

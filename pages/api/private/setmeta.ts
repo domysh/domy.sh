@@ -1,9 +1,11 @@
-import { DBCollection } from "../../../js/db"
+import { DB } from "../../../js/db"
 import { getSession } from "next-auth/react"
 
 import { validData } from "../../../js/utils"
+import { NextApiRequest, NextApiResponse } from "next"
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    const db = await DB()
     const session = await getSession({ req })
     if (session == null)
         return res.status(401).json({status:"unauthorized"})
@@ -16,9 +18,7 @@ export default async function handler(req, res) {
             name:"string"
         });
         if (validate.valid){
-            await DBCollection("static", async (db) => {
-                await db.updateOne({_id:"meta"},{$set:validate.data})
-            })
+            await db.collection("static").updateOne({_id:"meta"},{$set:validate.data})
             return res.status(200).json({status:"ok"})
         }
         return res.status(400).json({status:"Bad request"})
