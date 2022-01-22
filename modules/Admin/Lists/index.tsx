@@ -1,14 +1,18 @@
 import { useContext, useEffect, useState } from "react";
 import { Col, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
-import { Error404, Loading } from "../Errors";
-import { Category, LinkObject, Page, Post, PublicInfo } from "../interfaces";
-import { CircleBtn } from "./CircleBtn";
-import style from "./style.module.scss"
-import { getCategory, marktext_to_plain, rndId } from "../utils";
-import { CategoryButton, PostDate, Star } from "../Posts";
-import { SocialIcon } from "../SocialIcon";
-import { CategoryEdit, EditPost, LinkEdit, PageEdit, PanePopup } from "./Panes";
-import { InfosContext } from "../Context/Infos";
+import { CircleBtn } from "..";
+import { InfosContext } from "../../Context/Infos";
+import { Error404, Loading } from "../../Errors";
+import { Category, LinkObject, Page, Post } from "../../interfaces";
+import { rndId } from "../../utils";
+import { CategoryEdit, PostEdit, LinkEdit, PageEdit, PanePopup } from "../EditPanes";
+import style from "../style.module.scss"
+import { ListCategory, ListLink, ListPage, ListPost } from ".";
+
+export * from "./ListCategory"
+export * from "./ListLink"
+export * from "./ListPage"
+export * from "./ListPost"
 
 const SelectorIcon = ({ to, icon, variant, name, state }:
     { to:number, icon:string, variant:string, name:string, state:[number, (s:number)=>void]}) => {
@@ -29,13 +33,12 @@ const SelectorIcon = ({ to, icon, variant, name, state }:
                 variant={variant}
                 className={style.btnlink+" "+(to!==pane?style.btnlink_deactivated:null)} />
     </OverlayTrigger>
-
 }
 
 const addElement = (state: [number, (s:number)=>void]) => {
     const [pane] = state;
     switch (pane){
-        case 0: return <EditPost />
+        case 0: return <PostEdit />
         case 1: return <PageEdit />
         case 2: return <LinkEdit />
         case 3: return <CategoryEdit />
@@ -60,7 +63,7 @@ const ListSelector = ({ state }:{ state: [number, (s:number)=>void] }) => {
 
 const trimtxt = (text:string)=> text.length>150?text.substring(0,150)+" [...]":text
 
-const ListElement = ({ onClick, title, metas, text }:{ onClick:()=>void, title:string|JSX.Element, metas:string|JSX.Element, text?:string }) => {
+export const ListElement = ({ onClick, title, metas, text }:{ onClick:()=>void, title:string|JSX.Element, metas:string|JSX.Element, text?:string }) => {
 
     return <div className={style.listelement} onClick={onClick}>
         <div className={style.header_post}>
@@ -79,73 +82,13 @@ const emptyListMsg = <div className="center-flex" style={{paddingTop:"100px"}}>
     <u><h2>No content available!</h2></u>
 </div>
 
-const listRender = (Tag:(props:{ value:any })=>JSX.Element,values:any[]) => {
+export const listRender = (Tag:(props:{ value:any })=>JSX.Element,values:any[]) => {
     return <div className={style.list}>
         {values.length===0?emptyListMsg:values.map( (o,i) =>  <div key={rndId()}><Tag value={o} />{i!==values.length-1?<hr />:null}</div>)}
     </div>
 }
 
-const ListPost = ({ values }:{ values: Post[] }) => {
-    const PostElement = ({value}:{value:Post}) => {
-        return <PanePopup show={<EditPost post={value} />}>
-            {open => <ListElement 
-                title={value.title}
-                metas={<>
-                    <PostDate post_date={value.date} post_end_date={value.end_date} />
-                    <CategoryButton category={getCategory(value.category)} />
-                    <Star star={value.star} />
-                </>}
-                text={marktext_to_plain(value.description)}
-                onClick={open}
-            />}
-        </PanePopup>
-    }
-    return listRender(PostElement,values)
-}
-
-const ListPage = ({ values }:{ values: Page[] }) => {
-    const PageElement = ({ value }:{value:Page}) => {
-        return <PanePopup show={<PageEdit page={value} />}>
-            {open => <ListElement 
-                title={value.name}
-                metas={<code>{"/"+value._id}</code>}
-                text={marktext_to_plain(value.content)}
-                onClick={open}
-            />}
-        </PanePopup>
-    }
-    return listRender(PageElement,values)
-}
-
-const ListLink = ({ values }:{ values: LinkObject[] }) => {
-    const LinkElement = ({value}:{value:LinkObject}) => {
-        return <PanePopup show={<LinkEdit link={value} />}>
-            {open => <ListElement 
-                title={value.name}
-                metas={<SocialIcon link={value} />}
-                onClick={open}
-            />}
-        </PanePopup>
-    }
-    return listRender(LinkElement,values)
-}
-
-const ListCategory = ({ values }:{ values: Category[] }) => {
-    const CategoryElement = ({value}:{value:Category}) => {
-        return <PanePopup show={<CategoryEdit category={value} />}>
-            {open => <ListElement 
-                title={value.name}
-                metas={<CategoryButton category={value} />}
-                text={value.description}
-                onClick={open}
-            />}
-        </PanePopup>
-    }
-    return listRender(CategoryElement,values)
-}
-
-
-const ListElements = ({ data, state }: { data: [Post[],Page[],LinkObject[],Category[]], state: number }) => {
+export const ListElements = ({ data, state }: { data: [Post[],Page[],LinkObject[],Category[]], state: number }) => {
     switch (state){
         case 0: return <ListPost values={data[state]} />
         case 1: return <ListPage values={data[state]} />
@@ -182,5 +125,4 @@ export const ListSwitch = () => {
         </Row>
         {loaded?null:<Loading />}
     </>
-
 }
