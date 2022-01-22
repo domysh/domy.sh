@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         if (from > to) [params.from, params.to] = [params.to, params.from]
         return res.status(200).json(
-            tojsonlike(await db.collection("posts").find({}).skip(params.from).limit(params.to-params.from).toArray())
+            tojsonlike(await db.collection("posts").find({}).sort({star:-1,end_date:-1}).skip(params.from).limit(params.to-params.from).toArray())
         )
     }
     return res.status(405).json({status:"Invalid Method"})

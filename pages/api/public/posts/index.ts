@@ -6,7 +6,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (req.method === 'GET') {
         const db = await DB()
         return res.status(200).json(
-            tojsonlike(await db.collection("posts").find({}).toArray())
+            tojsonlike(await db.collection("posts").find({}).sort({star:-1,end_date:-1}).toArray())
         )
     }
     return res.status(405).json({status:"Invalid Method"})

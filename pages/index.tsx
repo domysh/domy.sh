@@ -17,7 +17,6 @@ const Render = ({ page, posts, infos }: { infos:PublicInfo, page?:Page, posts:Po
     }
     return (<Infos infos={infos}>
     <DefaultLayout>
-    {console.log(useContext(InfosContext))}
         <Head>
             <meta name="description" content={description} />
             <meta property="og:description" content={description} />

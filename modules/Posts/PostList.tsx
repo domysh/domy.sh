@@ -1,14 +1,12 @@
-import { useContext } from "react";
 import { Col, Row } from "react-bootstrap";
 import { categoryIconColor } from ".";
-import { InfosContext } from "../Context/Infos";
-import { Post, PublicInfo } from "../interfaces";
+import { Post } from "../interfaces";
 import { getCategory, SideLine } from "../utils";
 import { PostBox } from "./PostBox";
 
 const PostListElement = ({ post }: { post:Post }) => {
     const currentCategory = getCategory(post.category)
-
+    
     return <Row>
         <Col xs={12} sm={2}>
             <SideLine 

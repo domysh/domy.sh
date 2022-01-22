@@ -43,10 +43,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 }catch(err){
                     return res.status(400).json({status:"Invalid Post ID"})
                 }
-                await db.collection("posts").updateOne({_id:request._id},{$set:request})
+                try{
+                    await db.collection("posts").updateOne({_id:request._id},{$set:request})
+                }catch(err){
+                    return res.status(400).json({status:"The post to edit does not exists"})
+                }
                 return res.status(200).json({status:"ok"})
             }
             
+        }
+        return res.status(400).json({status:"Bad request"})
+    }else if (req.method === 'DELETE'){
+        const validate = validData(req.body, {
+            _id:"required|string",
+        });
+        if (validate.valid){
+            let request = validate.data
+            try{
+                request._id = new ObjectId(request._id)
+            }catch(err){
+                return res.status(400).json({status:"Invalid Post ID"})
+            }
+            await db.collection("posts").deleteOne(request)
+            return res.status(200).json({status:"ok"})
         }
         return res.status(400).json({status:"Bad request"})
     }

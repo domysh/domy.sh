@@ -7,7 +7,7 @@ import style from "./style.module.scss"
 import { getCategory, marktext_to_plain, rndId } from "../utils";
 import { CategoryButton, PostDate, Star } from "../Posts";
 import { SocialIcon } from "../SocialIcon";
-import { EditPost, PanePopup } from "./Panes";
+import { CategoryEdit, EditPost, LinkEdit, PageEdit, PanePopup } from "./Panes";
 import { InfosContext } from "../Context/Infos";
 
 const SelectorIcon = ({ to, icon, variant, name, state }:
@@ -36,9 +36,9 @@ const addElement = (state: [number, (s:number)=>void]) => {
     const [pane] = state;
     switch (pane){
         case 0: return <EditPost />
-        case 1: return <>Page Create</>//<PageEdit />
-        case 2: return <>Link Create</>//<LinkEdit />
-        case 3: return <>Category Create</>//<CategoryEdit />
+        case 1: return <PageEdit />
+        case 2: return <LinkEdit />
+        case 3: return <CategoryEdit />
         default: return <Error404 />
     }
 }
@@ -105,7 +105,7 @@ const ListPost = ({ values }:{ values: Post[] }) => {
 
 const ListPage = ({ values }:{ values: Page[] }) => {
     const PageElement = ({ value }:{value:Page}) => {
-        return <PanePopup show={<>Please, I wanna edit static page /{value._id}</>}>
+        return <PanePopup show={<PageEdit page={value} />}>
             {open => <ListElement 
                 title={value.name}
                 metas={<code>{"/"+value._id}</code>}
@@ -119,7 +119,7 @@ const ListPage = ({ values }:{ values: Page[] }) => {
 
 const ListLink = ({ values }:{ values: LinkObject[] }) => {
     const LinkElement = ({value}:{value:LinkObject}) => {
-        return <PanePopup show={<>Please, I wanna edit the link of {value.name}</>}>
+        return <PanePopup show={<LinkEdit link={value} />}>
             {open => <ListElement 
                 title={value.name}
                 metas={<SocialIcon link={value} />}
@@ -132,7 +132,7 @@ const ListLink = ({ values }:{ values: LinkObject[] }) => {
 
 const ListCategory = ({ values }:{ values: Category[] }) => {
     const CategoryElement = ({value}:{value:Category}) => {
-        return <PanePopup show={<>Please, I wanna edit this category: {value.name}</>}>
+        return <PanePopup show={<CategoryEdit category={value} />}>
             {open => <ListElement 
                 title={value.name}
                 metas={<CategoryButton category={value} />}

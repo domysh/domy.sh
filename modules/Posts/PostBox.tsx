@@ -4,7 +4,7 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap"
 import style from "./style.module.scss"
 import { Category, Post, PublicInfo } from "../interfaces"
 import { getCategory, MdPost } from "../utils"
-import { categoryIconColor } from "."
+import { categoryIconColor, fakeIcon } from "."
 
 const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
@@ -30,7 +30,7 @@ export const Star = React.forwardRef<HTMLElement,{star:boolean}>(({star, ...prop
 })
 
 export const CategoryButton = ({ category }:{ category?:Category }) => {
-    let categ:Category = category?category:{_id:"", name:"", description:"", highlighted:false}
+    let categ:Category = category?category:fakeIcon
     const color = categ.color?categ.color:categoryIconColor;
     const categoryTooltip = (props:any) => (
         <Tooltip id={categ._id+"_category_tooltip"} {...props}>
