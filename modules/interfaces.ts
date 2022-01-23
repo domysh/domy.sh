@@ -1,8 +1,9 @@
 export type LinkObject = {
+    _id: string
     name: string
     icon: string
     color: string
-    link: string
+    url: string
 }
 
 export type MetaInfo = {

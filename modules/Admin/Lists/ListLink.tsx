@@ -10,6 +10,7 @@ export const ListLink = ({ values }:{ values: LinkObject[] }) => {
                 title={value.name}
                 metas={<SocialIcon link={value} />}
                 onClick={open}
+                text={value.url}
             />}
         </PanePopup>
     }

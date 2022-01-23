@@ -2,6 +2,7 @@ import { MongoClient } from "mongodb"
 import { GetServerSidePropsContext, PreviewData } from "next"
 import { ParsedUrlQuery } from "querystring"
 import { Category, LinkObject, MetaInfo, Page, PageInfo, PublicInfo } from "../modules/interfaces"
+import { tojsonlike } from "./utils"
 
 export const DBpromise = (async () => {
     const conn = new MongoClient(process.env.MONGO as string)
@@ -36,8 +37,8 @@ export const getPublicInfo = async ():Promise<PublicInfo> => {
     let meta:MetaInfo = (await db.collection("static")
                     .findOne({_id:"meta"})) as unknown as MetaInfo
 
-    let links:LinkObject[] = (await db.collection("links")
-            .find({}).project({_id:false}).toArray()) as LinkObject[]
+    let links:LinkObject[] = tojsonlike(await db.collection("links")
+            .find({}).toArray()) as LinkObject[]
 
     let pages:PageInfo[] = []
 

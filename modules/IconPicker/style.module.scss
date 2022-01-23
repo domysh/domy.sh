@@ -1,0 +1,56 @@
+@use "../../styles/glob" as *;
+
+.icon_chooser_box{
+    width: 230px;
+    background-color: #151515;
+    border-radius: 20px;
+    padding:20px
+}
+
+.icon_box{
+    width: 30px;
+    min-width: 30px;
+    height: 30px;
+    background-color: #457b9d;
+    border-radius: 50%;
+    margin: 5px 8px;
+    @extend .center-flex;
+    cursor: pointer;
+}
+
+.input{
+    width: 100%;
+    border-radius: 60px;
+    padding: 0 10px;
+    margin-bottom: 10px;
+    margin-top: 5px;
+    &:focus{
+        outline: none
+    }
+}
+
+.iconcollection{
+    @extend .center-flex;
+    width: 100%;
+
+}
+
+.footer{
+    @extend .center-flex;
+    margin-top:10px;
+}
+
+.selectedicon{
+    padding:5px;
+    font-size: 140%;
+    border-bottom: 2px solid white ;
+}
+
+.switchbtn{
+    margin:3px;
+}
+
+.pagecount{
+    @extend .center-flex;
+    font-weight: bolder;
+}
