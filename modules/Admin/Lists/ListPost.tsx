@@ -6,7 +6,7 @@ import { PostEdit, PanePopup } from "../EditPanes"
 
 export const ListPost = ({ values }:{ values: Post[] }) => {
     const PostElement = ({value}:{value:Post}) => {
-        return <PanePopup show={<PostEdit post={value} />}>
+        return <PanePopup show={closePane => <PostEdit post={value} close={closePane}/>}>
             {open => <ListElement
                 title={value.title}
                 metas={<>

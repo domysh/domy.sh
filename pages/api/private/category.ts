@@ -13,7 +13,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             _id:"required|string",
             name:"required|string",
             description:"required|string",
-            content:"required|string",
+            color:"required|string",
+            icon:"required|string",
             highlighted:"required|boolean",
             create:"required|boolean",
         });
@@ -21,29 +22,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             let request = validate.data
 
             if (request.name === ""){
-                return res.status(400).json({status:"A title is required!"})
+                return res.status(400).json({status:"A name is required!"})
             }
 
             if (request._id === ""){
-                request.highlighted = false
+                return res.status(400).json({status:"A link is required!"})
             }
             const create = request.create
             delete request.create
             if (create){
-                if(!new RegExp(/^[A-Za-z0-9_-]*$/).test(request._id)){
+                if(!new RegExp(/^[A-Za-z0-9_-]+$/).test(request._id)){
                     return res.status(400).json({status:"Invalid link!"})
                 }
                 try{
-                    await db.collection("pages").insertOne(request)
+                    await db.collection("categories").insertOne(request)
                 }catch(err){
-                    return res.status(400).json({status:"The page already exists with this link"})
+                    return res.status(400).json({status:"This link of the category already exists!"})
                 }
                 return res.status(200).json({status:"ok"})
             }else{
                 try{
-                    await db.collection("pages").updateOne({_id:request._id},{$set:request})
+                    await db.collection("categories").updateOne({_id:request._id},{$set:request})
                 }catch(err){
-                    return res.status(400).json({status:"The page to edit does not exists"})
+                    return res.status(400).json({status:"The category to edit does not exists"})
                 }
                 return res.status(200).json({status:"ok"})
             }
@@ -55,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             _id:"required|string",
         });
         if (validate.valid){
-            await db.collection("pages").deleteOne(validate.data)
+            await db.collection("categories").deleteOne(validate.data)
             return res.status(200).json({status:"ok"})
         }
         return res.status(400).json({status:"Bad request"})

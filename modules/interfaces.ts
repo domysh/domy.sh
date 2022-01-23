@@ -26,8 +26,8 @@ export type Category = {
     name: string
     description: string
     highlighted: boolean
-    icon?: string
-    color?: string
+    icon: string
+    color: string
 }
 
 export type Post = {

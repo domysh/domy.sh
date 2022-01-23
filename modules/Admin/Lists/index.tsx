@@ -1,8 +1,6 @@
-import { useContext, useEffect, useState } from "react";
-import { Col, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { CircleBtn } from "..";
-import { InfosContext } from "../../Context/Infos";
-import { Error404, Loading } from "../../Errors";
+import { Error404 } from "../../Errors";
 import { Category, LinkObject, Page, Post } from "../../interfaces";
 import { rndId } from "../../utils";
 import { CategoryEdit, PostEdit, LinkEdit, PageEdit, PanePopup } from "../EditPanes";
@@ -35,25 +33,25 @@ const SelectorIcon = ({ to, icon, variant, name, state }:
     </OverlayTrigger>
 }
 
-const addElement = (state: [number, (s:number)=>void]) => {
+const addElement = (state: [number, (s:number)=>void], closePane: ()=>void) => {
     const [pane] = state;
     switch (pane){
-        case 0: return <PostEdit />
-        case 1: return <PageEdit />
-        case 2: return <LinkEdit />
-        case 3: return <CategoryEdit />
+        case 0: return <PostEdit close={closePane} />
+        case 1: return <PageEdit close={closePane} />
+        case 2: return <LinkEdit close={closePane} />
+        case 3: return <CategoryEdit close={closePane} />
         default: return <Error404 />
     }
 }
 
-const ListSelector = ({ state }:{ state: [number, (s:number)=>void] }) => {
+export const ListSelector = ({ state }:{ state: [number, (s:number)=>void] }) => {
     return <>
         <div className={style.listselector}>
             <SelectorIcon state={state} icon="fas fa-file-alt" variant="primary" name="Posts" to={0} />
             <SelectorIcon state={state} icon="fas fa-code" variant="success" name="Static Pages" to={1} />
             <SelectorIcon state={state} icon="fas fa-share-alt-square" variant="warning" name="Social Links" to={2} />
             <SelectorIcon state={state} icon="fab fa-cuttlefish" variant="danger" name="Categories" to={3} />
-            <PanePopup show={addElement(state)}>
+            <PanePopup show={closePane => addElement(state,closePane)}>
                 {open => <CircleBtn onClick={open} icon="fas fa-plus" variant="secondary" className={style.btnlink}/>}
             </PanePopup>
             
@@ -88,7 +86,7 @@ export const listRender = (Tag:(props:{ value:any })=>JSX.Element,values:any[]) 
     </div>
 }
 
-export const ListElements = ({ data, state }: { data: [Post[],Page[],LinkObject[],Category[]], state: number }) => {
+export const ListElements = ({ data, state }: { data: [Post[],Page[],LinkObject[],Category[]], state: number}) => {
     switch (state){
         case 0: return <ListPost values={data[state]} />
         case 1: return <ListPage values={data[state]} />
@@ -98,31 +96,4 @@ export const ListElements = ({ data, state }: { data: [Post[],Page[],LinkObject[
     }
 }
 
-export const ListSwitch = () => {
-    const infos = useContext(InfosContext)
 
-    const [pane, setPane] = useState<number>(0)
-    const [data, setData] = useState<[Post[],Page[],LinkObject[],Category[]]>([[],[],[],[]])
-    const [loaded, setLoading] = useState<boolean>(false);
-
-    useEffect(()=>{(async () =>{
-        let posts = await fetch("/api/public/posts").then( res => res.json() ) as unknown as Post[]
-        let static_pages = await fetch("/api/public/pages").then( res => res.json() ) as unknown as Page[]
-        let links = infos.links
-        let categories = await fetch("/api/public/categories").then( res => res.json() ) as unknown as Category[]
-        setData([posts,static_pages,links,categories])
-        setLoading(true)
-    })()},[])
-
-    return <>
-        <Row className="row-no-margin">
-            <Col xs={12} md={1} className="g-0">
-                <ListSelector state={[pane,setPane]} />
-            </Col>
-            <Col xs={12} md={11} className="g-0">
-                <ListElements data={data} state={pane} />
-            </Col>
-        </Row>
-        {loaded?null:<Loading />}
-    </>
-}

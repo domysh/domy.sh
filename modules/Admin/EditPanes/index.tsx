@@ -1,4 +1,4 @@
-import { Button, Container, FormControl, InputGroup } from "react-bootstrap"
+import { Alert, Button, Container, FormControl, InputGroup } from "react-bootstrap"
 import style from "../style.module.scss"
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
@@ -8,15 +8,61 @@ import ReactMarkdown from "react-markdown";
 import { useContext, useState } from "react";
 import { EmojiRender } from "../../EmojiRender";
 import Popup from "reactjs-popup";
-import Router from 'next/router'
 import { InfosContext } from "../../Context/Infos";
+import { AdminDataReload } from "../";
 
 export * from "./CategoryEdit"
 export * from "./PostEdit"
 export * from "./LinkEdit"
 export * from "./PageEdit"
 
-export const PanePopup = ({ show, children }:{ show:JSX.Element, children:(s:()=>void)=>JSX.Element }) => {
+export const dataEdit = (privateUrl:string, request:any, setError: (v:string)=>void, close: ()=>void) => {
+    const reload = useContext(AdminDataReload)
+    return () => {
+        fetch("/api/private/"+privateUrl,{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify(request)
+        }).then( res => res.json() ).then(res => {
+            if (res.status === "ok"){
+                close()
+                reload()
+            }else
+                setError(res.status)
+        }).catch(err => {
+            setError("Error: "+err)
+        })
+    }
+
+
+}
+
+export const dataDelete = (privateUrl:string, name:string, request:any, setError: (v:string)=>void, close: ()=>void) => {
+    const reload = useContext(AdminDataReload)
+    return () => {
+        if(confirm("Are you sure to delete '"+name+"'")){
+            fetch("/api/private/"+privateUrl,{
+                method:"DELETE",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify(request)
+            }).then( res => res.json() ).then(res => {
+                if (res.status === "ok"){
+                    close()
+                    reload()
+                }else
+                    setError(res.status)
+            }).catch(err => {
+                setError("Error: "+err)
+            })
+        }
+    }
+}
+
+export const PanePopup = ({ show, children }:{ show:(s:()=>void)=>JSX.Element, children:(s:()=>void)=>JSX.Element }) => {
     const [open, setOpen] = useState(false);
     const closeModal = () => setOpen(false);
     return (<>
@@ -28,7 +74,7 @@ export const PanePopup = ({ show, children }:{ show:JSX.Element, children:(s:()=
                         <div className={style.panewindow_header}>
                             <i className="fas fa-times" onClick={closeModal} />
                         </div>
-                        {show}
+                        {show(closeModal)}
                     </Container>
                 </div>
             </div>
@@ -40,27 +86,17 @@ export const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
     ssr: false,
 });
 
-export const EditMetas = () => {
+export const EditMetas = ({close}:{close:()=>void}) => {
     const infos = useContext(InfosContext)
     const [site_name, setSitename] = useState(infos.meta.site_name)
     const [description, setDescription] = useState(infos.meta.description)
     const [footer, setFooter] = useState(infos.meta.footer)
     const [name, setName] = useState(infos.meta.name)
+    const [error, setError] = useState<string|null>(null);
+
     const original = site_name === infos.meta.site_name && description === infos.meta.description && footer === infos.meta.footer && name === infos.meta.name
 
-    const submitData = () => {
-        let request = {site_name, description, footer, name}
-
-        fetch("/api/private/meta",{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify(request)
-        }).then(() => {
-            Router.reload()
-        })
-    }
+    const submitData = dataEdit("meta", {site_name, description, footer, name}, setError, close)
 
     return <>
         <h1 style={{ textAlign:"center" }}>
@@ -81,6 +117,7 @@ export const EditMetas = () => {
             <InputGroup.Text id="input-site-motd"><b>Site Motd</b></InputGroup.Text>
             <FormControl aria-describedby="input-site-name" defaultValue={infos.meta.description} />
         </InputGroup>
+        <h3>Footer</h3>
         <MdEditor
             className={style.mdeditor}
             renderHTML={(v)=>{
@@ -88,6 +125,10 @@ export const EditMetas = () => {
             defaultValue={infos.meta.footer}
             onChange={(v)=>{setFooter(v.text)}}
         />
+        {error?
+            <Alert variant="danger" style={{marginTop:"20px"}}>
+                {error}
+            </Alert>:null}
     </>
 }
 

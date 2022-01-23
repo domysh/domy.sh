@@ -1,12 +1,11 @@
-import Router from "next/router"
 import { useState } from "react"
 import { Alert, Button, Form, FormControl, InputGroup } from "react-bootstrap"
-import { MdEditor } from "."
+import { dataDelete, dataEdit, MdEditor } from "."
 import { Page } from "../../interfaces"
 import { MdPost } from "../../utils"
 import style from "../style.module.scss"
 
-export const PageEdit = ({ page }:{ page?:Page }) => {
+export const PageEdit = ({ page, close }:{ page?:Page, close:()=>void }) => {
     const [name, setName] = useState<string>(page?page.name:"")
     const [description, setDescription] = useState<string>(page?page.description:"")
     const [content, setContent] = useState<string>(page?page.content:"")
@@ -26,43 +25,11 @@ export const PageEdit = ({ page }:{ page?:Page }) => {
         setRawId(res)   
     }
 
-    let request = {_id,highlighted,content,description,name,create:page?false:true}
+    const currentObj = {_id,highlighted,content,description,name,create:page?false:true}
 
-    const submitData = () => {
-        fetch("/api/private/page",{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify(request)
-        }).then( res => res.json() ).then(res => {
-            if (res.status === "ok")
-                Router.reload()
-            else
-                setError(res.status)
-        }).catch(err => {
-            setError("Error: "+err)
-        })
-    }
+    const submitData = dataEdit("page", currentObj, setError, close)
+    const deleteData = dataDelete("page",name,{_id:page?._id},setError, close)
 
-    const deleteData = () => {
-        if(confirm("Are you sure to delete '"+name+"'")){
-            fetch("/api/private/page",{
-                method:"DELETE",
-                headers:{
-                    "Content-Type":"application/json"
-                },
-                body:JSON.stringify({_id:page?._id})
-            }).then( res => res.json() ).then(res => {
-                if (res.status === "ok")
-                    Router.reload()
-                else
-                    setError(res.status)
-            }).catch(err => {
-                setError("Error: "+err)
-            })
-        }
-    }
     return <>
     <h1 style={{ textAlign:"center" }}>
         {page?"Editor":"Create"} Static Page
@@ -82,7 +49,7 @@ export const PageEdit = ({ page }:{ page?:Page }) => {
         <InputGroup.Text><b>Description</b></InputGroup.Text>
         <FormControl defaultValue={description} onChange={(v)=>{setDescription((v.target as HTMLInputElement).value)}} />
         <InputGroup.Text><b>Link</b></InputGroup.Text>
-        {!page? <FormControl value={_id} onChange={(v)=>{setId((v.target as HTMLInputElement).value)}} />:
+        {!page? <FormControl value={"/"+_id} onChange={(v)=>{setId((v.target as HTMLInputElement).value.substring(1))}} />:
             <InputGroup.Text><b>/{_id}</b></InputGroup.Text>}
     </InputGroup>
     

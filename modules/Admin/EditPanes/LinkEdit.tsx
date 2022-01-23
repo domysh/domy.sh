@@ -1,14 +1,14 @@
 import { useState } from "react"
 import { LinkObject } from "../../interfaces"
-import Router from "next/router"
 import { Alert, Button, FormControl, InputGroup } from "react-bootstrap"
 import style from "../style.module.scss"
 import { HuePicker, TwitterPicker } from "react-color"
 import { categoryIconColor } from "../../Posts"
 import { SocialIcon } from "../../SocialIcon"
 import { IconPicker } from "../../IconPicker"
+import { dataDelete, dataEdit } from "."
 
-export const LinkEdit = ({ link }:{ link?:LinkObject }) => {
+export const LinkEdit = ({ link, close }:{ link?:LinkObject, close:()=>void }) => {
     const [name, setName] = useState<string>(link?link.name:"")
     const [color, setColor] = useState<string>(link?link.color:"")
     const [icon, setIcon] = useState<string>(link?link.icon:"")
@@ -18,46 +18,14 @@ export const LinkEdit = ({ link }:{ link?:LinkObject }) => {
     const original = name === (link?link.name:"") && color === (link?link.color:"") &&
         icon === (link?link.icon:"") && url === (link?link.url:"")
 
-    let request = {name,color,icon,url,_id:link?link._id:null}
+    const currentObj = {name,color,icon,url,_id:link?link._id:null}
 
-    const submitData = () => {
-        fetch("/api/private/link",{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify(request)
-        }).then( res => res.json() ).then(res => {
-            if (res.status === "ok")
-                Router.reload()
-            else
-                setError(res.status)
-        }).catch(err => {
-            setError("Error: "+err)
-        })
-    }
+    const submitData = dataEdit("link",currentObj, setError, close)
+    const deleteData = dataDelete("link",name,{_id:link?._id},setError, close)
 
-    const deleteData = () => {
-        if(confirm("Are you sure to delete '"+name+"'")){
-            fetch("/api/private/link",{
-                method:"DELETE",
-                headers:{
-                    "Content-Type":"application/json"
-                },
-                body:JSON.stringify({_id:link?._id})
-            }).then( res => res.json() ).then(res => {
-                if (res.status === "ok")
-                    Router.reload()
-                else
-                    setError(res.status)
-            }).catch(err => {
-                setError("Error: "+err)
-            })
-        }
-    }
     return <>
     <h1 style={{ textAlign:"center" }}>
-        {link?"Editor":"Create"} Static Page
+        {link?"Editor":"Create"} Social Link
         {original?<Button className={style.donebtn} variant="success" disabled><i className="fas fa-check" /></Button>:
             <Button className={style.donebtn} variant="success" onClick={submitData}><i className="fas fa-check" /></Button>}
         {link?<Button className={style.donebtn} onClick={deleteData} style={{marginLeft:"20px"}} variant="danger"><i className="fas fa-trash" /></Button>:null}
@@ -76,7 +44,7 @@ export const LinkEdit = ({ link }:{ link?:LinkObject }) => {
     <div className="center-flex" style={{justifyContent:"space-around"}}>
         <IconPicker value={icon} onChange={v=>{setIcon(v)}} color={ color !== ""?color:categoryIconColor } />
         <div style={{transform:"scale(2)",padding:"40px"}} className="center-flex" >
-            <SocialIcon link={request as LinkObject} />
+            <SocialIcon link={currentObj as LinkObject} />
         </div>
         <div className="center-flex" style={{flexDirection:"column"}}>
             <TwitterPicker triangle="hide" color={ color !== ""?color:categoryIconColor } onChangeComplete={ (v:{hex:string})=>{setColor(v.hex)} } />

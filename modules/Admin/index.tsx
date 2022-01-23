@@ -1,13 +1,15 @@
-import { Container } from "react-bootstrap"
-import { Footer } from "../Footer"
-import React from "react"
+import { Col, Container, Row } from "react-bootstrap"
+import React, { useEffect, useState } from "react"
 import { Button } from "react-bootstrap"
 import currentStyle from "./style.module.scss"
 import { logout } from "../Auth";
 import { EditMetas, PanePopup } from "./EditPanes";
 import { InfosContext } from "../Context/Infos";
-import { useContext } from "react";
-import { ListSwitch } from "./Lists"
+import { useContext, createContext } from "react";
+import { Spacer } from "../utils"
+import { Category, LinkObject, MetaInfo, Page, Post } from "../interfaces";
+import { ListElements, ListSelector } from "./Lists";
+import { Loading } from "../Errors";
 
 export const Header = () => {
     const infos = useContext(InfosContext)
@@ -17,7 +19,7 @@ export const Header = () => {
                 Admin Panel - <u>{infos.meta.site_name}</u>
             </div>
             <div className={currentStyle.header_btns} >
-                <PanePopup show={<EditMetas />}>
+                <PanePopup show={closePane => <EditMetas close={closePane} />}>
                     { open => <CircleBtn icon="fas fa-edit" variant="success" onClick={open} /> }
                 </PanePopup>
                 <CircleBtn onClick={logout} icon="fas fa-sign-out-alt" variant="danger" />
@@ -38,14 +40,41 @@ export const CircleBtn = React.forwardRef<HTMLButtonElement,{ icon:string, onCli
         </Button>
 })
 
-export const AdminPage = () => {
+export const AdminDataReload = createContext<()=>void>(()=>{})
 
-    return <>  
+export const AdminPage = () => {
+    const infos = useContext(InfosContext)
+
+    const [pane, setPane] = useState<number>(0)
+    const [data, setData] = useState<[Post[],Page[],LinkObject[],Category[]]>([[],[],[],[]])
+    const [loaded, setLoaded] = useState<boolean>(false);
+
+    useEffect(()=>{
+        if (loaded) return;
+        else (async () =>{
+            const posts = await fetch("/api/public/posts").then( res => res.json() ) as unknown as Post[]
+            const static_pages = await fetch("/api/public/pages").then( res => res.json() ) as unknown as Page[]
+            infos.links = await fetch("/api/public/links").then( res => res.json() ) as unknown as LinkObject[]
+            infos.meta = await fetch("/api/public/meta").then( res => res.json() ) as unknown as MetaInfo
+            const categories = await fetch("/api/public/categories").then( res => res.json() ) as unknown as Category[]
+            setData([posts,static_pages,infos.links,categories])
+            setLoaded(true)
+    })()},[loaded])
+        
+    return <AdminDataReload.Provider value={() => setLoaded(false)}>
         <Header />
         <Container>
-            <ListSwitch />
+            <Row className="row-no-margin">
+                <Col xs={12} md={1} className="g-0">
+                    <ListSelector state={[pane,setPane]} />
+                </Col>
+                <Col xs={12} md={11} className="g-0">
+                    <ListElements data={data} state={pane} />
+                </Col>
+            </Row>
         </Container>
-        <Footer />
-    </>
+        {loaded?null:<Loading />}
+        <Spacer />
+        <Spacer />
+    </AdminDataReload.Provider>
 }
-

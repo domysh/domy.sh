@@ -55,12 +55,8 @@ export const NoBots = () => {
     </Head>
 }
 
-let random_incremental_value = 0;
-
 export const rndId = () => {
-    random_incremental_value++;
-    const [res] = useState("sequential_unique_id_"+random_incremental_value)
-    return res
+    return '_' + Math.random().toString(36);
 }
 
 

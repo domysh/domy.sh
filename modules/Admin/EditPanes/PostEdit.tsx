@@ -1,7 +1,6 @@
-import Router from "next/router"
 import { useContext, useEffect, useState } from "react"
 import { Alert, Button, Form, FormControl, InputGroup } from "react-bootstrap"
-import { MdEditor } from "."
+import { dataDelete, dataEdit, MdEditor } from "."
 import { InfosContext } from "../../Context/Infos"
 import { Post } from "../../interfaces"
 import { CategoryButton, PostBox, PostDate, Star } from "../../Posts"
@@ -54,7 +53,7 @@ const PostDatePicker = ({ name, defaultValue, onChange }:{ name:string, defaultV
 }
 
 
-export const PostEdit = ({ post }:{ post?:Post }) => {
+export const PostEdit = ({ post, close }:{ post?:Post, close:()=>void }) => {
     const [actualDate] = useState(currentDate())
     const infos = useContext(InfosContext)
     const [title, setTitle] = useState<string>(post?post.title:"")
@@ -69,43 +68,10 @@ export const PostEdit = ({ post }:{ post?:Post }) => {
                      category === (post?post.category:"") && star === (post?post.star:false) &&
                      date === (post?post.date:actualDate) && end_date === (post?post.end_date:actualDate)
 
-    let request = {_id:post?post._id:null,title,description,category,star,date,end_date}
+    const currentObj = {_id:post?post._id:null,title,description,category,star,date,end_date}
 
-    const submitData = () => {
-        fetch("/api/private/post",{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify(request)
-        }).then( res => res.json() ).then(res => {
-            if (res.status === "ok")
-                Router.reload()
-            else
-                setError(res.status)
-        }).catch(err => {
-            setError("Error: "+err)
-        })
-    }
-
-    const deleteData = () => {
-        if(confirm("Are you sure to delete '"+title+"'")){
-            fetch("/api/private/post",{
-                method:"DELETE",
-                headers:{
-                    "Content-Type":"application/json"
-                },
-                body:JSON.stringify({_id:post?._id})
-            }).then( res => res.json() ).then(res => {
-                if (res.status === "ok")
-                    Router.reload()
-                else
-                    setError(res.status)
-            }).catch(err => {
-                setError("Error: "+err)
-            })
-        }
-    }
+    const submitData = dataEdit("post",currentObj, setError, close)
+    const deleteData = dataDelete("post",title,{_id:post?._id},setError, close)
 
     return <>
         <h1 style={{ textAlign:"center" }}>
@@ -149,7 +115,7 @@ export const PostEdit = ({ post }:{ post?:Post }) => {
                 {error}
             </Alert>:null}
         <div className={style.backpost}>
-            <PostBox post={request as Post} />
+            <PostBox post={currentObj as Post} />
         </div>
 
             

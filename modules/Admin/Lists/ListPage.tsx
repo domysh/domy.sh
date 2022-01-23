@@ -5,7 +5,7 @@ import { PageEdit, PanePopup } from "../EditPanes"
 
 export const ListPage = ({ values }:{ values: Page[] }) => {
     const PageElement = ({ value }:{value:Page}) => {
-        return <PanePopup show={<PageEdit page={value} />}>
+        return <PanePopup show={closePane => <PageEdit page={value} close={closePane} />}>
             {open => <ListElement 
                 title={value.name}
                 metas={<code>{"/"+value._id}</code>}
