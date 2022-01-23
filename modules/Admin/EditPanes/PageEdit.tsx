@@ -1,8 +1,8 @@
 import { useState } from "react"
 import { Alert, Button, Form, FormControl, InputGroup } from "react-bootstrap"
+import ReactMarkdown from "react-markdown"
 import { dataDelete, dataEdit, MdEditor } from "."
 import { Page } from "../../interfaces"
-import { MdPost } from "../../utils"
 import style from "../style.module.scss"
 
 export const PageEdit = ({ page, close }:{ page?:Page, close:()=>void }) => {
@@ -55,7 +55,7 @@ export const PageEdit = ({ page, close }:{ page?:Page, close:()=>void }) => {
     
     <MdEditor
         className={style.mdeditor}
-        renderHTML={(v) => <MdPost>{v}</MdPost>}
+        renderHTML={(v) => <ReactMarkdown>{v}</ReactMarkdown>}
         defaultValue={content}
         onChange={(v)=>{setContent(v.text)}}
     />

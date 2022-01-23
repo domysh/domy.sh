@@ -55,10 +55,6 @@ export const NoBots = () => {
     </Head>
 }
 
-export const rndId = () => {
-    return '_' + Math.random().toString(36);
-}
-
 
 export const marktext_to_plain = (marktext:string) => {
     let htmlObject = document.createElement('div');

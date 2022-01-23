@@ -16,6 +16,7 @@ html, body, #root {
     background-color: $main-color;
     color: #FFF;
     @include normal_font();
+    word-break: break-word;
 }
 
 a{
@@ -113,3 +114,21 @@ h1, h2, h3, h4, h5, h6{
 .row-no-margin {
     margin: 0;
 }
+
+blockquote {
+    border-left: 10px solid #aaa;
+    margin: 1.5em 10px;
+    padding: 0.5em 10px;
+    quotes: "\201C""\201D""\2018""\2019";
+  }
+  blockquote:before {
+    color: #aaa;
+    content: open-quote;
+    font-size: 4em;
+    line-height: 0.1em;
+    margin-right: 0.25em;
+    vertical-align: -0.4em;
+  }
+  blockquote p {
+    display: inline;
+  }

@@ -12,7 +12,8 @@ const Render = ({ page, infos }:{ page:Page, infos:PublicInfo }) => {
         <Head>
             <meta name="description" content={page.description} />
         </Head>
-        <h1>{page.name}</h1>
+        <h1 style={{textAlign:"center"}}>{page.name}</h1>
+        <hr style={{margin:"50px 0px"}}/>
         <ReactMarkdown>{page.content}</ReactMarkdown>
     </DefaultLayout>
     </Infos>) 

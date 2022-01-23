@@ -56,8 +56,8 @@ export const AdminPage = () => {
             const static_pages = await fetch("/api/public/pages").then( res => res.json() ) as unknown as Page[]
             infos.links = await fetch("/api/public/links").then( res => res.json() ) as unknown as LinkObject[]
             infos.meta = await fetch("/api/public/meta").then( res => res.json() ) as unknown as MetaInfo
-            const categories = await fetch("/api/public/categories").then( res => res.json() ) as unknown as Category[]
-            setData([posts,static_pages,infos.links,categories])
+            infos.categories = await fetch("/api/public/categories").then( res => res.json() ) as unknown as Category[]
+            setData([posts,static_pages,infos.links,infos.categories])
             setLoaded(true)
     })()},[loaded])
         

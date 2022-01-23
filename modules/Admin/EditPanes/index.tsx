@@ -67,7 +67,7 @@ export const PanePopup = ({ show, children }:{ show:(s:()=>void)=>JSX.Element, c
     const closeModal = () => setOpen(false);
     return (<>
         {children(()=>{setOpen(true)})}
-        <Popup open={open} closeOnDocumentClick onClose={closeModal}>
+        <Popup open={open} closeOnDocumentClick onClose={closeModal} closeOnEscape={false}>
             <div className={style.panewindow}>
                 <div className="center-flex" style={{height:"100%"}}>
                     <Container style={{width:"100%"}}>

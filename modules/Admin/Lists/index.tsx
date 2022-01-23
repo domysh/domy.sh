@@ -2,7 +2,6 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { CircleBtn } from "..";
 import { Error404 } from "../../Errors";
 import { Category, LinkObject, Page, Post } from "../../interfaces";
-import { rndId } from "../../utils";
 import { CategoryEdit, PostEdit, LinkEdit, PageEdit, PanePopup } from "../EditPanes";
 import style from "../style.module.scss"
 import { ListCategory, ListLink, ListPage, ListPost } from ".";
@@ -82,7 +81,7 @@ const emptyListMsg = <div className="center-flex" style={{paddingTop:"100px"}}>
 
 export const listRender = (Tag:(props:{ value:any })=>JSX.Element,values:any[]) => {
     return <div className={style.list}>
-        {values.length===0?emptyListMsg:values.map( (o,i) =>  <div key={rndId()}><Tag value={o} />{i!==values.length-1?<hr />:null}</div>)}
+        {values.length===0?emptyListMsg:values.map( (o,i) =>  <div key={i}><Tag value={o} />{i!==values.length-1?<hr />:null}</div>)}
     </div>
 }
 

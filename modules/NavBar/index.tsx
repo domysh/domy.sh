@@ -1,10 +1,8 @@
 import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react"
 import { Container, Nav, Navbar } from "react-bootstrap";
-import { PublicProps } from "../interfaces";
 import style from "./style.module.scss"
 import { useRouter } from 'next/router';
-import { rndId } from "../utils";
 import { InfosContext } from "../Context/Infos";
 
 
@@ -27,35 +25,43 @@ export function NavLink({ href, children, className, ...props }:{ href:string, c
 export const NavBar = () => {
     const infos = useContext(InfosContext)
     const [onTop, setOnTop] = useState(true);
+    const [collapsed, setCollapsed] = useState(true)
+    const [toggleVisible, setToggleVisible] = useState(true)
 
-    const id = rndId()
+    const nav_collapse_btn = React.createRef<HTMLButtonElement>()
     
-    useEffect(()=>{ 
+    useEffect(()=>{
+      const collapse_btn = nav_collapse_btn.current
       const updateStatus = () => {
         setOnTop(window.pageYOffset <= 100)
       }
+      const closeOnResize = () => {
+        setToggleVisible(collapse_btn?getComputedStyle(collapse_btn).display !== "none":false)        
+      }
+      window.addEventListener("resize",closeOnResize)
       window.addEventListener("scroll",updateStatus)
       return () => {
+        window.removeEventListener("resize",closeOnResize)
         window.removeEventListener("scroll",updateStatus)
       }
-  },[])
+    },[])
     
   const NavBtn = ({ to, children }:{ to:string, children?:any }) => {
     return (<Nav.Link as={NavLink} onClick={
       () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        const collapse = document.querySelector(`#${id} .navbar-collapse.show`)
-        if(collapse){
-          const navbtn:HTMLElement|null = document.querySelector(`#${id} .navbar-toggler`)
-          navbtn!.click()
-        }
-      
+        if (!collapsed) nav_collapse_btn.current?.click()
       }
     } href={to}>{children}</Nav.Link>)
   }
 
   return (
-    <Navbar id={id} className={onTop?style.onTop:style.onBottom} collapseOnSelect fixed="top" expand="lg" bg="dark" variant="dark" style={{transition:"background-color .8s"}} >
+    <Navbar 
+      className={onTop && (collapsed || !toggleVisible)?style.onTop:style.onBottom}
+      collapseOnSelect fixed="top"
+      expand="lg" bg="dark" variant="dark"
+      style={{transition:"background-color .8s"}} >
+      
     <Container fluid className={style.navbar}>
     <Navbar.Brand as={NavLink} href="/">
         <img
@@ -67,7 +73,7 @@ export const NavBar = () => {
             style={{marginRight:"10px"}}
         />
     </Navbar.Brand>
-    <Navbar.Toggle/>
+    <Navbar.Toggle ref={nav_collapse_btn} onClick={()=>setCollapsed(!collapsed)} />
     <Navbar.Collapse>
         <Nav className="me-auto" />
         <Nav>
