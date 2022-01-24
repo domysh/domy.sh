@@ -121,7 +121,7 @@ export const EditMetas = ({close}:{close:()=>void}) => {
         <MdEditor
             className={style.mdeditor}
             renderHTML={(v)=>{
-                return <EmojiRender><ReactMarkdown>{v}</ReactMarkdown></EmojiRender>}}
+                return <ReactMarkdown>{v}</ReactMarkdown>}}
             defaultValue={infos.meta.footer}
             onChange={(v)=>{setFooter(v.text)}}
         />
