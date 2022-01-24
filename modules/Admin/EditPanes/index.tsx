@@ -1,7 +1,5 @@
 import { Alert, Button, Container, FormControl, InputGroup } from "react-bootstrap"
 import style from "../style.module.scss"
-import "@uiw/react-md-editor/markdown-editor.css";
-import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from 'next/dynamic';
 import 'react-markdown-editor-lite/lib/index.css';
 import ReactMarkdown from "react-markdown";
