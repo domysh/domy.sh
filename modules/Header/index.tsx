@@ -4,6 +4,8 @@ import { SocialIcons } from "../SocialIcon"
 import style from  "./style.module.scss"
 import { Spacer } from "../utils";
 import { InfosContext } from "../Context/Infos";
+import profileImg from "../../public/img/profile.png"
+import Image from "next/image";
 
 export const Header = () => {
   const infos = useContext(InfosContext)
@@ -15,7 +17,7 @@ export const Header = () => {
         <SocialIcons className={style.social} />
       </Col>
       <Col md={4} lg={6} className={style.profile_image}>
-        <img src="/img/profile.png" className={style.header_profile} alt="Profile Image" />
+        <Image src={profileImg} placeholder="blur" className={style.header_profile} alt="Profile Image" />
       </Col>
     </Row>
     <Spacer />
