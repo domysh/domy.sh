@@ -1,6 +1,7 @@
-FROM node:16
+FROM node:16-alpine
 
 #React project copy
+RUN apk add --update npm
 RUN mkdir /app
 WORKDIR /app
 ADD package.json .

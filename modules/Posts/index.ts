@@ -5,4 +5,4 @@ export * from "./PostList"
 
 export const categoryIconColor = "#1b4965"
 
-export const fakeIcon:Category = {_id:"", name:"", description:"", highlighted:false}
+export const fakeIcon:Category = {_id:"", name:"", description:"", highlighted:false, icon:"", color:""}
