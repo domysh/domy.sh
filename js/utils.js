@@ -55,4 +55,4 @@ export const validData = (data,rules) => {
     return {data,valid:valid.passes()}
 }
 
-export const globalRevalidationTime = !isNaN(parseInt(process.env.REVALIDATE))?parseInt(process.env.REVALIDATE):10
+export const globalRevalidationTime = process.env.REVALIDATE?parseInt(process.env.REVALIDATE):10
