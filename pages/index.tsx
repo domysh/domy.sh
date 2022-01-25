@@ -2,7 +2,7 @@ import Head from 'next/head'
 import ReactMarkdown from 'react-markdown'
 import { DefaultLayout } from '../modules/DefaultLayout'
 import { PostList } from '../modules/Posts'
-import { sprops, DB } from '../js/db'
+import { sprops, DB, ssprops } from '../js/db'
 import { Page, Post, PublicInfo } from '../modules/interfaces'
 import { tojsonlike } from '../js/utils'
 import { Infos, InfosContext } from '../modules/Context/Infos'
@@ -28,10 +28,10 @@ const Render = ({ page, posts, infos }: { infos:PublicInfo, page?:Page, posts:Po
     </Infos>)
 }; export default Render
 
-export const getServerSideProps = sprops(async () => {
+export const getStaticProps = ssprops(async () => {
     const db = await DB()
     return {
         page: tojsonlike(await db.collection("pages").findOne({_id:""})),
         posts: tojsonlike(await db.collection("posts").find({ star: true }).sort({ end_date:-1 }).toArray())
     }
-})
+},5)

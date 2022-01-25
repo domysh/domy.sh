@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { DefaultLayout } from '../../modules/DefaultLayout'
-import { sprops } from '../../js/db'
-import { PublicInfo, PublicProps } from '../../modules/interfaces'
+import { sspaths, ssprops } from '../../js/db'
+import { PublicInfo } from '../../modules/interfaces'
 import { CategoryList } from '../../modules/CategoryView';
 import { Infos } from '../../modules/Context/Infos';
 
@@ -16,4 +16,4 @@ const Render = ({ infos }:{infos:PublicInfo}) => {
     </DefaultLayout></Infos>)
 }; export default Render
 
-export const getServerSideProps = sprops()
+export const getStaticProps = ssprops(async ()=>{return {}},5)

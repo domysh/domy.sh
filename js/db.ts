@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb"
-import { GetServerSidePropsContext, PreviewData } from "next"
+import { GetServerSidePropsContext, GetStaticPaths, GetStaticPropsContext, GetStaticPropsResult, PreviewData } from "next"
 import { ParsedUrlQuery } from "querystring"
 import { Category, LinkObject, MetaInfo, Page, PageInfo, PublicInfo } from "../modules/interfaces"
 import { tojsonlike } from "./utils"
@@ -70,3 +70,21 @@ export function sprops(fn?:serverSitePropsFunc) {
         return {props:result}
     }
 }
+
+export type serverStaticPropsFunc
+                 = (context:GetStaticPropsContext) => Promise<{[key:string]:any}>
+
+export function ssprops(fn?:serverStaticPropsFunc, revalidate?:number) {
+    return async function(context:GetStaticPropsContext) {
+        let result:any = {}
+        if (fn != null)
+            result = await fn(context)
+        if (result.notfound != null) return { notFound:true, revalidate }
+        if (result.redirect != null) return { redirect:result.redirect, revalidate }
+        result.infos = await getPublicInfo()
+        return {props:result, revalidate}
+    }
+}
+
+
+export const sspaths:GetStaticPaths = () => {return {paths: [],fallback: "blocking"};}

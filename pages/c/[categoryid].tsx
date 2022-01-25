@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { DefaultLayout } from '../../modules/DefaultLayout'
 import { PostList } from '../../modules/Posts'
-import { DB, sprops } from '../../js/db'
+import { DB, ssprops, sspaths } from '../../js/db'
 import { Post, PublicInfo } from '../../modules/interfaces'
 import { tojsonlike } from '../../js/utils'
 import { getCategoryWithInfos } from '../../modules/utils'
@@ -31,10 +31,12 @@ const Render = ({ infos, posts, categoryid }: { infos:PublicInfo, posts:Post[], 
     </Infos>)
 }; export default Render
 
-export const getServerSideProps = sprops(async (context) => {
+export const getStaticPaths = sspaths
+
+export const getStaticProps = ssprops(async (context) => {
     const db = await DB()
     return {
         categoryid: context.params!.categoryid,
         posts: tojsonlike(await db.collection("posts").find({ category: context.params!.categoryid }).sort({ star:-1, end_date:-1 }).toArray())
     }
-})
+},5)
