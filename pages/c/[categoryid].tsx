@@ -39,4 +39,4 @@ export const getStaticProps = ssprops(async (context) => {
         categoryid: context.params!.categoryid,
         posts: tojsonlike(await db.collection("posts").find({ category: context.params!.categoryid }).sort({ star:-1, end_date:-1 }).toArray())
     }
-},5)
+})

@@ -34,4 +34,4 @@ export const getStaticProps = ssprops(async () => {
         page: tojsonlike(await db.collection("pages").findOne({_id:""})),
         posts: tojsonlike(await db.collection("posts").find({ star: true }).sort({ end_date:-1 }).toArray())
     }
-},5)
+})

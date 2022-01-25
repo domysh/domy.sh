@@ -2,7 +2,7 @@ import { MongoClient } from "mongodb"
 import { GetServerSidePropsContext, GetStaticPaths, GetStaticPropsContext, GetStaticPropsResult, PreviewData } from "next"
 import { ParsedUrlQuery } from "querystring"
 import { Category, LinkObject, MetaInfo, Page, PageInfo, PublicInfo } from "../modules/interfaces"
-import { tojsonlike } from "./utils"
+import { globalRevalidationTime, tojsonlike } from "./utils"
 
 export const DBpromise = (async () => {
     const conn = new MongoClient(process.env.MONGO as string)
@@ -74,7 +74,7 @@ export function sprops(fn?:serverSitePropsFunc) {
 export type serverStaticPropsFunc
                  = (context:GetStaticPropsContext) => Promise<{[key:string]:any}>
 
-export function ssprops(fn?:serverStaticPropsFunc, revalidate?:number) {
+export function ssprops(fn?:serverStaticPropsFunc, revalidate:number|null = globalRevalidationTime) {
     return async function(context:GetStaticPropsContext) {
         let result:any = {}
         if (fn != null)

@@ -16,4 +16,4 @@ const Render = ({ infos }:{infos:PublicInfo}) => {
     </DefaultLayout></Infos>)
 }; export default Render
 
-export const getStaticProps = ssprops(async ()=>{return {}},5)
+export const getStaticProps = ssprops()
