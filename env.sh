@@ -8,7 +8,7 @@ if [ -f ".env" ]; then
 fi
 
 GENERATED_SECRET=`dd if=/dev/random bs=32 count=1 2>/dev/null | od -An -tx1 | tr -d ' \t\n'`
-echo "MONGO=mongodb://user:password@host.docker.internal:port/dbname?authSource=dbauth" >> .env
+echo "MONGO=mongodb://user:password@172.17.0.1:port/dbname?authSource=dbauth" >> .env
 echo "NEXTAUTH_URL=http://external_url/" >> .env
 echo "GOOGLE_CLIENT_ID=" >> .env
 echo "GOOGLE_CLIENT_SECRET=" >> .env
