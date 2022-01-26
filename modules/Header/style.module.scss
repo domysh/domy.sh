@@ -47,8 +47,6 @@
     z-index: 2;
 }
 
-
-
 .subtitle{
     @include normal_font();
     font-size: .4em;
@@ -67,7 +65,7 @@
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    > *{
+    * {
         @include header_darkborder();
         max-height: 80%;
         background-repeat: no-repeat;
