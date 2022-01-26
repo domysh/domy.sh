@@ -32,7 +32,6 @@ export const Header = () => {
         <Image
           src={profileImg}
           alt="Profile Image"
-          placeholder="blur"
           objectFit="contain" />
       </Col>
     </Row>
