@@ -24,7 +24,7 @@ export function DefaultLayout({ children }: {children:any}) {
                 <title>{site_title}</title>
                 <meta itemProp="image" content="/favicon.ico"  />
                 <link itemProp="image" href="/favicon.ico" />
-                <meta property="og:image" content="/favicon.ico" />
+                <meta property="og:image" content="https://domysh.com/favicon.ico" />
             </Head>
             <NavBar />
             <Header />
