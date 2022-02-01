@@ -2,9 +2,10 @@ import Link from "next/link"
 import React from "react"
 import { OverlayTrigger, Tooltip } from "react-bootstrap"
 import style from "./style.module.scss"
-import { Category, Post, PublicInfo } from "../interfaces"
+import { Category, Post } from "../interfaces"
 import { getCategory, MdPost } from "../utils"
 import { categoryIconColor, fakeIcon } from "."
+import { EmojiRender } from "../EmojiRender"
 
 const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
@@ -69,7 +70,7 @@ export const PostBox = ({ post }: { post:Post }) => {
     const currentCategory = getCategory(post.category)
     const categoryContent = <CategoryButton category={currentCategory} />
     const star = <Star star={post.star} />
-    const description = <MdPost>{post.description}</MdPost>
+    const description = <EmojiRender><MdPost>{post.description}</MdPost></EmojiRender>
 
     return <div className={style.box} id={post._id}>
         <div className={style.head}>

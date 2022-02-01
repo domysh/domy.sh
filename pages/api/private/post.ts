@@ -5,7 +5,7 @@ import { validData } from "../../../js/utils"
 import { NextApiRequest, NextApiResponse } from "next"
 import { ObjectId } from "mongodb"
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
     const db = await DB()
     const session = await getSession({ req })
     if (session == null)
@@ -15,8 +15,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const validate = validData(req.body, {
             _id:"string",
             title:"required|string",
-            description:"required|string",
-            category:"required|string",
+            description:"present|string",
+            category:"present|string",
             star:"required|boolean",
             date:"required|string",
             end_date:"required|string"

@@ -47,13 +47,25 @@ export type PageInfo = {
     highlighted: boolean
 }
 
-
 export type PublicInfo = {
     meta: MetaInfo
     links: LinkObject[]
     pages: PageInfo[]
     categories: Category[]
 }
+
+export type FileInfo = {
+    filename: string
+    _id: string
+}
+
+export type AdminInfos = [
+    Post[],
+    Page[],
+    LinkObject[],
+    Category[],
+    FileInfo[]
+]
 
 export type PublicProps = {
     infos: PublicInfo

@@ -3,7 +3,7 @@ import { getSession } from "next-auth/react"
 import { validData } from "../../../js/utils"
 import { NextApiRequest, NextApiResponse } from "next"
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
     const db = await DB()
     const session = await getSession({ req })
     if (session == null)
@@ -12,8 +12,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const validate = validData(req.body, {
             _id:"required|string",
             name:"required|string",
-            description:"required|string",
-            content:"required|string",
+            description:"present|string",
+            content:"present|string",
             highlighted:"required|boolean",
             create:"required|boolean",
         });
