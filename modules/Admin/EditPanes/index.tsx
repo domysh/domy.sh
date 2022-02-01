@@ -7,6 +7,7 @@ import { useContext, useState } from "react";
 import Popup from "reactjs-popup";
 import { InfosContext } from "../../Context/Infos";
 import { AdminDataReload } from "../";
+import { FileChooser } from "./FileEdit";
 
 export * from "./CategoryEdit"
 export * from "./PostEdit"
@@ -61,10 +62,10 @@ export const dataDelete = (privateUrl:string, name:string, request:any, setError
 
 export const PanePopup = ({ show, children }:{ show:(s:()=>void)=>JSX.Element, children:(s:()=>void)=>JSX.Element }) => {
     const [open, setOpen] = useState(false);
-    const closeModal = () => setOpen(false);
+    const closeModal = () => {setOpen(false);}
     return (<>
         {children(()=>{setOpen(true)})}
-        <Popup open={open} closeOnDocumentClick onClose={closeModal} closeOnEscape={false}>
+        <Popup open={open} onClose={closeModal} closeOnEscape={false} modal nested>
             <div className={style.panewindow}>
                 <div className="center-flex" style={{height:"100%"}}>
                     <Container style={{width:"100%"}}>
@@ -88,12 +89,18 @@ export const EditMetas = ({close}:{close:()=>void}) => {
     const [site_name, setSitename] = useState(infos.meta.site_name)
     const [description, setDescription] = useState(infos.meta.description)
     const [footer, setFooter] = useState(infos.meta.footer)
+    const [profile_img, setProfileImg] = useState(infos.meta.profile_img)
+    const [header_img, setHeaderImg] = useState(infos.meta.header_img)
     const [name, setName] = useState(infos.meta.name)
     const [error, setError] = useState<string|null>(null);
 
-    const original = site_name === infos.meta.site_name && description === infos.meta.description && footer === infos.meta.footer && name === infos.meta.name
+    const original = site_name === infos.meta.site_name && description === infos.meta.description && footer === infos.meta.footer &&
+            name === infos.meta.name && profile_img === infos.meta.profile_img && header_img === infos.meta.header_img
 
-    const submitData = dataEdit("meta", {site_name, description, footer, name}, setError, close)
+    const submitData = dataEdit("meta", {site_name, description, footer, name,
+                        profile_img:profile_img?profile_img:"",
+                        header_img:header_img?header_img:""
+                    }, setError, close)
 
     return <>
         <h1 style={{ textAlign:"center" }}>
@@ -122,6 +129,18 @@ export const EditMetas = ({close}:{close:()=>void}) => {
             defaultValue={infos.meta.footer}
             onChange={(v)=>{setFooter(v.text)}}
         />
+        <div style={{marginTop:"40px"}} />
+        <div className="center-flex">
+            <div>
+                Profile Image
+                <FileChooser onChange={(file)=>{setProfileImg(file?file._id:undefined)}} file={profile_img} />
+            </div>
+            <div style={{marginLeft:"50px"}} />
+            <div>
+                Header Image
+                <FileChooser onChange={(file)=>{setHeaderImg(file?file._id:undefined)}} file={header_img}/>
+            </div>
+        </div> 
         {error?
             <Alert variant="danger" style={{marginTop:"20px"}}>
                 {error}

@@ -11,6 +11,8 @@ export type MetaInfo = {
     description: string
     site_name: string
     footer: string
+    header_img?: string
+    profile_img?: string
 }
 
 export type Page = {
@@ -52,6 +54,7 @@ export type PublicInfo = {
     links: LinkObject[]
     pages: PageInfo[]
     categories: Category[]
+    publicurl: string
 }
 
 export type FileInfo = {
@@ -66,8 +69,4 @@ export type AdminInfos = [
     Category[],
     FileInfo[]
 ]
-
-export type PublicProps = {
-    infos: PublicInfo
-}
 

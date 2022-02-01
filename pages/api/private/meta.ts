@@ -15,7 +15,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             site_name:"string",
             footer:"string",
             description:"string",
-            name:"string"
+            name:"string",
+            header_img:"string",
+            profile_img:"string"
         });
         if (validate.valid){
             await db.collection("static").updateOne({_id:"meta"},{$set:validate.data})

@@ -52,7 +52,9 @@ export const getPublicInfo = async ():Promise<PublicInfo> => {
     
     page_static.map((obj) => pages.push({path:"/"+obj._id,name:obj.name,highlighted:obj.highlighted}))
 
-    return { meta, links, pages, categories }
+    const publicurl = process.env.NEXTAUTH_URL?process.env.NEXTAUTH_URL:""
+
+    return { meta, links, pages, categories, publicurl }
 } 
 
 export type serverSitePropsFunc
