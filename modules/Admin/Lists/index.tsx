@@ -1,5 +1,5 @@
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { CircleBtn } from "..";
+import { AdminDataReload, CircleBtn } from "..";
 import { Error404 } from "../../Errors";
 import { AdminInfos } from "../../interfaces";
 import { CategoryEdit, PostEdit, LinkEdit, PageEdit, PanePopup } from "../EditPanes";
@@ -7,6 +7,7 @@ import style from "../style.module.scss"
 import { ListCategory, ListLink, ListPage, ListPost } from ".";
 import { ListFile } from "./ListFile";
 import { UploadFile } from "../EditPanes/FileEdit";
+import { useContext } from "react";
 
 export * from "./ListCategory"
 export * from "./ListLink"
@@ -36,12 +37,13 @@ const SelectorIcon = ({ to, icon, variant, name, state }:
 
 const addElement = (state: [number, (s:number)=>void], closePane: ()=>void) => {
     const [pane] = state;
+    const reload = useContext(AdminDataReload)
     switch (pane){
         case 0: return <PostEdit close={closePane} />
         case 1: return <PageEdit close={closePane} />
         case 2: return <LinkEdit close={closePane} />
         case 3: return <CategoryEdit close={closePane} />
-        case 4: return <UploadFile close={closePane} />
+        case 4: return <UploadFile onChange={reload} />
         default: return <Error404 />
     }
 }

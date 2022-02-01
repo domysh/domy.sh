@@ -18,13 +18,15 @@ export function DefaultLayout({ children }: {children:any}) {
             break
         }
     }
+    const favicon_url = (new URL("/favicon.ico",infos.publicurl)).href
     return (
         <>
             <Head>
                 <title>{site_title}</title>
-                <meta itemProp="image" content="/favicon.ico"  />
-                <link itemProp="image" href="/favicon.ico" />
-                <meta property="og:image" content="https://domysh.com/favicon.ico" />
+                <meta itemProp="image" content={favicon_url}  />
+                <link itemProp="image" href={favicon_url} />
+                <meta property="og:image" content={favicon_url} />
+                <link rel="icon" href={favicon_url} />
             </Head>
             <NavBar />
             <Header />

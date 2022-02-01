@@ -28,6 +28,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             }
         }
         return res.status(400).json({status:"Bad request"})
+    } else if (req.method === 'POST') {
+        const validate = validData(req.body, { _id:"required|string" })
+        if (validate.valid){
+            try{
+                return res.status(200).json((await db.collection("files").find({_id: validate.data._id}).project({content: false}).toArray())[0])
+            }catch(err){
+                return res.status(400).json({ status: "Filename does not exists!" })
+            }
+        }
+        return res.status(400).json({status:"Bad request"})
     }
     return res.status(405).json({status:"Invalid Method"})
 }
