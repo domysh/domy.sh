@@ -5,9 +5,8 @@ import { marked } from 'marked';
 import sideLineStyle from "./styles/SideLine.module.scss"
 import ReactMarkdown from "react-markdown";
 import { InfosContext } from "./Context/Infos";
-import { useContext, useState } from "react";
-import { Category, PublicInfo } from "./interfaces";
-import { EmojiRender } from "./EmojiRender"
+import { useContext } from "react";
+import { PublicInfo } from "./interfaces";
 import { fakeIcon } from "./Posts";
 
 export const Spacer = () => {
@@ -62,7 +61,8 @@ export const marktext_to_plain = (marktext:string) => {
     return htmlObject.innerText
 }
 
-export const MdPost = ({ children }:{ children:any }) => <EmojiRender>
+export const MdPost = ({ children }:{ children:any }) => (
     <ReactMarkdown unwrapDisallowed disallowedElements={["p"]} >
         {children}
-    </ReactMarkdown></EmojiRender>
+    </ReactMarkdown>
+)

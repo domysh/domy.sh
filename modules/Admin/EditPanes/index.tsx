@@ -4,7 +4,6 @@ import dynamic from 'next/dynamic';
 import 'react-markdown-editor-lite/lib/index.css';
 import ReactMarkdown from "react-markdown";
 import { useContext, useState } from "react";
-import { EmojiRender } from "../../EmojiRender";
 import Popup from "reactjs-popup";
 import { InfosContext } from "../../Context/Infos";
 import { AdminDataReload } from "../";
@@ -49,8 +48,8 @@ export const dataDelete = (privateUrl:string, name:string, request:any, setError
                 body:JSON.stringify(request)
             }).then( res => res.json() ).then(res => {
                 if (res.status === "ok"){
-                    close()
                     reload()
+                    close()
                 }else
                     setError(res.status)
             }).catch(err => {

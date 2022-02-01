@@ -7,7 +7,7 @@ import { EditMetas, PanePopup } from "./EditPanes";
 import { InfosContext } from "../Context/Infos";
 import { useContext, createContext } from "react";
 import { Spacer } from "../utils"
-import { Category, LinkObject, MetaInfo, Page, Post } from "../interfaces";
+import { AdminInfos, Category, FileInfo, LinkObject, MetaInfo, Page, Post } from "../interfaces";
 import { ListElements, ListSelector } from "./Lists";
 import { Loading } from "../Errors";
 
@@ -46,7 +46,7 @@ export const AdminPage = () => {
     const infos = useContext(InfosContext)
 
     const [pane, setPane] = useState<number>(0)
-    const [data, setData] = useState<[Post[],Page[],LinkObject[],Category[]]>([[],[],[],[]])
+    const [data, setData] = useState<AdminInfos>([[],[],[],[],[]])
     const [loaded, setLoaded] = useState<boolean>(false);
 
     useEffect(()=>{
@@ -57,7 +57,8 @@ export const AdminPage = () => {
             infos.links = await fetch("/api/public/links").then( res => res.json() ) as unknown as LinkObject[]
             infos.meta = await fetch("/api/public/meta").then( res => res.json() ) as unknown as MetaInfo
             infos.categories = await fetch("/api/public/categories").then( res => res.json() ) as unknown as Category[]
-            setData([posts,static_pages,infos.links,infos.categories])
+            const files = await fetch("/api/private/file").then( res => res.json() ) as unknown as FileInfo[]
+            setData([posts,static_pages,infos.links,infos.categories,files])
             setLoaded(true)
     })()},[loaded])
         

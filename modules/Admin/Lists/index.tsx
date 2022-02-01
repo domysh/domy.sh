@@ -1,10 +1,12 @@
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { CircleBtn } from "..";
 import { Error404 } from "../../Errors";
-import { Category, LinkObject, Page, Post } from "../../interfaces";
+import { AdminInfos } from "../../interfaces";
 import { CategoryEdit, PostEdit, LinkEdit, PageEdit, PanePopup } from "../EditPanes";
 import style from "../style.module.scss"
 import { ListCategory, ListLink, ListPage, ListPost } from ".";
+import { ListFile } from "./ListFile";
+import { UploadFile } from "../EditPanes/FileEdit";
 
 export * from "./ListCategory"
 export * from "./ListLink"
@@ -39,6 +41,7 @@ const addElement = (state: [number, (s:number)=>void], closePane: ()=>void) => {
         case 1: return <PageEdit close={closePane} />
         case 2: return <LinkEdit close={closePane} />
         case 3: return <CategoryEdit close={closePane} />
+        case 4: return <UploadFile close={closePane} />
         default: return <Error404 />
     }
 }
@@ -50,6 +53,7 @@ export const ListSelector = ({ state }:{ state: [number, (s:number)=>void] }) =>
             <SelectorIcon state={state} icon="fas fa-code" variant="success" name="Static Pages" to={1} />
             <SelectorIcon state={state} icon="fas fa-share-alt-square" variant="warning" name="Social Links" to={2} />
             <SelectorIcon state={state} icon="fab fa-cuttlefish" variant="danger" name="Categories" to={3} />
+            <SelectorIcon state={state} icon="fas fa-upload" variant="info" name="Files" to={4} />
             <PanePopup show={closePane => addElement(state,closePane)}>
                 {open => <CircleBtn onClick={open} icon="fas fa-plus" variant="secondary" className={style.btnlink}/>}
             </PanePopup>
@@ -85,12 +89,13 @@ export const listRender = (Tag:(props:{ value:any })=>JSX.Element,values:any[]) 
     </div>
 }
 
-export const ListElements = ({ data, state }: { data: [Post[],Page[],LinkObject[],Category[]], state: number}) => {
+export const ListElements = ({ data, state }: { data: AdminInfos, state: number}) => {
     switch (state){
         case 0: return <ListPost values={data[state]} />
         case 1: return <ListPage values={data[state]} />
         case 2: return <ListLink values={data[state]} />
         case 3: return <ListCategory values={data[state]} />
+        case 4: return <ListFile values={data[state]} />
         default: return <Error404 />
     }
 }

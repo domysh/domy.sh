@@ -4,7 +4,7 @@ import { validData } from "../../../js/utils"
 import { NextApiRequest, NextApiResponse } from "next"
 import { ObjectId } from "mongodb"
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
     const db = await DB()
     const session = await getSession({ req })
     if (session == null)
@@ -13,10 +13,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (req.method === 'POST') {
         const validate = validData(req.body, {
             _id:"string",
-            name:"required|string",
-            color:"required|string",
-            icon:"required|string",
-            url:"required|string"
+            name:"present|string",
+            color:"present|string",
+            icon:"present|string",
+            url:"present|string"
         });
         if (validate.valid){
             let request = validate.data
