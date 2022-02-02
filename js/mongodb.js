@@ -29,7 +29,7 @@ async function createIndexes(db) {
         ]),
         db.collection("pages").createIndex({ highlighted:1 }),
         db.collection("categories").createIndex({ highlighted:1 }),
-        download_favicon(db)
+        //download_favicon(db)
     ]);
     global.mongo.indexesCreated = true;
 }
