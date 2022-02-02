@@ -1,9 +1,10 @@
-import { Binary, Db, MongoClient } from "mongodb"
+import { Binary, Db } from "mongodb"
 import { GetServerSidePropsContext, GetStaticPaths, GetStaticPropsContext, PreviewData } from "next"
 import { ParsedUrlQuery } from "querystring"
 import { Category, LinkObject, MetaInfo, Page, PageInfo, PublicInfo } from "../modules/interfaces"
 import { globalRevalidationTime, tojsonlike } from "./utils"
 import fs from 'fs';
+import database from "./mongodb"
 
 export const download_favicon = async (db:Db) => {
     const meta = await db.collection("static").findOne({_id:"meta"}) as unknown as MetaInfo
@@ -24,46 +25,7 @@ export const download_favicon = async (db:Db) => {
     }
 }
 
-let init_execute = true
-
-const init = async (db:Db)=>{
-    if (init_execute){
-        console.log("HELLO!")
-        await download_favicon(db)
-        init_execute = false
-    }
-}
-
-
-export const DBpromise = (async () => {
-    const conn = new MongoClient(process.env.MONGO as string)
-    
-    const db = (await conn.connect()).db()
-    await db.collection("static").findOneAndUpdate(
-        {_id:"meta"},
-        {$setOnInsert:{
-            name:"",
-            description:"",
-            site_name:"",
-            footer:""
-        }},
-        {upsert:true}
-    )
-
-    await db.collection("posts").createIndex({ category:1 })
-    await db.collection("posts").createIndex({ star:1 })
-    await db.collection("posts").createIndex({ end_date:1 })
-
-    await db.collection("pages").createIndex({ highlighted:1 })
-
-    await db.collection("categories").createIndex({ highlighted:1 })
-
-    await init(db)
-
-    return db
-})()
-
-export const DB = async () => await DBpromise
+export const DB = async () => await database()
 
 export const getPublicInfo = async ():Promise<PublicInfo> => {
     const db = await DB()
