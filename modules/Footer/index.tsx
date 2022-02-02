@@ -5,12 +5,21 @@ import ReactMarkdown from "react-markdown";
 import style from "./style.module.scss"
 import { Spacer } from "../utils";
 import { InfosContext } from "../Context/Infos";
+import Image from "next/image";
 
 export const Footer = () => {
     const infos = useContext(InfosContext)
     return (<> <Spacer />
     <Container fluid className={style.main_footer}>
-        <img className={style.footer_logo} src="/favicon.ico" alt="Site Icon" placeholder="blur"  />
+        <div className={style.footer_logo}>
+            <Image
+                width="130"
+                height="130"
+                objectFit="contain"
+                src="/favicon.ico"
+                alt="Site Icon" 
+            />
+        </div>
         <div className={style.social_wrapper}>
             <SocialIcons />
         </div>

@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 import { File, IncomingForm } from "formidable";
 import { getSession } from "next-auth/react";
 import fs from 'fs';
-import { filename_simplify, validData } from "../../../js/utils";
+import { filename_simplify } from "../../../js/utils";
 import { randomUUID } from "crypto";
 
 export const config = {

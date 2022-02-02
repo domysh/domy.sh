@@ -6,11 +6,6 @@ import { Spacer } from "../utils";
 import { InfosContext } from "../Context/Infos";
 import Image from "next/image";
 
-/*
-import profileImg from "/img/profile.png"
-import backgroundImg from ''
-*/
-
 export const Header = () => {
   const infos = useContext(InfosContext)
 
@@ -19,19 +14,17 @@ export const Header = () => {
             "/img/header-back.jpg"
   return (<>
     <Row className={`${style.header} g-0`} >
-      <Image
-          src={background_img}
-          alt="Background"
-          layout="fill"
-          priority
-          width="2000"
-          height="2000"
-          objectFit="cover"
-          objectPosition="center"
-          className={style.backimage} />
+        <Image
+            src={background_img}
+            alt="Background"
+            layout="fill"
+            objectFit="cover"
+            objectPosition="center"
+            className={style.backimage}
+            priority />
         <div className={style.darklayer} />
-      <Col xs={12} md={8} lg={6} className={style.text}>
-      {infos.meta.name}
+        <Col xs={12} md={8} lg={6} className={style.text}>
+        {infos.meta.name}
         <div className={style.subtitle}>{infos.meta.description}</div>
         <SocialIcons className={style.social} />
       </Col>
