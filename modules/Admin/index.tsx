@@ -10,6 +10,7 @@ import { Spacer } from "../utils"
 import { AdminInfos, Category, FileInfo, LinkObject, MetaInfo, Page, Post } from "../interfaces";
 import { ListElements, ListSelector } from "./Lists";
 import { Loading } from "../Errors";
+import Head from "next/head";
 
 export const Header = () => {
     const infos = useContext(InfosContext)
@@ -63,6 +64,9 @@ export const AdminPage = () => {
     })()},[loaded])
         
     return <AdminDataReload.Provider value={() => setLoaded(false)}>
+        <Head>
+            <title>Admin Interface</title>
+        </Head>
         <Header />
         <Container>
             <Row className="row-no-margin">
