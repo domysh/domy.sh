@@ -4,7 +4,7 @@ import { validData } from "../../../js/utils"
 import { NextApiRequest, NextApiResponse } from "next"
 import { ObjectId } from "mongodb"
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function handler(req: NextApiRequest, res: NextApiResponse){
     const db = await DB()
     const session = await getSession({ req })
     if (session == null)

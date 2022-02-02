@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 import { getSession } from "next-auth/react";
 import { validData } from "../../../js/utils";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function handler(req: NextApiRequest, res: NextApiResponse){
     const db = await DB()
     const session = await getSession({ req })
     if (session == null)

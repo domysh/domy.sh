@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 import { Binary } from "mongodb"
 import { filename_simplify } from "../../../js/utils"
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function handler(req: NextApiRequest, res: NextApiResponse){
     const db = await DB()
     if (req.method === 'GET') {
         const { filename } = req.query

@@ -34,7 +34,7 @@ const upload_file = async (res:NextApiResponse, file:File) => {
     }
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function handler(req: NextApiRequest, res: NextApiResponse){
     const db = await DB()
     const session = await getSession({ req })
     if (session == null)
