@@ -5,4 +5,3 @@ Dockerfile
 out
 coverage
 .vercel
-/public/favicon.ico

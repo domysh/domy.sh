@@ -91,18 +91,18 @@ export const EditMetas = ({close}:{close:()=>void}) => {
     const [footer, setFooter] = useState(infos.meta.footer)
     const [profile_img, setProfileImg] = useState(infos.meta.profile_img)
     const [header_img, setHeaderImg] = useState(infos.meta.header_img)
-    const [favicon_img, setFaviconImg] = useState(infos.meta.favicon_img)
+    //const [favicon_img, setFaviconImg] = useState(infos.meta.favicon_img)
     const [name, setName] = useState(infos.meta.name)
     const [error, setError] = useState<string|null>(null);
 
     const original = site_name === infos.meta.site_name && description === infos.meta.description && footer === infos.meta.footer &&
-            name === infos.meta.name && profile_img === infos.meta.profile_img && header_img === infos.meta.header_img &&
-            favicon_img === infos.meta.favicon_img
+            name === infos.meta.name && profile_img === infos.meta.profile_img && header_img === infos.meta.header_img
+            // && favicon_img === infos.meta.favicon_img
 
     const submitData = dataEdit("meta", {site_name, description, footer, name,
                         profile_img:profile_img?profile_img:"",
                         header_img:header_img?header_img:"",
-                        favicon_img:favicon_img?favicon_img:"",
+                        //favicon_img:favicon_img?favicon_img:"",
                     }, setError, close)
 
     return <>
@@ -143,11 +143,13 @@ export const EditMetas = ({close}:{close:()=>void}) => {
                 Header Image
                 <FileChooser onChange={(file)=>{setHeaderImg(file?file._id:undefined)}} file={header_img}/>
             </div>
+            {/*
             <div style={{marginLeft:"50px"}} />
             <div>
                 Site Icon
                 <FileChooser onChange={(file)=>{setFaviconImg(file?file._id:undefined)}} file={favicon_img}/>
             </div>
+            */}
         </div> 
         {error?
             <Alert variant="danger" style={{marginTop:"20px"}}>

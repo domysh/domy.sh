@@ -17,12 +17,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             description:"string",
             name:"string",
             header_img:"string",
-            profile_img:"string",
-            favicon_img:"string"
+            profile_img:"string"
+            //favicon_img:"string"
         });
         if (validate.valid){
             await db.collection("static").updateOne({_id:"meta"},{$set:validate.data})
-            await download_favicon(db)
+            //await download_favicon(db)
             return res.status(200).json({status:"ok"})
         }
         return res.status(400).json({status:"Bad request"})
