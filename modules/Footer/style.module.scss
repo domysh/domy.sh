@@ -9,8 +9,6 @@
 
 .footer_logo{
     padding: 20px 30px;
-    max-width: 200px;
-    max-height: 200px;
     @include media-breakpoint-down(sm){
         display: none;
     }

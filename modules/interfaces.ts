@@ -13,6 +13,7 @@ export type MetaInfo = {
     footer: string
     header_img?: string
     profile_img?: string
+    favicon_img?: string
 }
 
 export type Page = {

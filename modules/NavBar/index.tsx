@@ -4,6 +4,7 @@ import { Container, Nav, Navbar } from "react-bootstrap";
 import style from "./style.module.scss"
 import { useRouter } from 'next/router';
 import { InfosContext } from "../Context/Infos";
+import Image from "next/image";
 
 
 export function NavLink({ href, children, className, ...props }:{ href:string, children:any, className?:string}) {
@@ -64,13 +65,13 @@ export const NavBar = () => {
       
     <Container fluid className={style.navbar}>
     <Navbar.Brand as={NavLink} href="/">
-        <img
+        <Image
             src="/favicon.ico"
             width="30"
             height="30"
+            objectFit="contain"
             className="d-inline-block align-top"
             alt="Page Logo"
-            style={{marginRight:"10px"}}
         />
     </Navbar.Brand>
     <Navbar.Toggle ref={nav_collapse_btn} onClick={()=>setCollapsed(!collapsed)} />

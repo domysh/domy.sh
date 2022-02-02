@@ -1,8 +1,39 @@
-import { MongoClient } from "mongodb"
-import { GetServerSidePropsContext, GetStaticPaths, GetStaticPropsContext, GetStaticPropsResult, PreviewData } from "next"
+import { Binary, Db, MongoClient } from "mongodb"
+import { GetServerSidePropsContext, GetStaticPaths, GetStaticPropsContext, PreviewData } from "next"
 import { ParsedUrlQuery } from "querystring"
 import { Category, LinkObject, MetaInfo, Page, PageInfo, PublicInfo } from "../modules/interfaces"
 import { globalRevalidationTime, tojsonlike } from "./utils"
+import fs from 'fs';
+
+export const download_favicon = async (db:Db) => {
+    const meta = await db.collection("static").findOne({_id:"meta"}) as unknown as MetaInfo
+    if (meta && meta.favicon_img){
+        const favicon = await db.collection("files").findOne({_id:meta.favicon_img})
+        if (favicon){
+            const favicon_img = (favicon.content as Binary).buffer
+            await new Promise((resolve, reject)=>{fs.writeFile("public/favicon.ico", favicon_img, (err)=>{
+                if (err) reject(err)
+                else resolve(null)
+            })})
+        }
+    }else{
+        await new Promise((resolve, reject)=>{fs.copyFile("public/default-favicon.ico","public/favicon.ico", (err)=>{
+            if (err) reject(err)
+            else resolve(null)
+        })})
+    }
+}
+
+let init_execute = true
+
+const init = async (db:Db)=>{
+    if (init_execute){
+        console.log("HELLO!")
+        await download_favicon(db)
+        init_execute = false
+    }
+}
+
 
 export const DBpromise = (async () => {
     const conn = new MongoClient(process.env.MONGO as string)
@@ -26,6 +57,8 @@ export const DBpromise = (async () => {
     await db.collection("pages").createIndex({ highlighted:1 })
 
     await db.collection("categories").createIndex({ highlighted:1 })
+
+    await init(db)
 
     return db
 })()
