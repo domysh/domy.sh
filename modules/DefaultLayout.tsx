@@ -3,7 +3,6 @@ import { Container } from 'react-bootstrap'
 import { Footer } from './Footer'
 import { Header } from './Header'
 import { NavBar } from './NavBar'
-import { PublicInfo } from './interfaces'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
 import { InfosContext } from './Context/Infos'
@@ -26,7 +25,7 @@ export function DefaultLayout({ children }: {children:any}) {
                 <meta itemProp="image" content={favicon_url}  />
                 <link itemProp="image" href={favicon_url} />
                 <meta property="og:image" content={favicon_url} />
-                <link rel="icon" href={favicon_url} />
+                <link rel="icon" href="/favicon.ico" />
             </Head>
             <NavBar />
             <Header />

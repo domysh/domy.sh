@@ -5,8 +5,7 @@ import { PostList } from '../modules/Posts'
 import { sprops, DB, ssprops } from '../js/db'
 import { Page, Post, PublicInfo } from '../modules/interfaces'
 import { tojsonlike } from '../js/utils'
-import { Infos, InfosContext } from '../modules/Context/Infos'
-import { useContext } from 'react'
+import { Infos } from '../modules/Context/Infos'
 
 const Render = ({ page, posts, infos }: { infos:PublicInfo, page?:Page, posts:Post[] }) => {
     let description = "Welcome to the home page of my website!"
