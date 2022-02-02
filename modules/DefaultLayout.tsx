@@ -26,7 +26,7 @@ export function DefaultLayout({ children }: {children:any}) {
                 <link itemProp="image" href={favicon_url} />
                 <meta property="og:image" content={favicon_url} />
                 <link rel="icon" href="/favicon.ico" />
-            </Head>
+            </Head>    
             <NavBar />
             <Header />
             <Container>

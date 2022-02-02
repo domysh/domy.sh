@@ -8,4 +8,18 @@ module.exports = {
   images: {
     domains: [deploy_domain]
   },
+  async headers() {
+    return [
+      {
+        // Apply these headers to all routes in your application.
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'self' http://vitals.vercel-insights.com; connect-src 'self' http://vitals.vercel-insights.com;"
+          }
+        ],
+      },
+    ]
+  },
 }
