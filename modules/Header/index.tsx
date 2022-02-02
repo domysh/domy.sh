@@ -20,8 +20,7 @@ export const Header = () => {
             layout="fill"
             objectFit="cover"
             objectPosition="center"
-            className={style.backimage}
-            priority />
+            className={style.backimage} />
         <div className={style.darklayer} />
         <Col xs={12} md={8} lg={6} className={style.text}>
         {infos.meta.name}
