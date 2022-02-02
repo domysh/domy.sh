@@ -62,12 +62,10 @@ export const AdminPage = () => {
             setData([posts,static_pages,infos.links,infos.categories,files])
             setLoaded(true)
     })()},[loaded])
-    const favicon_url = (new URL("/favicon.ico",infos.publicurl)).href
+    
     return <AdminDataReload.Provider value={() => setLoaded(false)}>
         <Head>
             <title>Admin Interface</title>
-            <link rel="icon" href="/favicon.ico" />
-            <meta property="og:image" content={favicon_url} />
         </Head>
         <Header />
         <Container>

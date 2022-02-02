@@ -7,5 +7,5 @@ module.exports = {
   reactStrictMode: !isProd,
   images: {
     domains: [deploy_domain]
-  },
+  }
 }
