@@ -1,6 +1,6 @@
 import { Category } from "../../interfaces"
 import { useState } from "react"
-import { Alert, Button, Form, FormControl, InputGroup } from "react-bootstrap"
+import { Alert, Button, Form, FormControl, InputGroup, Row, Col } from "react-bootstrap"
 import style from "../style.module.scss"
 import { HuePicker, TwitterPicker } from "react-color"
 import { CategoryButton, categoryIconColor } from "../../Posts"
@@ -58,18 +58,28 @@ export const CategoryEdit = ({ category, close }:{ category?:Category, close:()=
             <InputGroup.Text><b>/c/{_id}</b></InputGroup.Text>}
     </InputGroup>
     
-    <div className="center-flex" style={{justifyContent:"space-around"}}>
-        <IconPicker value={icon} onChange={v=>{setIcon(v)}} color={ color !== ""?color:categoryIconColor } />
-        <div style={{transform:"scale(2)",padding:"40px"}} className="center-flex" >
-            <CategoryButton category={currentObj as Category} />
-        </div>
+    <Row>
+        <Col xs={12} md={4}>
+            <div className="center-flex">
+                <IconPicker value={icon} onChange={v=>{setIcon(v)}} color={ color !== ""?color:categoryIconColor } />
+            </div>
+        </Col>
+        <Col xs={12} md={4}>
+            <div className="center-flex" >
+                <div style={{transform:"scale(2)",padding:"60px"}}>
+                <CategoryButton category={currentObj as Category} />
+                </div>
+            </div>
+        </Col>
+        <Col xs={12} md={4}>
         <div className="center-flex" style={{flexDirection:"column"}}>
             <TwitterPicker triangle="hide" color={ color !== ""?color:categoryIconColor } onChangeComplete={ (v:{hex:string})=>{setColor(v.hex)} } />
             <div style={{marginTop:"20px"}}>
                 <HuePicker color={ color !== ""?color:categoryIconColor } onChange={ (v:{hex:string})=>{setColor(v.hex)} } />
             </div>
         </div>
-    </div>
+        </Col>
+    </Row>
     {error?
         <Alert variant="danger" style={{marginTop:"20px"}}>
             {error}

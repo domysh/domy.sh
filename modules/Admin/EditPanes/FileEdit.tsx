@@ -109,7 +109,7 @@ const FileSelectPane = ({ close, setFile }:{ close:()=>void, setFile:(file:FileI
         <div style={{marginTop:"30px"}} />
         <UploadFile onChange={reload_filelist} />
         <div style={{marginTop:"30px"}} />
-        <div style={{height:"50vh", overflowY:"scroll", padding:"20px"}}>
+        <div style={{height:"50vh", overflowY:"auto", padding:"20px"}}>
             {listRender(LinkElement,fileList)}
         </div>
     </>
@@ -119,7 +119,10 @@ export const FileChooser = ({ onChange, file }:{ onChange?:(v:FileInfo|null)=>vo
 
     const [fileSelected, setFile] = useState<FileInfo|null>(null);
 
+    const [loading, setLoading] = useState(false);
+
     useEffect(()=>{if(file){
+        setLoading(true);
         fetch("/api/private/file",{
             method: "POST",
             headers:{
@@ -130,13 +133,17 @@ export const FileChooser = ({ onChange, file }:{ onChange?:(v:FileInfo|null)=>vo
         .then(res => res.json())
         .then(res =>{
             setFile(res as FileInfo)
-        }).catch(()=>{setFile(null)})
+            setLoading(false);
+        }).catch(()=>{
+            setFile(null)
+            setLoading(false);
+        })
     }},[])
 
     useEffect(()=>{onChange?onChange(fileSelected):null},[fileSelected])
 
     return <>
-        <InputGroup className="mb-3">
+        <InputGroup className="mb-3 center-flex">
             <PanePopup show={closePane => <FileSelectPane close={closePane} setFile={setFile} />}>
                 {open => <Button variant="primary" onClick={open}>
                     {fileSelected?"Change File":"Choose File"}
@@ -145,7 +152,7 @@ export const FileChooser = ({ onChange, file }:{ onChange?:(v:FileInfo|null)=>vo
             <InputGroup.Text><b>
                 {fileSelected?
                     <>Selected: <a href={`/api/file/${fileSelected._id}`} target="_blank">{fileSelected.filename}</a></>:
-                    <>No file selected</>}
+                    loading?<>Loading...</>:<>No file selected</>}
             </b></InputGroup.Text>
         </InputGroup>
     </>

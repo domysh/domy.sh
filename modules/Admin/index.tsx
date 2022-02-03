@@ -11,6 +11,7 @@ import { AdminInfos, Category, FileInfo, LinkObject, MetaInfo, Page, Post } from
 import { ListElements, ListSelector } from "./Lists";
 import { Loading } from "../Errors";
 import Head from "next/head";
+import style from "./style.module.scss"
 
 export const Header = () => {
     const infos = useContext(InfosContext)
@@ -64,22 +65,22 @@ export const AdminPage = () => {
     })()},[loaded])
     
     return <AdminDataReload.Provider value={() => setLoaded(false)}>
-        <Head>
-            <title>Admin Interface</title>
-        </Head>
-        <Header />
-        <Container>
-            <Row className="row-no-margin">
-                <Col xs={12} md={1} className="g-0">
-                    <ListSelector state={[pane,setPane]} />
-                </Col>
-                <Col xs={12} md={11} className="g-0">
-                    <ListElements data={data} state={pane} />
-                </Col>
-            </Row>
-        </Container>
-        {loaded?null:<Loading />}
-        <Spacer />
-        <Spacer />
-    </AdminDataReload.Provider>
+            <Head>
+                <title>Admin Interface</title>
+            </Head>
+            <Header />
+            <Container>
+                <Row className="row-no-margin">
+                    <Col xs={12} md={1} className="g-0">
+                        <ListSelector state={[pane,setPane]} />
+                    </Col>
+                    <Col xs={12} md={11} className="g-0">
+                        <ListElements data={data} state={pane} />
+                    </Col>
+                </Row>
+                
+            </Container>
+            {loaded?null:<Loading />}
+
+        </AdminDataReload.Provider>
 }
