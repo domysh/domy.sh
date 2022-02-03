@@ -1,4 +1,4 @@
-import { Alert, Button, Container, FormControl, InputGroup } from "react-bootstrap"
+import { Alert, Button, Col, Container, FormControl, InputGroup, Row } from "react-bootstrap"
 import style from "../style.module.scss"
 import dynamic from 'next/dynamic';
 import 'react-markdown-editor-lite/lib/index.css';
@@ -8,6 +8,8 @@ import Popup from "reactjs-popup";
 import { InfosContext } from "../../Context/Infos";
 import { AdminDataReload } from "../";
 import { FileChooser } from "./FileEdit";
+import { Header } from "../../Header";
+import { MetaInfo } from "../../interfaces";
 
 export * from "./CategoryEdit"
 export * from "./PostEdit"
@@ -67,13 +69,17 @@ export const PanePopup = ({ show, children }:{ show:(s:()=>void)=>JSX.Element, c
         {children(()=>{setOpen(true)})}
         <Popup open={open} onClose={closeModal} closeOnEscape={false} modal nested>
             <div className={style.panewindow}>
-                <div className="center-flex" style={{height:"100%"}}>
-                    <Container style={{width:"100%"}}>
+                <div className={style.inner_div}> 
+                    <Container style={{width:"100%",height:"100%"}}>
+                        <div style={{paddingBottom:"70px"}} />
                         <div className={style.panewindow_header}>
                             <i className="fas fa-times" onClick={closeModal} />
                         </div>
-                        {show(closeModal)}
-                    </Container>
+                        <div>
+                            {show(closeModal)}
+                        </div>
+                        <div style={{paddingTop:"70px"}} />s
+                    </Container>      
                 </div>
             </div>
         </Popup>    
@@ -105,12 +111,16 @@ export const EditMetas = ({close}:{close:()=>void}) => {
                         //favicon_img:favicon_img?favicon_img:"",
                     }, setError, close)
 
+    const actualMeta:MetaInfo = {site_name, description, footer, name,profile_img:profile_img?profile_img:"",header_img:header_img?header_img:""}
+
     return <>
         <h1 style={{ textAlign:"center" }}>
             Edit Site Meta Information
             {original?<Button className={style.donebtn} variant="success" disabled><i className="fas fa-check" /></Button>:
                 <Button className={style.donebtn} variant="success" onClick={submitData}><i className="fas fa-check" /></Button>}
         </h1>
+        <div style={{marginTop:"40px"}} />
+        <Header meta={actualMeta}/>
         <div style={{marginTop:"40px"}} />
         <InputGroup className="mb-3" onChange={(v)=>{setName((v.target as HTMLInputElement).value)}}>
             <InputGroup.Text id="input-name"><b>Name</b></InputGroup.Text>
@@ -133,16 +143,15 @@ export const EditMetas = ({close}:{close:()=>void}) => {
             onChange={(v)=>{setFooter(v.text)}}
         />
         <div style={{marginTop:"40px"}} />
-        <div className="center-flex">
-            <div>
-                Profile Image
+        <Row>
+            <Col xs={12} md={6}style={{textAlign:"center"}}>
+                <h4>Profile Image</h4>
                 <FileChooser onChange={(file)=>{setProfileImg(file?file._id:undefined)}} file={profile_img} />
-            </div>
-            <div style={{marginLeft:"50px"}} />
-            <div>
-                Header Image
+            </Col>
+            <Col xs={12} md={6} style={{textAlign:"center"}}>
+                <h4>Header Image</h4>
                 <FileChooser onChange={(file)=>{setHeaderImg(file?file._id:undefined)}} file={header_img}/>
-            </div>
+            </Col>
             {/*
             <div style={{marginLeft:"50px"}} />
             <div>
@@ -150,7 +159,7 @@ export const EditMetas = ({close}:{close:()=>void}) => {
                 <FileChooser onChange={(file)=>{setFaviconImg(file?file._id:undefined)}} file={favicon_img}/>
             </div>
             */}
-        </div> 
+        </Row>
         {error?
             <Alert variant="danger" style={{marginTop:"20px"}}>
                 {error}

@@ -6,6 +6,7 @@ import { NavBar } from './NavBar'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
 import { InfosContext } from './Context/Infos'
+import { Spacer } from './utils'
 
 export function DefaultLayout({ children }: {children:any}) {
     const infos = useContext(InfosContext)
@@ -26,6 +27,7 @@ export function DefaultLayout({ children }: {children:any}) {
             </Head>    
             <NavBar />
             <Header />
+            <Spacer />
             <Container>
                 {children}
             </Container>

@@ -132,3 +132,14 @@ blockquote {
   blockquote p {
     display: inline;
   }
+
+::-webkit-scrollbar {
+    width: 12px;
+    margin:3px;
+    background: #333;
+    cursor: pointer;
+}
+::-webkit-scrollbar-thumb {
+    background: #757575;
+    border-radius: 8px;
+}

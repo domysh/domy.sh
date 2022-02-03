@@ -5,9 +5,10 @@ import style from  "./style.module.scss"
 import { Spacer } from "../utils";
 import { InfosContext } from "../Context/Infos";
 import Image from "next/image";
+import { MetaInfo } from "../interfaces";
 
-export const Header = () => {
-  const infos = useContext(InfosContext)
+export const Header = ({meta}:{meta?:MetaInfo}) => {
+  const infos = meta?{meta,publicurl:useContext(InfosContext).publicurl}:useContext(InfosContext)
 
   const background_img = infos.meta.header_img?
         new URL(`/api/file/${infos.meta.header_img}`,infos.publicurl).href:
@@ -38,7 +39,6 @@ export const Header = () => {
           objectFit="contain" />:null}
       </Col>
     </Row>
-    <Spacer />
   </>);
 }
 

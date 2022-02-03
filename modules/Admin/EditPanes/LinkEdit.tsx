@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { LinkObject } from "../../interfaces"
-import { Alert, Button, FormControl, InputGroup } from "react-bootstrap"
+import { Alert, Button, Col, FormControl, InputGroup, Row } from "react-bootstrap"
 import style from "../style.module.scss"
 import { HuePicker, TwitterPicker } from "react-color"
 import { categoryIconColor } from "../../Posts"
@@ -41,18 +41,28 @@ export const LinkEdit = ({ link, close }:{ link?:LinkObject, close:()=>void }) =
         <FormControl defaultValue={url} onChange={(v)=>{setUrl((v.target as HTMLInputElement).value)}} />
     </InputGroup>
     
-    <div className="center-flex" style={{justifyContent:"space-around"}}>
-        <IconPicker value={icon} onChange={v=>{setIcon(v)}} color={ color !== ""?color:categoryIconColor } />
-        <div style={{transform:"scale(2)",padding:"40px"}} className="center-flex" >
-            <SocialIcon link={currentObj as LinkObject} />
-        </div>
-        <div className="center-flex" style={{flexDirection:"column"}}>
-            <TwitterPicker triangle="hide" color={ color !== ""?color:categoryIconColor } onChangeComplete={ (v:{hex:string})=>{setColor(v.hex)} } />
-            <div style={{marginTop:"20px"}}>
-                <HuePicker color={ color !== ""?color:categoryIconColor } onChange={ (v:{hex:string})=>{setColor(v.hex)} } />
+    <Row>
+        <Col xs={12} md={4}>
+            <div className="center-flex">
+            <IconPicker value={icon} onChange={v=>{setIcon(v)}} color={ color !== ""?color:categoryIconColor } />
             </div>
-        </div>
-    </div>
+        </Col>
+        <Col xs={12} md={4}>
+            <div className="center-flex" >
+                <div style={{transform:"scale(2)",padding:"60px"}}>
+                <SocialIcon link={currentObj as LinkObject} />
+                </div>
+            </div>
+        </Col>
+        <Col xs={12} md={4}>
+            <div className="center-flex" style={{flexDirection:"column",height:"100%"}}>
+                <TwitterPicker triangle="hide" color={ color !== ""?color:categoryIconColor } onChangeComplete={ (v:{hex:string})=>{setColor(v.hex)} } />
+                <div style={{marginTop:"20px"}}>
+                    <HuePicker color={ color !== ""?color:categoryIconColor } onChange={ (v:{hex:string})=>{setColor(v.hex)} } />
+                </div>
+            </div>
+        </Col>
+    </Row>
     {error?
         <Alert variant="danger" style={{marginTop:"20px"}}>
             {error}

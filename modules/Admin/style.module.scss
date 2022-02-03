@@ -5,6 +5,7 @@
     @include media-breakpoint-down(md){
         padding: 40px;
     }
+    margin:0
 }
 
 .btn{
@@ -53,7 +54,16 @@
 }
 
 .list{
+    overflow-y: auto;
     width: 100%;
+    height: calc(100vh - 210px);
+    padding: 10px;
+    @include media-breakpoint-down(md){
+        height: calc(100vh - 290px);
+    }
+    @include media-breakpoint-down(sm){
+        height: calc(100vh - 320px);
+    }
 }
 
 .arrow{
@@ -62,8 +72,8 @@
 
 .metas{
     @extend .center-flex;
-    margin-bottom: 8px;
-    margin-right: 10px;
+    padding-bottom: 8px;
+    padding-right: 10px;
 }
 
 .header_post{
@@ -77,6 +87,7 @@
     @include media-breakpoint-down(md){
         flex-direction: row;
         padding-bottom: 30px;
+        padding-right: 0;
     }
 }
 
@@ -84,7 +95,12 @@
     width: 100vw;
     height: 100vh;
     background-color: #222D;
-    padding: 50px;
+    > .inner_div{
+        @extend .center-flex;
+        height: 100%;
+        flex-direction: column;
+        overflow: auto;
+    }
 }
 
 .panewindow_header > i{
