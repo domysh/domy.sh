@@ -78,7 +78,7 @@ export const PanePopup = ({ show, children }:{ show:(s:()=>void)=>JSX.Element, c
                         <div>
                             {show(closeModal)}
                         </div>
-                        <div style={{paddingTop:"70px"}} />s
+                        <div style={{paddingTop:"70px"}} />
                     </Container>      
                 </div>
             </div>
