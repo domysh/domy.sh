@@ -30,7 +30,7 @@ export const download_favicon = async (db:Db) => {
     }
 }
 
-export const DB = async () => await database()
+export const DB:()=>Promise<Db> = async () => await database()
 
 export const getPublicInfo = async ():Promise<PublicInfo> => {
     const db = await DB()
