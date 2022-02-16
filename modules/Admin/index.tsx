@@ -6,12 +6,10 @@ import { logout } from "../Auth";
 import { EditMetas, PanePopup } from "./EditPanes";
 import { InfosContext } from "../Context/Infos";
 import { useContext, createContext } from "react";
-import { Spacer } from "../utils"
 import { AdminInfos, Category, FileInfo, LinkObject, MetaInfo, Page, Post } from "../interfaces";
 import { ListElements, ListSelector } from "./Lists";
 import { Loading } from "../Errors";
 import Head from "next/head";
-import style from "./style.module.scss"
 
 export const Header = () => {
     const infos = useContext(InfosContext)
@@ -54,13 +52,18 @@ export const AdminPage = () => {
     useEffect(()=>{
         if (loaded) return;
         else (async () =>{
-            const posts = await fetch("/api/public/posts").then( res => res.json() ) as unknown as Post[]
-            const static_pages = await fetch("/api/public/pages").then( res => res.json() ) as unknown as Page[]
-            infos.links = await fetch("/api/public/links").then( res => res.json() ) as unknown as LinkObject[]
-            infos.meta = await fetch("/api/public/meta").then( res => res.json() ) as unknown as MetaInfo
-            infos.categories = await fetch("/api/public/categories").then( res => res.json() ) as unknown as Category[]
-            const files = await fetch("/api/private/file").then( res => res.json() ) as unknown as FileInfo[]
-            setData([posts,static_pages,infos.links,infos.categories,files])
+            const data = await Promise.all([
+                fetch("/api/public/posts").then( res => res.json() ) as unknown as Post[],
+                fetch("/api/public/pages").then( res => res.json() ) as unknown as Page[],
+                fetch("/api/public/links").then( res => res.json() ) as unknown as LinkObject[],
+                fetch("/api/public/categories").then( res => res.json() ) as unknown as Category[],
+                fetch("/api/private/file").then( res => res.json() ) as unknown as FileInfo[],
+                fetch("/api/public/meta").then( res => res.json() ) as unknown as MetaInfo
+            ])
+            infos.links = data[2]
+            infos.categories = data[3]
+            infos.meta = data[5]
+            setData([data[0],data[1],data[2],data[3],data[4]])
             setLoaded(true)
     })()},[loaded])
     
