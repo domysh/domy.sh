@@ -6,6 +6,17 @@ import { SessionProvider } from "next-auth/react"
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return <>
+    <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+          ga('create', 'UA-172882427-1', 'auto');
+          ga('send', 'pageview');
+        `}
+    </Script>
+    <Script
+      src="https://www.google-analytics.com/analytics.js"
+      strategy="afterInteractive"
+    />
     <SessionProvider session={session}>
         <EmojiRender>
             <Head>
