@@ -3,6 +3,7 @@ import { EmojiRender } from '../modules/EmojiRender'
 import Head from 'next/head'
 import { OverlayProvider } from '../modules/Fullscreen'
 import { SessionProvider } from "next-auth/react"
+import Script from 'next/script'
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return <>
