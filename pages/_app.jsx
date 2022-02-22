@@ -35,7 +35,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
               location="bottom"
               buttonText="That's Ok!"
               cookieName="cookie-consent"
-              style={{ background: "#0B0B0B", borderTop: "6px solid #000" }}
+              style={{ background: "#0B0B0BDD", borderTop: "6px solid #000"}}
               buttonStyle={{ color: "#4e503b", fontSize: "16px" }}
             >
             This website uses cookies to enhance the user experience.

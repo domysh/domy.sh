@@ -26,7 +26,7 @@ export const PageEdit = ({ page, close }:{ page?:Page, close:()=>void }) => {
     }
 
     const currentObj = {_id,highlighted,content,description,name,create:page?false:true}
-
+    
     const submitData = dataEdit("page", currentObj, setError, close)
     const deleteData = dataDelete("page",name,{_id:page?._id},setError, close)
 
