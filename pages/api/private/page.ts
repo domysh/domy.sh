@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(401).json({status:"unauthorized"})
     if (req.method === 'POST') {
         const validate = validData(req.body, {
-            _id:"required|string",
+            _id:"present|string",
             name:"required|string",
             description:"present|string",
             content:"present|string",
