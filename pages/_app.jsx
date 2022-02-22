@@ -5,6 +5,7 @@ import { OverlayProvider } from '../modules/Fullscreen'
 import { SessionProvider } from "next-auth/react"
 import Script from 'next/script'
 import '@fortawesome/fontawesome-free/css/all.min.css'
+import CookieConsent from 'react-cookie-consent'
 
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
@@ -30,6 +31,15 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
             <OverlayProvider>
                 <Component {...pageProps} />
             </OverlayProvider>
+          <CookieConsent
+              location="bottom"
+              buttonText="That's Ok!"
+              cookieName="cookie-consent"
+              style={{ background: "#0B0B0B", borderTop: "6px solid #000" }}
+              buttonStyle={{ color: "#4e503b", fontSize: "16px" }}
+            >
+            This website uses cookies to enhance the user experience.
+          </CookieConsent>
         </EmojiRender>
     </SessionProvider>
   </>
