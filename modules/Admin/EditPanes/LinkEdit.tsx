@@ -49,7 +49,7 @@ export const LinkEdit = ({ link, close }:{ link?:LinkObject, close:()=>void }) =
         </Col>
         <Col xs={12} md={4}>
             <div className="center-flex" >
-                <div style={{transform:"scale(2)",padding:"60px"}}>
+                <div style={{transform:"scale(2)",padding:"60px",pointerEvents: "none"}}>
                 <SocialIcon link={currentObj as LinkObject} />
                 </div>
             </div>
