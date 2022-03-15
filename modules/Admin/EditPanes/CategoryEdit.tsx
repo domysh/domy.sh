@@ -66,7 +66,7 @@ export const CategoryEdit = ({ category, close }:{ category?:Category, close:()=
         </Col>
         <Col xs={12} md={4}>
             <div className="center-flex" >
-                <div style={{transform:"scale(2)",padding:"60px"}}>
+                <div style={{transform:"scale(2)",padding:"60px",pointerEvents: "none"}}>
                 <CategoryButton category={currentObj as Category} />
                 </div>
             </div>
