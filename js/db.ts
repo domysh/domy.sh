@@ -38,17 +38,17 @@ export const getPublicInfo = async ():Promise<PublicInfo> => {
                     .findOne({_id:"meta"})) as unknown as MetaInfo
 
     let links:LinkObject[] = tojsonlike(await db.collection("links")
-            .find({}).toArray()) as LinkObject[]
+            .find({}).sort({"_id":1}).toArray()) as LinkObject[]
 
     let pages:PageInfo[] = []
 
     let categories = await db.collection("categories")
-                .find({}).toArray() as unknown as Category[]
+                .find({}).sort({"_id":1}).toArray() as unknown as Category[]
                 
     categories.map((obj)=>{ pages.push({path:"/c/"+obj._id,name:obj.name,highlighted:obj.highlighted}) })
 
     let page_static = await db.collection("pages")
-                .find({}).project({_id:true,name:true,highlighted:true}).toArray() as unknown as Page[]
+                .find({}).sort({"_id":1}).project({_id:true,name:true,highlighted:true}).toArray() as unknown as Page[]
     
     page_static.map((obj) => pages.push({path:"/"+obj._id,name:obj.name,highlighted:obj.highlighted}))
 
