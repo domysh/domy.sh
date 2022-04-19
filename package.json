@@ -25,6 +25,7 @@
     "react-twemoji": "^0.4.0",
     "reactjs-popup": "^2.0.5",
     "sass": "^1.49.8",
+    "sharp": "^0.30.4",
     "validatorjs": "^3.22.1"
   },
   "devDependencies": {
