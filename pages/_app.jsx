@@ -3,24 +3,39 @@ import { EmojiRender } from '../modules/EmojiRender'
 import Head from 'next/head'
 import { OverlayProvider } from '../modules/Fullscreen'
 import { SessionProvider } from "next-auth/react"
-import Script from 'next/script'
+import { useEffect } from "react";
+import Script from "next/script";
+import { useRouter } from "next/router";
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import CookieConsent from 'react-cookie-consent'
-
+import * as gtag from "../js/gtag";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
+  const router = useRouter();
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      gtag.pageview(url);
+    };
+    router.events.on("routeChangeComplete", handleRouteChange);
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
+  }, [router.events]);
+
+  
   return <>
+    <Script
+        strategy="afterInteractive"
+        src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
+      />
     <Script id="google-analytics" strategy="afterInteractive">
         {`
-          window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-          ga('create', 'UA-172882427-1', 'auto');
-          ga('send', 'pageview');
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){window.dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${gtag.GA_TRACKING_ID}');
         `}
-    </Script>
-    <Script
-      src="https://www.google-analytics.com/analytics.js"
-      strategy="afterInteractive"
-    />
+      </Script>
     <SessionProvider session={session}>
         <EmojiRender>
             <Head>
