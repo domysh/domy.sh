@@ -1,7 +1,7 @@
 import { DB, download_favicon } from "../../../js/db"
 import { getSession } from "next-auth/react"
 
-import { validData } from "../../../js/utils"
+import { validData, refresh_pages } from "../../../js/utils"
 import { NextApiRequest, NextApiResponse } from "next"
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse){
