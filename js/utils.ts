@@ -1,5 +1,7 @@
-import { ObjectId } from "mongodb";
+import { Db, ObjectId } from "mongodb";
+import { NextApiResponse } from "next";
 import Validator from "validatorjs"
+import { Category, Page } from "../modules/interfaces";
 
 function isDict(v:any) {
     return typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
@@ -64,4 +66,17 @@ export const filename_simplify = (filename:string) => {
     }).join("")
 }
 
-export const globalRevalidationTime = process.env.REVALIDATE?parseInt(process.env.REVALIDATE):10
+export const refresh_pages = async (res:NextApiResponse, db:Db) => {
+    await Promise.all([
+        res.revalidate('/'),
+        res.revalidate('/c'),
+        (async () => {
+            const pages = await db.collection("pages").find({}).project({_id:true}).toArray() as unknown as Page[]
+            await Promise.all(pages.map( (ele) => res.revalidate(`/${ele._id}`) ))
+        })(),
+        (async () => {
+            const categories = await db.collection("categories").find({}).project({_id:true}).toArray() as unknown as Category[]
+            await Promise.all(categories.map( (ele) => res.revalidate(`/c/${ele._id}`) ))
+        })(),
+    ]);
+}

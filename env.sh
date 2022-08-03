@@ -15,3 +15,4 @@ echo "GOOGLE_CLIENT_SECRET=" >> .env
 echo "ADMIN_EMAIL=me@example.com" >> .env
 echo "API_SECRET=$GENERATED_SECRET" >> .env
 echo "PORT=8080" >> .env
+echo "NEXT_PUBLIC_GA_ID=G-AAAAAAAA" >> .env

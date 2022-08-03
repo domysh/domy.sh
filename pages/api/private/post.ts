@@ -1,7 +1,7 @@
 import { DB } from "../../../js/db"
 import { getSession } from "next-auth/react"
 
-import { validData } from "../../../js/utils"
+import { refresh_pages, validData } from "../../../js/utils"
 import { NextApiRequest, NextApiResponse } from "next"
 import { ObjectId } from "mongodb"
 
@@ -36,6 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             if (request._id == null){
                 await db.collection("posts").insertOne(request)
+                await refresh_pages(res, db)
                 return res.status(200).json({status:"ok"})
             }else{
                 try{
@@ -48,6 +49,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 }catch(err){
                     return res.status(400).json({status:"The post to edit does not exists"})
                 }
+                await refresh_pages(res, db)
                 return res.status(200).json({status:"ok"})
             }
             
@@ -65,6 +67,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 return res.status(400).json({status:"Invalid Post ID"})
             }
             await db.collection("posts").deleteOne(request)
+            await refresh_pages(res, db)
             return res.status(200).json({status:"ok"})
         }
         return res.status(400).json({status:"Bad request"})

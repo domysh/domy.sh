@@ -23,6 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (validate.valid){
             await db.collection("static").updateOne({_id:"meta"},{$set:validate.data})
             //await download_favicon(db)
+            await refresh_pages(res, db)
             return res.status(200).json({status:"ok"})
         }
         return res.status(400).json({status:"Bad request"})

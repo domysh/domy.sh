@@ -1,6 +1,6 @@
 import { DB } from "../../../js/db"
 import { getSession } from "next-auth/react"
-import { validData } from "../../../js/utils"
+import { refresh_pages, validData } from "../../../js/utils"
 import { NextApiRequest, NextApiResponse } from "next"
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse){
@@ -38,6 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 }catch(err){
                     return res.status(400).json({status:"The page already exists with this link"})
                 }
+                await refresh_pages(res, db)
                 return res.status(200).json({status:"ok"})
             }else{
                 try{
@@ -45,6 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 }catch(err){
                     return res.status(400).json({status:"The page to edit does not exists"})
                 }
+                await refresh_pages(res, db)
                 return res.status(200).json({status:"ok"})
             }
             
@@ -56,6 +58,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
         if (validate.valid){
             await db.collection("pages").deleteOne(validate.data)
+            await refresh_pages(res, db)
             return res.status(200).json({status:"ok"})
         }
         return res.status(400).json({status:"Bad request"})

@@ -2,7 +2,7 @@ import { Binary, Db } from "mongodb"
 import { GetServerSidePropsContext, GetStaticPaths, GetStaticPropsContext, PreviewData } from "next"
 import { ParsedUrlQuery } from "querystring"
 import { Category, LinkObject, MetaInfo, Page, PageInfo, PublicInfo } from "../modules/interfaces"
-import { globalRevalidationTime, tojsonlike } from "./utils"
+import { tojsonlike } from "./utils"
 import fs from 'fs';
 import database from "./mongodb"
 
@@ -76,15 +76,15 @@ export function sprops(fn?:serverSitePropsFunc) {
 export type serverStaticPropsFunc
                  = (context:GetStaticPropsContext) => Promise<{[key:string]:any}>
 
-export function ssprops(fn?:serverStaticPropsFunc, revalidate:number|null = globalRevalidationTime) {
+export function ssprops(fn?:serverStaticPropsFunc) {
     return async function(context:GetStaticPropsContext) {
         let result:any = {}
         if (fn != null)
             result = await fn(context)
-        if (result.notfound != null) return { notFound:true, revalidate }
-        if (result.redirect != null) return { redirect:result.redirect, revalidate }
+        if (result.notfound != null) return { notFound:true }
+        if (result.redirect != null) return { redirect:result.redirect }
         result.infos = await getPublicInfo()
-        return {props:result, revalidate}
+        return {props:result}
     }
 }
 
