@@ -66,7 +66,7 @@ export const filename_simplify = (filename:string) => {
     }).join("")
 }
 
-export const refresh_pages = async (res:NextApiResponse, db:Db) => {
+export const refresh_pages = async (res:NextApiResponse, db:Db, ...otherPages:string[]) => {
     await Promise.all([
         res.revalidate('/'),
         res.revalidate('/c'),
@@ -78,5 +78,6 @@ export const refresh_pages = async (res:NextApiResponse, db:Db) => {
             const categories = await db.collection("categories").find({}).project({_id:true}).toArray() as unknown as Category[]
             await Promise.all(categories.map( (ele) => res.revalidate(`/c/${ele._id}`) ))
         })(),
+        ...otherPages.map( (ele) => res.revalidate(ele))
     ]);
 }

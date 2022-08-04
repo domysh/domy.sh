@@ -59,7 +59,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
         if (validate.valid){
             await db.collection("categories").deleteOne(validate.data)
-            await refresh_pages(res, db)
+            await refresh_pages(res, db, `/c/${validate.data._id}`)
             return res.status(200).json({status:"ok"})
         }
         return res.status(400).json({status:"Bad request"})
