@@ -37,7 +37,7 @@
     "eslint": "^8.21.0",
     "eslint-config-next": "^12.2.3",
     "node": "^16.16.0",
-    "typescript": "4.5.5"
+    "typescript": "^4.5.5"
   },
   "description": "<img align=\"left\" src=\"public/favicon.ico\" width=\"70\" /><h1>Domysh.com Website</h1> This is the project of [domysh.com](https://domysh.com) in his second version created using [nextjs](https://nextjs.org/) and [react](https://reactjs.org/).",
   "version": "1.0.0",
