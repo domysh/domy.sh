@@ -54,7 +54,7 @@ export const PageEdit = ({ page, close }:{ page?:Page, close:()=>void }) => {
     </InputGroup>
     
     <InputGroup className="mb-3" onChange={(v)=>{setContent((v.target as HTMLTextAreaElement).value)}}>
-        <FormControl as="textarea" aria-describedby="md-text-editor" defaultValue={content} />
+        <FormControl className={style.mdeditor} as="textarea" aria-describedby="md-text-editor" defaultValue={content} />
     </InputGroup>
     <ReactMarkdown>{content}</ReactMarkdown>
     {error?

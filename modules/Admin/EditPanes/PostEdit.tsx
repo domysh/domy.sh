@@ -104,7 +104,7 @@ export const PostEdit = ({ post, close }:{ post?:Post, close:()=>void }) => {
             </InputGroup.Text>
         </InputGroup>
         <InputGroup className="mb-3" onChange={(v)=>{setDescription((v.target as HTMLTextAreaElement).value)}}>
-            <FormControl as="textarea" aria-describedby="md-text-editor" defaultValue={description} />
+            <FormControl className={style.mdeditor} as="textarea" aria-describedby="md-text-editor" defaultValue={description} />
         </InputGroup>
         <div className={style.backpost}>
             <PostBox post={currentObj as Post} />

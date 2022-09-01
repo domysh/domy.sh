@@ -130,7 +130,7 @@ export const EditMetas = ({close}:{close:()=>void}) => {
         </InputGroup>
         <h3>Footer</h3>
         <InputGroup className="mb-3" onChange={(v)=>{setFooter((v.target as HTMLTextAreaElement).value)}}>
-            <FormControl as="textarea" aria-describedby="md-text-editor" defaultValue={infos.meta.footer} />
+            <FormControl className={style.mdeditor} as="textarea" aria-describedby="md-text-editor" defaultValue={infos.meta.footer} />
         </InputGroup>
         <ReactMarkdown>{footer}</ReactMarkdown>
         <div style={{marginTop:"40px"}} />
