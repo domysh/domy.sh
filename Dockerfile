@@ -1,12 +1,10 @@
 FROM node:16-bullseye-slim
 
-ENV NODE_ENV=production
-
 RUN mkdir /app
 WORKDIR /app
 
 ADD package*.json ./
-RUN npm ci
+RUN npm ci --ignore-engines
 
 COPY . .
 RUN npm run build
