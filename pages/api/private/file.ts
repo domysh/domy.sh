@@ -2,6 +2,7 @@ import { DB } from "../../../js/db"
 import { NextApiRequest, NextApiResponse } from "next"
 import { getSession } from "next-auth/react";
 import { validData } from "../../../js/utils";
+import { promises as fs } from "fs"
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse){
     const db = await DB()
@@ -22,6 +23,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 await db.collection("files").deleteOne({
                     _id: validate.data._id
                 } as any)
+                try {
+                    await fs.unlink('/tmp/'+validate.data._id);
+                } catch (error) {}
                 return res.status(200).json({status: "ok"})
             }catch(err){
                 return res.status(400).json({ status: "Filename does not exists!" })
