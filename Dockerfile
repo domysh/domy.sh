@@ -1,13 +1,13 @@
-FROM node:18-alpine
+FROM node:16-bullseye-slim
 
-#React project copy
-RUN apk add --update npm
-RUN npm install -g npm@latest
+ENV NODE_ENV=production
+
 RUN mkdir /app
 WORKDIR /app
-ADD package.json .
-ADD package-lock.json .
+
+ADD package*.json ./
 RUN npm ci
+
 COPY . .
 RUN npm run build
-ENTRYPOINT [ "npm","start" ]
+CMD [ "npm","start" ]
