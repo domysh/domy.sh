@@ -10,7 +10,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const { filename } = req.query
         let result = await db.collection("files").findOne({_id:filename},{projection:{_id:1,filename:1}})
         let file_content = null;
-        console.log("File richiesto: "+result)
         if (result){
             try {
                 file_content = await fs.readFile('/tmp/'+result._id);
@@ -18,7 +17,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 result = await db.collection("files").findOne({_id:filename})
                 if (!result) return res.status(404).json({status:"File not found!"})
                 file_content = (result.content as Binary).buffer
-                console.log("Scrivo sto file")
                 await fs.writeFile("/tmp/"+result._id, file_content)
             }
             const fn = filename_simplify(result.filename?result.filename:filename)

@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import { Alert, Button, Form, FormControl, InputGroup } from "react-bootstrap"
-import { dataDelete, dataEdit, MdEditor } from "."
+import { dataDelete, dataEdit } from "."
 import { InfosContext } from "../../Context/Infos"
 import { Post } from "../../interfaces"
 import { CategoryButton, PostBox, PostDate, Star } from "../../Posts"
@@ -103,20 +103,16 @@ export const PostEdit = ({ post, close }:{ post?:Post, close:()=>void }) => {
                 <PostDate post_date={date} post_end_date={end_date} />
             </InputGroup.Text>
         </InputGroup>
-        
-        <MdEditor
-            className={style.mdeditor}
-            renderHTML={(v) => <MdPost>{v}</MdPost>}
-            defaultValue={description}
-            onChange={(v)=>{setDescription(v.text)}}
-        />
+        <InputGroup className="mb-3" onChange={(v)=>{setDescription((v.target as HTMLTextAreaElement).value)}}>
+            <FormControl as="textarea" aria-describedby="md-text-editor" defaultValue={description} />
+        </InputGroup>
+        <div className={style.backpost}>
+            <PostBox post={currentObj as Post} />
+        </div>
         {error?
             <Alert variant="danger" style={{marginTop:"20px"}}>
                 {error}
             </Alert>:null}
-        <div className={style.backpost}>
-            <PostBox post={currentObj as Post} />
-        </div>
 
             
     </>

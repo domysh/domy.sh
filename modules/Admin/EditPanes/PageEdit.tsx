@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Alert, Button, Form, FormControl, InputGroup } from "react-bootstrap"
 import ReactMarkdown from "react-markdown"
-import { dataDelete, dataEdit, MdEditor } from "."
+import { dataDelete, dataEdit } from "."
 import { Page } from "../../interfaces"
 import style from "../style.module.scss"
 
@@ -53,12 +53,10 @@ export const PageEdit = ({ page, close }:{ page?:Page, close:()=>void }) => {
             <InputGroup.Text><b>/{_id}</b></InputGroup.Text>}
     </InputGroup>
     
-    <MdEditor
-        className={style.mdeditor}
-        renderHTML={(v) => <ReactMarkdown>{v}</ReactMarkdown>}
-        defaultValue={content}
-        onChange={(v)=>{setContent(v.text)}}
-    />
+    <InputGroup className="mb-3" onChange={(v)=>{setContent((v.target as HTMLTextAreaElement).value)}}>
+        <FormControl as="textarea" aria-describedby="md-text-editor" defaultValue={content} />
+    </InputGroup>
+    <ReactMarkdown>{content}</ReactMarkdown>
     {error?
         <Alert variant="danger" style={{marginTop:"20px"}}>
             {error}

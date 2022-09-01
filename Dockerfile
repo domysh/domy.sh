@@ -7,7 +7,7 @@ RUN mkdir /app
 WORKDIR /app
 ADD package.json .
 ADD package-lock.json .
-RUN npm ci -f
+RUN npm ci
 COPY . .
 RUN npm run build
 ENTRYPOINT [ "npm","start" ]
