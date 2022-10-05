@@ -1,5 +1,4 @@
 import { MongoClient } from 'mongodb';
-import { download_favicon } from './db';
 
 
 /**
@@ -28,8 +27,7 @@ async function createIndexes(db) {
             { key: { end_date: 1 } }
         ]),
         db.collection("pages").createIndex({ highlighted:1 }),
-        db.collection("categories").createIndex({ highlighted:1 }),
-        download_favicon(db)
+        db.collection("categories").createIndex({ highlighted:1 })
     ]);
     global.mongo.indexesCreated = true;
 }

@@ -3,32 +3,7 @@ import { GetServerSidePropsContext, GetStaticPaths, GetStaticPropsContext, Previ
 import { ParsedUrlQuery } from "querystring"
 import { Category, LinkObject, MetaInfo, Page, PageInfo, PublicInfo } from "../modules/interfaces"
 import { tojsonlike } from "./utils"
-import fs from 'fs';
 import database from "./mongodb"
-
-import * as path from "path"
-
-export const download_favicon = async (db:Db) => {
-    const meta = await db.collection("static").findOne({_id:"meta"}) as unknown as MetaInfo
-    if (meta && meta.favicon_img){
-        const favicon = await db.collection("files").findOne({_id:meta.favicon_img})
-        if (favicon){
-            const favicon_img = (favicon.content as Binary).buffer
-            await new Promise((resolve, reject)=>{fs.writeFile(
-                path.join(process.cwd(),"public/favicon.ico"), favicon_img, (err)=>{
-                if (err) reject(err)
-                else resolve(null)
-            })})
-        }
-    }else{
-        await new Promise((resolve, reject)=>{fs.copyFile(
-            path.join(process.cwd(),"public/default-favicon.ico"),
-            path.join(process.cwd(),"public/favicon.ico"), (err)=>{
-            if (err) reject(err)
-            else resolve(null)
-        })})
-    }
-}
 
 export const DB:()=>Promise<Db> = async () => await database()
 

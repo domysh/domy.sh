@@ -35,7 +35,6 @@ const upload_file = async (res:NextApiResponse, file:File) => {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse){
-    const db = await DB()
     const session = await getSession({ req })
     if (session == null)
         return res.status(401).json({status:"unauthorized"})

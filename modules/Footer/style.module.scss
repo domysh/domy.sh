@@ -7,7 +7,7 @@
     justify-content: center;
 }
 
-.footer_logo{
+.footer_spacer{
     padding: 20px 30px;
     @include media-breakpoint-down(sm){
         display: none;
@@ -25,6 +25,10 @@
     }
 }
 .text{
-    text-align: center;
-    margin: 20px 30px;
+    text-align: right;
+    margin: 10px 15px;
+    @include media-breakpoint-down(md){
+        text-align: center;
+        margin: 20px 30px;
+    }
 }

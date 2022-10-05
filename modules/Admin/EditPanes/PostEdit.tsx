@@ -4,7 +4,7 @@ import { dataDelete, dataEdit } from "."
 import { InfosContext } from "../../Context/Infos"
 import { Post } from "../../interfaces"
 import { CategoryButton, PostBox, PostDate, Star } from "../../Posts"
-import { getCategory, MdPost } from "../../utils"
+import { getCategory } from "../../utils"
 import style from "../style.module.scss"
 
 const currentDate = (res:Date|null=null, hideMonth=false) => {
