@@ -9,7 +9,7 @@ import Image from "next/image";
 
 export function NavLink({ href, children, className, ...props }:{ href:string, children:any, className?:string}) {
     const { asPath } = useRouter();
-    if (asPath === href) {
+    if (asPath.split("?")[0] === href) {
         if (className) className += ' active'
         else className = "active"
     }

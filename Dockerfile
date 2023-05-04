@@ -3,9 +3,10 @@ FROM node:16-bullseye-slim
 RUN mkdir /app
 WORKDIR /app
 
-ADD package*.json ./
-RUN npm ci --ignore-engines
+ADD package.json ./
+ADD yarn.lock ./
+RUN yarn install
 
 COPY . .
-RUN npm run build
-CMD [ "npm","start" ]
+RUN yarn run build
+CMD [ "yarn", "run", "start" ]
