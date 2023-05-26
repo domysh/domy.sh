@@ -43,10 +43,8 @@ export const CategoryButton = ({ category }:{ category?:Category }) => {
             delay={{ show: 250, hide: 400 }}
             overlay={categoryTooltip}>
             {({ ref, ...triggerHandler }) => (
-                <Link href={`/c/${categ._id}`} >
-                    <a ref={ref} {...triggerHandler} className={style.category} style={{backgroundColor:color}}>
-                        <i className={categ.icon?categ.icon:"fab fa-cuttlefish"} />
-                    </a>
+                <Link href={`/c/${categ._id}`} ref={ref} {...triggerHandler} className={style.category} style={{backgroundColor:color}}>
+                    <i className={categ.icon?categ.icon:"fab fa-cuttlefish"} />
                 </Link>
             )}
         </OverlayTrigger>

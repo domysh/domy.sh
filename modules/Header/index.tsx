@@ -2,7 +2,6 @@ import React, { useContext } from "react"
 import { Row, Col } from "react-bootstrap";
 import { SocialIcons } from "../SocialIcon"
 import style from  "./style.module.scss"
-import { Spacer } from "../utils";
 import { InfosContext } from "../Context/Infos";
 import Image from "next/image";
 import { MetaInfo } from "../interfaces";
@@ -14,15 +13,11 @@ export const Header = ({meta}:{meta?:MetaInfo}) => {
         new URL(`/api/file/${infos.meta.header_img}`,infos.publicurl).href:
             "/img/header-back.jpg"
   return (<>
-    <Row className={`${style.header} g-0`} >
-        <Image
-            src={background_img}
-            alt="Background"
-            layout="fill"
-            objectFit="cover"
-            objectPosition="center"
-            className={style.backimage} 
-            priority />
+    <Row className={`${style.header} g-0`} style={{
+      backgroundImage: `url(${background_img})`,
+      backgroundPosition: "center",
+      backgroundSize: "cover",
+    }} >
         <div className={style.darklayer} />
         <Col xs={12} md={8} lg={6} className={style.text}>
         {infos.meta.name}
@@ -31,12 +26,10 @@ export const Header = ({meta}:{meta?:MetaInfo}) => {
       </Col>
       <Col md={4} lg={6} className={style.profile_image}>
         {infos.meta.profile_img?
-        <Image
+        <img
           src={new URL(`/api/file/${infos.meta.profile_img}`,infos.publicurl).href}
-          alt="Profile Image"
-          width="700"
-          height="700"
-          objectFit="contain" />:null}
+          alt="Profile Image"/>
+        :null}
       </Col>
     </Row>
   </>);

@@ -15,10 +15,8 @@ export function NavLink({ href, children, className, ...props }:{ href:string, c
     }
 
     return (
-        <Link href={href}>
-            <a className={className} {...props}>
-                {children}
-            </a>
+        <Link href={href} className={className} {...props}>
+            {children}
         </Link>
     );
 }
@@ -69,7 +67,6 @@ export const NavBar = () => {
             src="/favicon.ico"
             width="30"
             height="30"
-            objectFit="contain"
             className="d-inline-block align-top"
             alt="Page Logo"
         />
