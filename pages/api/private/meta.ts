@@ -1,13 +1,13 @@
 import { DB } from "../../../js/db"
-import { getSession } from "next-auth/react"
-
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "../auth/[...nextauth]"
 import { refresh_pages, validData } from "../../../js/utils"
 import { NextApiRequest, NextApiResponse } from "next"
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse){
     const db = await DB()
-    const session = await getSession({ req })
+    const session = await getServerSession(req, res, authOptions)
     if (session == null)
         return res.status(401).json({status:"unauthorized"})
 

@@ -1,12 +1,13 @@
 import { DB } from "../../../js/db"
 import { NextApiRequest, NextApiResponse } from "next"
-import { getSession } from "next-auth/react";
 import { validData } from "../../../js/utils";
 import { promises as fs } from "fs"
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "../auth/[...nextauth]"
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse){
     const db = await DB()
-    const session = await getSession({ req })
+    const session = await getServerSession(req, res, authOptions)
     if (session == null)
         return res.status(401).json({status:"unauthorized"})
     if (req.method === 'GET') {

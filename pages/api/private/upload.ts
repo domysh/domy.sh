@@ -1,7 +1,8 @@
 import { DB } from "../../../js/db"
 import { NextApiRequest, NextApiResponse } from "next"
 import { File, IncomingForm } from "formidable";
-import { getSession } from "next-auth/react";
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "../auth/[...nextauth]"
 import fs from 'fs';
 import { filename_simplify } from "../../../js/utils";
 import { randomUUID } from "crypto";
@@ -35,7 +36,7 @@ const upload_file = async (res:NextApiResponse, file:File) => {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse){
-    const session = await getSession({ req })
+    const session = await getServerSession(req, res, authOptions)
     if (session == null)
         return res.status(401).json({status:"unauthorized"})
     if (req.method === 'POST') { 
