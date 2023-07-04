@@ -32,7 +32,7 @@ export const NavBar = () => {
     useEffect(()=>{
       const collapse_btn = nav_collapse_btn.current
       const updateStatus = () => {
-        setOnTop(window.pageYOffset <= 100)
+        setOnTop(window.scrollY <= 100)
       }
       const closeOnResize = () => {
         setToggleVisible(collapse_btn?getComputedStyle(collapse_btn).display !== "none":false)        

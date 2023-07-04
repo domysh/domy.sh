@@ -32,4 +32,7 @@ $dashedlinecolor: #444;
     @include media-breakpoint-up(sm){
         flex-direction: column;
     }
+    a {
+        @extend .no-undeline-animation;
+    }
 }
