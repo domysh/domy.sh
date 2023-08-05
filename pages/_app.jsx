@@ -3,39 +3,12 @@ import { EmojiRender } from '../modules/EmojiRender'
 import Head from 'next/head'
 import { OverlayProvider } from '../modules/Fullscreen'
 import { SessionProvider } from "next-auth/react"
-import { useEffect } from "react";
-import Script from "next/script";
-import { useRouter } from "next/router";
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import CookieConsent from 'react-cookie-consent'
-import * as gtag from "../js/gtag";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
-  const router = useRouter();
-  useEffect(() => {
-    const handleRouteChange = (url) => {
-      gtag.pageview(url);
-    };
-    router.events.on("routeChangeComplete", handleRouteChange);
-    return () => {
-      router.events.off("routeChangeComplete", handleRouteChange);
-    };
-  }, [router.events]);
 
-  
   return <>
-    <Script
-        strategy="afterInteractive"
-        src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
-      />
-    <Script id="google-analytics" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){window.dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', '${gtag.GA_TRACKING_ID}');
-        `}
-      </Script>
     <SessionProvider session={session}>
         <EmojiRender>
             <Head>
