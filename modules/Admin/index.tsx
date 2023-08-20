@@ -10,6 +10,7 @@ import { AdminInfos, Category, FileInfo, LinkObject, MetaInfo, Page, Post } from
 import { ListElements, ListSelector } from "./Lists";
 import { Loading } from "../Errors";
 import Head from "next/head";
+import { img_extentions } from "../utils";
 
 export const Header = () => {
     const infos = useContext(InfosContext)
@@ -41,6 +42,15 @@ export const CircleBtn = React.forwardRef<HTMLButtonElement,{ icon:string, onCli
 })
 
 export const AdminDataReload = createContext<()=>void>(()=>{})
+
+export const SmallFileDetails = ({file}:{file:FileInfo}) => {
+    
+    return <div className="center-flex" style={{width:"5vw"}} >
+        {img_extentions.find( ext => file.filename.toLowerCase().endsWith("."+ext) )?
+        <img src={`/api/file/${file._id}`} style={{maxWidth:"3.5vw",maxHeight:"60px"}} />:
+        <i className="fa-solid fa-file" style={{fontSize:"40px"}}></i>}
+    </div>
+}
 
 export const AdminPage = () => {
     const infos = useContext(InfosContext)

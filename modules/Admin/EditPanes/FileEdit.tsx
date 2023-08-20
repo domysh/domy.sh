@@ -5,6 +5,8 @@ import { Loading } from "../../Errors";
 import { FileInfo } from "../../interfaces";
 import { ListElement, listRender } from "../Lists";
 import style from "../style.module.scss"
+import { SmallFileDetails } from "..";
+import { img_extentions } from "../../utils";
 
 export const UploadFile = ({ onChange }: { onChange?:()=>void }) => {
     const [file, setFile] = useState<File|null>(null);
@@ -66,10 +68,14 @@ export const ShowFile = ({ close, file }:{ close:()=>void, file:FileInfo }) => {
         <Button className={style.donebtn} onClick={deleteData} style={{marginLeft:"20px"}} variant="danger"><i className="fas fa-trash" /></Button>
     </h1>
     <div style={{marginTop:"40px"}} />
+    <div className="center-flex" >
+        {img_extentions.find( ext => file.filename.toLowerCase().endsWith("."+ext) )?<img src={`/api/file/${file._id}`} style={{maxHeight:"45vh"}} />:null}
+    </div>
+    <div style={{marginTop:"40px"}} />
     <Alert variant="dark">
-    <h3>Filename: <small>{file.filename}</small></h3>
-    <h3>FileID: <small>{file._id}</small></h3>
-    <h3>Download: <small><a href={`/api/file/${file._id}`} target="_blank">{`/api/file/${file._id}`}</a></small></h3>
+        <h3>Filename: <small>{file.filename}</small></h3>
+        <h3>FileID: <small>{file._id}</small></h3>
+        <h3>Download: <small><a href={`/api/file/${file._id}`} target="_blank">{`/api/file/${file._id}`}</a></small></h3>
     </Alert>
     {error?
         <Alert variant="danger" style={{marginTop:"20px"}}>
@@ -94,24 +100,25 @@ const FileSelectPane = ({ close, setFile }:{ close:()=>void, setFile:(file:FileI
         close()
     }
     
+
     const LinkElement = ({value}:{value:FileInfo}) => {
-        return <>
+        return <div className="center-flex" >
+            <SmallFileDetails file={value} />
             <ListElement
                 title={value.filename}
                 metas={<code>{value._id}</code>}
                 onClick={()=>{selectFile(value)}}
                 text={`/api/file/${value._id}`}
             />
-        </>
+        </div>
     }
     return <>
         <h1>Choose a file <Button onClick={()=>{selectFile(null)}} style={{marginLeft:"20px"}} variant="danger"><i className="fas fa-times" /></Button></h1>
         <div style={{marginTop:"30px"}} />
         <UploadFile onChange={reload_filelist} />
         <div style={{marginTop:"30px"}} />
-        <div style={{height:"50vh", overflowY:"auto", padding:"20px"}}>
-            {listRender(LinkElement,fileList)}
-        </div>
+        {listRender(LinkElement,fileList, {maxHeight:"65vh"})}
+     
     </>
 }
 

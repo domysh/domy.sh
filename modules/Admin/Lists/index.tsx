@@ -7,7 +7,7 @@ import style from "../style.module.scss"
 import { ListCategory, ListLink, ListPage, ListPost } from ".";
 import { ListFile } from "./ListFile";
 import { UploadFile } from "../EditPanes/FileEdit";
-import { useContext } from "react";
+import { CSSProperties, useContext } from "react";
 
 export * from "./ListCategory"
 export * from "./ListLink"
@@ -85,8 +85,8 @@ const emptyListMsg = <div className="center-flex" style={{paddingTop:"100px"}}>
     <u><h2>No content available!</h2></u>
 </div>
 
-export const listRender = (Tag:(props:{ value:any })=>JSX.Element,values:any[]) => {
-    return <div className={style.list}>
+export const listRender = (Tag:(props:{ value:any })=>JSX.Element,values:any[], additionalStyle:CSSProperties|undefined = undefined) => {
+    return <div className={style.list} style={additionalStyle}>
         {values.length===0?emptyListMsg:values.map( (o,i) =>  <div key={i}><Tag value={o} />{i!==values.length-1?<hr />:null}</div>)}
     </div>
 }
