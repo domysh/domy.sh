@@ -1,12 +1,12 @@
-FROM node:16-bullseye-slim
+FROM node:20
 
 RUN mkdir /app
 WORKDIR /app
 
 ADD package.json ./
-ADD yarn.lock ./
-RUN yarn install
+ADD package-lock.json ./
+RUN npm i
 
 COPY . .
-RUN yarn run build
-CMD [ "yarn", "run", "start" ]
+RUN npm run build
+CMD [ "npm", "run", "start" ]
