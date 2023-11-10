@@ -63,7 +63,7 @@ export const NavBar = () => {
       
     <Container fluid className={style.navbar}>
     <Navbar.Brand as={NavLink} href="/">
-        <Image
+        <img
             src="/favicon.ico"
             width="30"
             height="30"
