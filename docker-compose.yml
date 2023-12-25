@@ -11,7 +11,6 @@ services:
   watchtower:
     image: containrrr/watchtower
     volumes:
-      - $HOME/.docker/config.json/:/config.json
       - /var/run/docker.sock:/var/run/docker.sock
     command: score-cloud score-cloud-frontend
     environment:
