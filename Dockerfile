@@ -6,7 +6,6 @@ ENV NODE_ENV=production
 COPY package.json ./
 RUN npm install
 COPY . .
-RUN npm run build
 
 FROM --platform=$TARGETARCH node:20
 
