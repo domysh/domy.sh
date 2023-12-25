@@ -1,8 +1,19 @@
 version: '3.9'
 
 services:
-    website:
-        restart: unless-stopped
-        build: .
-        ports:
-            - 127.0.0.1:${PORT}:8080
+  website:
+    restart: unless-stopped
+    image: ghcr.io/domysh/domy.sh
+    ports:
+      - 127.0.0.1:${PORT}:8080
+    env_file:
+      - .env
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - $HOME/.docker/config.json/:/config.json
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: score-cloud score-cloud-frontend
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=60
