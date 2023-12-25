@@ -1,7 +1,6 @@
 FROM --platform=$BUILDPLATFORM node:20 as build
 # Set working directory
 WORKDIR /build
-ENV NODE_ENV=production
 
 COPY package.json ./
 RUN npm install
