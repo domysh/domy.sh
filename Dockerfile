@@ -1,9 +1,9 @@
-FROM --platform=$BUILDPLATFORM node:20 as build
+FROM --platform=$BUILDPLATFORM oven/bun:1 as build
 # Set working directory
 WORKDIR /build
 
-COPY package.json ./
-RUN npm install
+COPY package.json bun.lockb /build/
+RUN bun install
 COPY . .
 
 FROM --platform=$TARGETARCH node:20
@@ -11,6 +11,5 @@ FROM --platform=$TARGETARCH node:20
 ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=build /build/ .
-CMD [ "sh", "-c", "npm run build && npm run start" ]
-
+CMD [ "sh", "-c", "bun run build && bun run start" ]
 
