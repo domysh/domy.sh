@@ -6,7 +6,7 @@ COPY package.json bun.lockb /build/
 RUN bun install
 COPY . .
 
-FROM --platform=$TARGETARCH node:20
+FROM --platform=$TARGETARCH oven/bun:1
 
 ENV NODE_ENV=production
 WORKDIR /app
