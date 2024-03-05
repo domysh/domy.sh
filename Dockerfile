@@ -1,5 +1,6 @@
 FROM --platform=$BUILDPLATFORM oven/bun:1 as build
 # Set working directory
+ENV NODE_ENV=production
 WORKDIR /build
 
 COPY package.json bun.lockb /build/
