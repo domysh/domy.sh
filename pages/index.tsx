@@ -2,7 +2,7 @@ import Head from 'next/head'
 import ReactMarkdown from 'react-markdown'
 import { DefaultLayout } from '../modules/DefaultLayout'
 import { PostList } from '../modules/Posts'
-import { sprops, DB, ssprops } from '../js/db'
+import { sprops, DB, ssprops, DocumentWithStingId } from '../js/db'
 import { Page, Post, PublicInfo } from '../modules/interfaces'
 import { tojsonlike } from '../js/utils'
 import { Infos } from '../modules/Context/Infos'
@@ -30,7 +30,7 @@ const Render = ({ page, posts, infos }: { infos:PublicInfo, page?:Page, posts:Po
 export const getStaticProps = ssprops(async () => {
     const db = await DB()
     return {
-        page: tojsonlike(await db.collection("pages").findOne({_id:""})),
+        page: tojsonlike(await db.collection<DocumentWithStingId>("pages").findOne({_id:""})),
         posts: tojsonlike(await db.collection("posts").find({ star: true }).sort({ end_date:-1 }).toArray())
     }
 })

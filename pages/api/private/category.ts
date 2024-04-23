@@ -1,4 +1,4 @@
-import { DB } from "../../../js/db"
+import { DB, DocumentWithStingId } from "../../../js/db"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "../auth/[...nextauth]"
 import { refresh_pages, validData } from "../../../js/utils"
@@ -44,7 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 return res.status(200).json({status:"ok"})
             }else{
                 try{
-                    await db.collection("categories").updateOne({_id:request._id},{$set:request})
+                    await db.collection<DocumentWithStingId>("categories").updateOne({_id:request._id},{$set:request})
                 }catch(err){
                     return res.status(400).json({status:"The category to edit does not exists"})
                 }
@@ -59,7 +59,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             _id:"required|string",
         });
         if (validate.valid){
-            await db.collection("categories").deleteOne(validate.data)
+            await db.collection<DocumentWithStingId>("categories").deleteOne(validate.data)
             await refresh_pages(res, db, `/c/${validate.data._id}`)
             return res.status(200).json({status:"ok"})
         }

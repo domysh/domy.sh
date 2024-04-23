@@ -1,4 +1,4 @@
-import { DB } from "../../../js/db"
+import { DB, DocumentWithStingId } from "../../../js/db"
 import { NextApiRequest, NextApiResponse } from "next"
 import { validData } from "../../../js/utils";
 import { promises as fs } from "fs"
@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const validate = validData(req.body, { _id:"required|string" })
         if (validate.valid){
             try{
-                await db.collection("files").deleteOne({
+                await db.collection<DocumentWithStingId>("files").deleteOne({
                     _id: validate.data._id
                 } as any)
                 try {
@@ -37,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const validate = validData(req.body, { _id:"required|string" })
         if (validate.valid){
             try{
-                return res.status(200).json((await db.collection("files").find({_id: validate.data._id}).project({content: false}).toArray())[0])
+                return res.status(200).json((await db.collection<DocumentWithStingId>("files").find({_id: validate.data._id}).project({content: false}).toArray())[0])
             }catch(err){
                 return res.status(400).json({ status: "Filename does not exists!" })
             }

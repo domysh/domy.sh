@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { DB } from "../../../../js/db"
+import { DB, DocumentWithStingId } from "../../../../js/db"
 import { tojsonlike } from "../../../../js/utils"
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

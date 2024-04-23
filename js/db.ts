@@ -1,16 +1,17 @@
-import { Binary, Db } from "mongodb"
+import { Db } from "mongodb"
 import { GetServerSidePropsContext, GetStaticPaths, GetStaticPropsContext, PreviewData } from "next"
 import { ParsedUrlQuery } from "querystring"
 import { Category, LinkObject, MetaInfo, Page, PageInfo, PublicInfo } from "../modules/interfaces"
 import { tojsonlike } from "./utils"
 import database from "./mongodb"
 
+export type DocumentWithStingId = Omit<Document, "_id"> & { _id: string }
+
 export const DB:()=>Promise<Db> = async () => await database()
 
 export const getPublicInfo = async ():Promise<PublicInfo> => {
     const db = await DB()
-    let meta:MetaInfo = (await db.collection("static")
-                    .findOne({_id:"meta"})) as unknown as MetaInfo
+    let meta:MetaInfo = (await db.collection<DocumentWithStingId>("static").findOne({"_id":"meta"})) as unknown as MetaInfo
 
     let links:LinkObject[] = tojsonlike(await db.collection("links")
             .find({}).sort({"_id":1}).toArray()) as LinkObject[]
@@ -23,7 +24,7 @@ export const getPublicInfo = async ():Promise<PublicInfo> => {
     categories.map((obj)=>{ pages.push({path:"/c/"+obj._id,name:obj.name,highlighted:obj.highlighted}) })
 
     let page_static = await db.collection("pages")
-                .find({}).sort({"_id":1}).project({_id:true,name:true,highlighted:true}).toArray() as unknown as Page[]
+                .find({}).sort({"_id":1}).project({"_id":true,name:true,highlighted:true}).toArray() as unknown as Page[]
     
     page_static.map((obj) => pages.push({path:"/"+obj._id,name:obj.name,highlighted:obj.highlighted}))
 

@@ -1,3 +1,5 @@
+import { Binary } from "mongodb"
+
 export type LinkObject = {
     _id: string
     name: string
@@ -61,6 +63,10 @@ export type FileInfo = {
     filename: string
     _id: string
 }
+
+export type FileContent = {
+    content: Binary
+} & FileInfo
 
 export type AdminInfos = [
     Post[],
