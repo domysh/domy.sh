@@ -8,11 +8,11 @@ import { FileContent, FileInfo } from "../../../modules/interfaces"
 export default async function handler(req: NextApiRequest, res: NextApiResponse){
     const db = await DB()
     if (req.method === 'GET') {
-        const { filename } = req.query
+        const { filename } = (req.query??{})
         let result = (await db.collection<DocumentWithStingId>("files").findOne({_id:filename},{projection:{_id:1,filename:1}})) as unknown as FileInfo
         let file_content = null;
-        const fn = filename_simplify(result.filename??filename)
         if (result){
+            const fn = filename_simplify(result.filename??filename)
             try {
                 file_content = await fs.readFile('/tmp/'+result._id);
             } catch (err) {

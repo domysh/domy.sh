@@ -46,6 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 form.parse(req, (err, fields, files) => {
                     if (!err)
                         if (!Array.isArray(files.file)) resolve(files.file)
+                        else if (files.file.length == 1) resolve(files.file[0])
                         else reject("Upload only one file")
                     reject(err)
                 })
@@ -56,7 +57,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 if (err.message.includes("options.maxFileSize"))
                     return res.status(400).json({status:"Upload a file not bigger than 10Mb"})
                 return res.status(400).json({status:err.message})
-            }     
+            }
+            console.log(err)
             return res.status(400).json({status:"Bad request"})
         }
     }
