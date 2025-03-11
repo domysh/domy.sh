@@ -1,16 +1,16 @@
-FROM --platform=$BUILDPLATFORM node as build
+FROM --platform=$BUILDPLATFORM docker.io/oven/bun AS build
 # Set working directory
 ENV NODE_ENV=production
 WORKDIR /build
 
-COPY package.json package-lock.json /build/
-RUN npm install
+COPY package.json bun.lock /build/
+RUN bun i
 COPY . .
 
-FROM --platform=$TARGETARCH node
+FROM --platform=$TARGETARCH docker.io/oven/bun
 
 ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=build /build/ .
-CMD [ "sh", "-c", "npm run build && npm run start" ]
+CMD [ "sh", "-c", "bun run build && bun run start" ]
 
