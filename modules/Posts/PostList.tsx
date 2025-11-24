@@ -4,25 +4,25 @@ import { Post } from "../interfaces";
 import { getCategory, SideLine } from "../utils";
 import { PostBox } from "./PostBox";
 
-const PostListElement = ({ post }: { post:Post }) => {
+const PostListElement = ({ post }: { post: Post }) => {
     const currentCategory = getCategory(post.category)
-    
+
     return <Row>
         <Col xs={12} sm={2}>
-            <SideLine 
-                icon={currentCategory.icon?currentCategory.icon:"fab fa-cuttlefish"}
-                color={currentCategory.color?currentCategory.color:categoryIconColor}
-                category_id={currentCategory._id} />
+            <SideLine
+                icon={currentCategory.icon ? currentCategory.icon : "fab fa-cuttlefish"}
+                color={currentCategory.color ? currentCategory.color : categoryIconColor}
+                category_id={currentCategory.id} />
         </Col>
 
         <Col xs={12} sm={10}>
-            <PostBox key={post._id} post={post} />
+            <PostBox key={post.id} post={post} />
         </Col>
     </Row>
 }
 
-export const PostList = ({ posts }: { posts:Post[] }) => {
+export const PostList = ({ posts }: { posts: Post[] }) => {
     return <>
-        {posts.map((p) => <PostListElement key={p._id} post={p} />)}
+        {posts.map((p) => <PostListElement key={p.id} post={p} />)}
     </>
 }

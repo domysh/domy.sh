@@ -34,7 +34,7 @@ export const CategoryButton = ({ category }: { category?: Category }) => {
     let categ: Category = category ? category : fakeIcon
     const color = categ.color ? categ.color : categoryIconColor;
     const categoryTooltip = (props: any) => (
-        <Tooltip id={categ._id + "_category_tooltip"} {...props}>
+        <Tooltip id={categ.id + "_category_tooltip"} {...props}>
             {categ.name}
         </Tooltip>
     );
@@ -43,7 +43,7 @@ export const CategoryButton = ({ category }: { category?: Category }) => {
         delay={{ show: 250, hide: 400 }}
         overlay={categoryTooltip}>
         {({ ref, ...triggerHandler }) => (
-            <Link href={`/c/${categ._id}`} ref={ref} {...triggerHandler} className={style.category} style={{ backgroundColor: color }}>
+            <Link href={`/c/${categ.id}`} ref={ref} {...triggerHandler} className={style.category} style={{ backgroundColor: color }}>
                 <i className={categ.icon ? categ.icon : "fab fa-cuttlefish"} />
             </Link>
         )}
@@ -70,7 +70,7 @@ export const PostBox = ({ post }: { post: Post }) => {
     const star = <Star star={post.star} />
     const description = <EmojiRender><MdPost>{post.description}</MdPost></EmojiRender>
 
-    return <div className={style.box} id={post._id}>
+    return <div className={style.box} id={post.id}>
         <div className={style.head}>
             <h2 className={style.title}>{post.title}</h2>
             <div className="flex-fullwidth" />

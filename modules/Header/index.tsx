@@ -7,7 +7,7 @@ import Image from "next/image";
 import { MetaInfo } from "../interfaces";
 
 export const Header = ({ meta }: { meta?: MetaInfo }) => {
-  const infos = meta ? { meta, publicurl: useContext(InfosContext).publicurl } : useContext(InfosContext)
+  const infos = meta ? { meta } : useContext(InfosContext)
 
   const background_img = infos.meta.header_img ?
     `/uploads/${infos.meta.header_img}` :

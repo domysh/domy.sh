@@ -23,8 +23,8 @@ export const getStaticPaths = async () => {
     const pages = getPages();
     return {
         paths: pages
-            .filter(p => (p.id || p._id) !== "" && (p.id || p._id) !== "index")
-            .map(p => ({ params: { pageid: p.id || p._id } })),
+            .filter(p => p.id !== "" && p.id !== "index")
+            .map(p => ({ params: { pageid: p.id } })),
         fallback: false
     }
 }

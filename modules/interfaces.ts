@@ -1,7 +1,5 @@
-import { Binary } from "mongodb"
 
 export type LinkObject = {
-    _id: string
     name: string
     icon: string
     color: string
@@ -18,7 +16,7 @@ export type MetaInfo = {
 }
 
 export type Page = {
-    _id: string
+    id: string
     name: string
     description: string
     content: string
@@ -26,7 +24,7 @@ export type Page = {
 }
 
 export type Category = {
-    _id: string
+    id: string
     name: string
     description: string
     highlighted: boolean
@@ -35,7 +33,7 @@ export type Category = {
 }
 
 export type Post = {
-    _id: string
+    id: string
     title: string
     description: string
     category: string
@@ -57,23 +55,12 @@ export type PublicInfo = {
     links: LinkObject[]
     pages: PageInfo[]
     categories: Category[]
-    publicurl: string
 }
-
-export type FileInfo = {
-    filename: string
-    _id: string
-}
-
-export type FileContent = {
-    content: Binary
-} & FileInfo
 
 export type AdminInfos = [
     Post[],
     Page[],
     LinkObject[],
-    Category[],
-    FileInfo[]
+    Category[]
 ]
 

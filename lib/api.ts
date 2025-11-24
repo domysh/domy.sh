@@ -38,13 +38,13 @@ export function getMeta(): MetaInfo {
 export function getLinks(): LinkObject[] {
     const fileContents = fs.readFileSync(path.join(CONTENT_DIR, 'links.yaml'), 'utf8');
     const links = yaml.load(fileContents) as any[];
-    return serialize(links.map(l => ({ ...l, _id: l.id || l._id }))) as LinkObject[];
+    return serialize(links) as LinkObject[];
 }
 
 export function getCategories(): Category[] {
     const fileContents = fs.readFileSync(path.join(CONTENT_DIR, 'categories.yaml'), 'utf8');
     const categories = yaml.load(fileContents) as any[];
-    return serialize(categories.map(c => ({ ...c, _id: c.id || c._id }))) as Category[];
+    return serialize(categories) as Category[];
 }
 
 export function getPages(): Page[] {
@@ -56,7 +56,7 @@ export function getPages(): Page[] {
         return serialize({
             ...data,
             content,
-            _id: data.id || filename.replace(/\.md$/, '')
+            id: data.id || filename.replace(/\.md$/, '')
         }) as Page;
     });
 }
@@ -69,7 +69,7 @@ export function getPage(id: string): Page | null {
     return serialize({
         ...data,
         content,
-        _id: data.id || id
+        id: data.id || id
     }) as Page;
 }
 
@@ -82,7 +82,7 @@ export function getPosts(): Post[] {
         return serialize({
             ...data,
             description: content,
-            _id: data.id || filename.replace(/\.md$/, '')
+            id: data.id || filename.replace(/\.md$/, '')
         }) as Post;
     });
     // Sort by date desc
@@ -97,7 +97,7 @@ export function getPost(id: string): (Post & { content: string }) | null {
     return serialize({
         ...data,
         content,
-        _id: data.id || id
+        id: data.id || id
     }) as Post & { content: string };
 }
 
@@ -112,7 +112,7 @@ export function getPublicInfo(): PublicInfo {
 
     categories.forEach(cat => {
         pages.push({
-            path: "/c/" + (cat.id || cat._id),
+            path: "/c/" + cat.id,
             name: cat.name,
             highlighted: cat.highlighted
         });
@@ -120,20 +120,19 @@ export function getPublicInfo(): PublicInfo {
 
     staticPages.forEach(page => {
         pages.push({
-            path: "/" + (page.id || page._id),
+            path: "/" + page.id,
             name: page.name,
             highlighted: page.highlighted
         });
     });
 
-    // Sort pages if needed, or keep order. Original code sorted by _id.
+    // Sort pages if needed, or keep order. Original code sorted by id.
     // Here we might want to sort by name or something, but let's leave it as is.
 
     return {
         meta,
         links,
         categories,
-        pages,
-        publicurl: process.env.NEXTAUTH_URL || "" // Or hardcode if static
+        pages
     };
 }

@@ -30,13 +30,7 @@ const Render = ({ page, posts, infos }: { infos: PublicInfo, page?: Page, posts:
 export const getStaticProps = async () => {
     const infos = getPublicInfo();
     const page = getPage("index");
-    // Wait, original code used `findOne({_id:""})`. 
-    // If migration script saved it as `.md` (empty name?), likely not.
-    // Let's check `content/pages` to see if there is a file for home.
-    // If not, maybe it's handled differently.
-    // But `getPublicInfo` is needed.
 
-    // Original: `posts: ...find({ star: true }).sort({ end_date:-1 })`
     const allPosts = getPosts();
     const posts = allPosts.filter(p => p.star).sort((a, b) => (new Date(b.end_date).getTime() - new Date(a.end_date).getTime()));
 

@@ -34,7 +34,7 @@ const Render = ({ infos, posts, categoryid }: { infos: PublicInfo, posts: Post[]
 export const getStaticPaths = async () => {
     const categories = getCategories();
     return {
-        paths: categories.map(c => ({ params: { categoryid: c.id || c._id } })),
+        paths: categories.map(c => ({ params: { categoryid: c.id } })),
         fallback: false
     }
 }

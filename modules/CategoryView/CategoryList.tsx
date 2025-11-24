@@ -6,16 +6,16 @@ import { Category } from "../interfaces";
 import { SideLine } from "../utils";
 import { CategoryView } from "./CategoryView";
 
-const CategoryListElement = ({ category }: { category:Category }) => {
+const CategoryListElement = ({ category }: { category: Category }) => {
     return <Row>
         <Col xs={12} sm={2}>
-            <SideLine 
-                icon={category.icon?category.icon:"fab fa-cuttlefish"}
-                color={category.color?category.color:categoryIconColor}
-                category_id={category._id} />
+            <SideLine
+                icon={category.icon ? category.icon : "fab fa-cuttlefish"}
+                color={category.color ? category.color : categoryIconColor}
+                category_id={category.id} />
         </Col>
         <Col xs={12} sm={10}>
-            <CategoryView category={category} key={category._id} />
+            <CategoryView category={category} key={category.id} />
         </Col>
     </Row>
 }
