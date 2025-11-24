@@ -5,7 +5,8 @@ star: false
 date: 2020-06-30T22:00:00.000Z
 end_date: 2020-08-31T22:00:00.000Z
 id: team-italy-2020
-showMonth: true
+showMonthStart: true
+showMonthEnd: true
 ---
 
 

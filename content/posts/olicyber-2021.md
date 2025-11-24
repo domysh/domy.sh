@@ -2,10 +2,11 @@
 title: Olicyber 2021
 category: cybersec
 star: false
-date: 2020-12-31T23:01:00.000Z
-end_date: 2020-12-31T23:01:00.000Z
+date: '2020-12-31T23:00:00.000Z'
+end_date: '2020-12-31T23:00:00.000Z'
 id: olicyber-2021
-showMonth: false
+showMonthStart: false
+showMonthEnd: false
 ---
 
 

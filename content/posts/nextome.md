@@ -5,7 +5,8 @@ star: true
 date: 2023-02-28T23:00:00.000Z
 end_date: 2024-01-31T23:00:00.000Z
 id: nextome
-showMonth: true
+showMonthStart: true
+showMonthEnd: true
 ---
 
 

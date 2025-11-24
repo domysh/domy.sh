@@ -2,10 +2,11 @@
 title: Letsapp 2018
 category: dev
 star: false
-date: 2017-12-31T23:01:00.000Z
-end_date: 2017-12-31T23:01:00.000Z
+date: '2017-12-31T23:00:00.000Z'
+end_date: '2017-12-31T23:00:00.000Z'
 id: letsapp-2018
-showMonth: false
+showMonthStart: false
+showMonthEnd: false
 ---
 
 

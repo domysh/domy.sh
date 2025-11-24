@@ -5,7 +5,8 @@ star: false
 date: 2020-02-29T23:00:00.000Z
 end_date: 2020-08-31T22:00:00.000Z
 id: cyberchallenge-2020
-showMonth: true
+showMonthStart: true
+showMonthEnd: true
 ---
 
 

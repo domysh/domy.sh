@@ -11,6 +11,9 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return <>
     <EmojiRender>
       <Head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
+        <link href="https://fonts.googleapis.com/css2?family=Anton&family=Nunito:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap" rel="stylesheet" />
         <link rel="icon" href="/favicon.ico" />
         <meta itemProp="image" content="/favicon.ico" />
         <link itemProp="image" href="/favicon.ico" />

@@ -61,7 +61,7 @@ export const NoBots = () => {
 
 export const marktext_to_plain = (marktext: string) => {
     let htmlObject = document.createElement('div');
-    htmlObject.innerHTML = marked.parse(marktext)
+    htmlObject.innerHTML = marked.parse(marktext) as string
     return htmlObject.innerText
 }
 

@@ -5,7 +5,8 @@ star: true
 date: 2022-08-31T22:00:00.000Z
 end_date: 2022-08-31T22:00:00.000Z
 id: firegex
-showMonth: true
+showMonthStart: true
+showMonthEnd: true
 ---
 
 

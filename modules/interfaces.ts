@@ -41,7 +41,8 @@ export type Post = {
     date: string
     star: boolean
     end_date: string
-    showMonth?: boolean
+    showMonthStart?: boolean
+    showMonthEnd?: boolean
 }
 
 export type PageInfo = {

@@ -2,10 +2,11 @@
 title: Olicyber 2022
 category: cybersec
 star: true
-date: 2021-12-31T23:01:00.000Z
+date: '2021-12-31T23:00:00.000Z'
 end_date: 2022-04-30T22:00:00.000Z
 id: olicyber-2022
-showMonth: false
+showMonthStart: false
+showMonthEnd: false
 ---
 
 

@@ -5,7 +5,8 @@ star: true
 date: 2022-09-30T22:00:00.000Z
 end_date: 2025-06-30T22:00:00.000Z
 id: poliba-computer-engineer
-showMonth: true
+showMonthStart: true
+showMonthEnd: true
 ---
 
 

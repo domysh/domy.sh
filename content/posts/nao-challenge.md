@@ -2,10 +2,11 @@
 title: Nao Challenge
 category: dev
 star: false
-date: 2018-12-31T23:01:00.000Z
-end_date: 2019-12-31T23:01:00.000Z
+date: '2018-12-31T23:00:00.000Z'
+end_date: '2019-12-31T23:00:00.000Z'
 id: nao-challenge
-showMonth: false
+showMonthStart: false
+showMonthEnd: false
 ---
 
 

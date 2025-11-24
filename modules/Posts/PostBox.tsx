@@ -9,15 +9,15 @@ import { EmojiRender } from "../EmojiRender"
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-export const getStrDate = (isodata: string, isodatatoskip?: string) => {
+export const getStrDate = (isodata: string, showOnlyYear?: boolean, isodatatoskip?: string) => {
     const date = new Date(isodata)
     if (isodatatoskip == null) {
-        if (date.getMinutes() === 1)
+        if (showOnlyYear)
             return `${date.getFullYear()}`
         return `${months[date.getMonth()]} ${date.getFullYear()}`
     }
     const start_date = new Date(isodatatoskip)
-    const skipmonth = start_date.getMonth() == date.getMonth() || (date.getMinutes() === 1)
+    const skipmonth = start_date.getMonth() == date.getMonth() || showOnlyYear
     const skipyear = start_date.getFullYear() == date.getFullYear()
     if (skipyear && !skipmonth) return `${months[date.getMonth()]}`
     if (!skipyear && skipmonth) return `${date.getFullYear()}`
@@ -50,10 +50,10 @@ export const CategoryButton = ({ category }: { category?: Category }) => {
     </OverlayTrigger>
 }
 
-export const PostDate = ({ post_date, post_end_date }: { post_date: string, post_end_date: string }) => {
-    const date_str = getStrDate(post_date);
+export const PostDate = ({ post_date, post_end_date, showOnlyYearStart, showOnlyYearEnd }: { post_date: string, post_end_date: string, showOnlyYearStart?: boolean, showOnlyYearEnd?: boolean }) => {
+    const date_str = getStrDate(post_date, showOnlyYearStart);
     let date_str_end = null;
-    let end_date = getStrDate(post_end_date, post_date)
+    let end_date = getStrDate(post_end_date, showOnlyYearEnd, post_date)
     date_str_end = end_date == "" ? "" : ` - ${end_date}`
 
     return <div className={style.date}>
@@ -64,7 +64,7 @@ export const PostDate = ({ post_date, post_end_date }: { post_date: string, post
 
 export const PostBox = ({ post }: { post: Post }) => {
 
-    const date = <PostDate post_date={post.date} post_end_date={post.end_date} />
+    const date = <PostDate post_date={post.date} post_end_date={post.end_date} showOnlyYearStart={!post.showMonthStart} showOnlyYearEnd={!post.showMonthEnd} />
     const currentCategory = getCategory(post.category)
     const categoryContent = <CategoryButton category={currentCategory} />
     const star = <Star star={post.star} />
