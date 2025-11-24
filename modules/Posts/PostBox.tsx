@@ -7,11 +7,11 @@ import { getCategory, MdPost } from "../utils"
 import { categoryIconColor, fakeIcon } from "."
 import { EmojiRender } from "../EmojiRender"
 
-const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-export const getStrDate = (isodata:string, isodatatoskip?:string) => {
+export const getStrDate = (isodata: string, isodatatoskip?: string) => {
     const date = new Date(isodata)
-    if (isodatatoskip == null){
+    if (isodatatoskip == null) {
         if (date.getMinutes() === 1)
             return `${date.getFullYear()}`
         return `${months[date.getMonth()]} ${date.getFullYear()}`
@@ -22,48 +22,48 @@ export const getStrDate = (isodata:string, isodatatoskip?:string) => {
     if (skipyear && !skipmonth) return `${months[date.getMonth()]}`
     if (!skipyear && skipmonth) return `${date.getFullYear()}`
     if (!skipyear && !skipmonth) return `${months[date.getMonth()]} ${date.getFullYear()}`
-    return "" 
+    return ""
 }
 
-export const Star = React.forwardRef<HTMLElement,{star:boolean}>(({star, ...props},ref) => {
-    return star?<i className={`fas fa-star ${style.star_icon}`} ref={ref} {...props} />:
+export const Star = React.forwardRef<HTMLElement, { star: boolean }>(({ star, ...props }, ref) => {
+    return star ? <i className={`fas fa-star ${style.star_icon}`} ref={ref} {...props} /> :
         <i className={`far fa-star ${style.star_icon}`} ref={ref} {...props} />
 })
 
-export const CategoryButton = ({ category }:{ category?:Category }) => {
-    let categ:Category = category?category:fakeIcon
-    const color = categ.color?categ.color:categoryIconColor;
-    const categoryTooltip = (props:any) => (
-        <Tooltip id={categ._id+"_category_tooltip"} {...props}>
-          {categ.name}
+export const CategoryButton = ({ category }: { category?: Category }) => {
+    let categ: Category = category ? category : fakeIcon
+    const color = categ.color ? categ.color : categoryIconColor;
+    const categoryTooltip = (props: any) => (
+        <Tooltip id={categ._id + "_category_tooltip"} {...props}>
+            {categ.name}
         </Tooltip>
     );
     return <OverlayTrigger
-            placement="top"
-            delay={{ show: 250, hide: 400 }}
-            overlay={categoryTooltip}>
-            {({ ref, ...triggerHandler }) => (
-                <Link href={`/c/${categ._id}`} ref={ref} {...triggerHandler} className={style.category} style={{backgroundColor:color}}>
-                    <i className={categ.icon?categ.icon:"fab fa-cuttlefish"} />
-                </Link>
-            )}
-        </OverlayTrigger>
+        placement="top"
+        delay={{ show: 250, hide: 400 }}
+        overlay={categoryTooltip}>
+        {({ ref, ...triggerHandler }) => (
+            <Link href={`/c/${categ._id}`} ref={ref} {...triggerHandler} className={style.category} style={{ backgroundColor: color }}>
+                <i className={categ.icon ? categ.icon : "fab fa-cuttlefish"} />
+            </Link>
+        )}
+    </OverlayTrigger>
 }
 
-export const PostDate = ({post_date,post_end_date}:{post_date:string,post_end_date:string}) => {
+export const PostDate = ({ post_date, post_end_date }: { post_date: string, post_end_date: string }) => {
     const date_str = getStrDate(post_date);
     let date_str_end = null;
-    let end_date = getStrDate(post_end_date,post_date)
-    date_str_end = end_date==""?"":` - ${end_date}`
+    let end_date = getStrDate(post_end_date, post_date)
+    date_str_end = end_date == "" ? "" : ` - ${end_date}`
 
     return <div className={style.date}>
-                {date_str}
-                <div className={style.datend}>{date_str_end}</div>
-            </div>
+        {date_str}
+        <div className={style.datend}>{date_str_end}</div>
+    </div>
 }
 
-export const PostBox = ({ post }: { post:Post }) => {
-    
+export const PostBox = ({ post }: { post: Post }) => {
+
     const date = <PostDate post_date={post.date} post_end_date={post.end_date} />
     const currentCategory = getCategory(post.category)
     const categoryContent = <CategoryButton category={currentCategory} />
@@ -83,6 +83,6 @@ export const PostBox = ({ post }: { post:Post }) => {
             <div className="flex-fullwidth" />
             {date} {categoryContent} {star}
         </div>
-        
-    </div>  
+
+    </div>
 }

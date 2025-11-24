@@ -1,0 +1,30 @@
+- name: Telegram
+  color: '#0088cc'
+  icon: fa-brands fa-telegram-plane
+  url: https://t.me/domysh
+  id:
+    buffer: !!binary Ye2pNrVeqXIvoqKD
+- name: Instagram
+  color: '#eb144c'
+  icon: fa-brands fa-instagram
+  url: https://instagram.com/domy.sh
+  id:
+    buffer: !!binary Ye2pkrVeqXIvoqKE
+- name: Linkedin
+  color: '#0e76a8'
+  icon: fa-brands fa-linkedin
+  url: https://www.linkedin.com/in/domysh/
+  id:
+    buffer: !!binary Ye2pwbVeqXIvoqKF
+- name: Email
+  color: '#00d084'
+  icon: fas fa-at
+  url: mailto:me@domy.sh
+  id:
+    buffer: !!binary Ye2p87VeqXIvoqKG
+- name: Github
+  color: '#000000'
+  icon: fab fa-github
+  url: https://github.com/domysh
+  id:
+    buffer: !!binary Ye2qMrVeqXIvoqKH

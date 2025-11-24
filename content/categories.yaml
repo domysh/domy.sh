@@ -1,0 +1,24 @@
+- name: Coding
+  description: Experiences, jobs and competitions about coding and programming
+  color: '#0693e3'
+  icon: fas fa-code
+  highlighted: true
+  id: dev
+- name: Cybersecurity
+  description: Courses, jobs, competition and CTFs about cybersecurity and hacking
+  color: '#eb144c'
+  icon: fas fa-bug
+  highlighted: true
+  id: cybersec
+- name: Instruction and Studies
+  description: Schools, Universities and all about the academic path in my studies
+  color: '#00d084'
+  icon: fas fa-graduation-cap
+  highlighted: false
+  id: instruction
+- name: Jobs
+  description: Find out what job I did or I'm working for
+  color: '#ff6900'
+  icon: fa-solid fa-computer-mouse
+  highlighted: true
+  id: jobs

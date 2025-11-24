@@ -35,7 +35,7 @@ export type Category = {
 }
 
 export type Post = {
-    _id:string
+    _id: string
     title: string
     description: string
     category: string
@@ -43,6 +43,7 @@ export type Post = {
     date: string
     star: boolean
     end_date: string
+    showMonth?: boolean
 }
 
 export type PageInfo = {

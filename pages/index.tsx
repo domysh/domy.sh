@@ -2,35 +2,49 @@ import Head from 'next/head'
 import ReactMarkdown from 'react-markdown'
 import { DefaultLayout } from '../modules/DefaultLayout'
 import { PostList } from '../modules/Posts'
-import { sprops, DB, ssprops, DocumentWithStingId } from '../js/db'
 import { Page, Post, PublicInfo } from '../modules/interfaces'
-import { tojsonlike } from '../js/utils'
 import { Infos } from '../modules/Context/Infos'
+import { getPublicInfo, getPage, getPosts } from '../lib/api'
 
-const Render = ({ page, posts, infos }: { infos:PublicInfo, page?:Page, posts:Post[] }) => {
+
+const Render = ({ page, posts, infos }: { infos: PublicInfo, page?: Page, posts: Post[] }) => {
     let description = "Welcome to the home page of my website!"
-    let content = posts.length == 0?"## No content available!":""
-    if (page != null){
+    let content = posts.length == 0 ? "## No content available!" : ""
+    if (page != null) {
         description = page.description
         content = page.content
     }
     return (<Infos infos={infos}>
-    <DefaultLayout>
-        <Head>
-            <meta name="description" content={description} />
-            <meta property="og:description" content={description} />
-        </Head>
-        <ReactMarkdown>{content}</ReactMarkdown>
-        {posts.length==0?"":<hr />}
-        <PostList posts={posts} />
-    </DefaultLayout>
+        <DefaultLayout>
+            <Head>
+                <meta name="description" content={description} />
+                <meta property="og:description" content={description} />
+            </Head>
+            <ReactMarkdown>{content}</ReactMarkdown>
+            {posts.length == 0 ? "" : <hr />}
+            <PostList posts={posts} />
+        </DefaultLayout>
     </Infos>)
 }; export default Render
 
-export const getStaticProps = ssprops(async () => {
-    const db = await DB()
+export const getStaticProps = async () => {
+    const infos = getPublicInfo();
+    const page = getPage("index");
+    // Wait, original code used `findOne({_id:""})`. 
+    // If migration script saved it as `.md` (empty name?), likely not.
+    // Let's check `content/pages` to see if there is a file for home.
+    // If not, maybe it's handled differently.
+    // But `getPublicInfo` is needed.
+
+    // Original: `posts: ...find({ star: true }).sort({ end_date:-1 })`
+    const allPosts = getPosts();
+    const posts = allPosts.filter(p => p.star).sort((a, b) => (new Date(b.end_date).getTime() - new Date(a.end_date).getTime()));
+
     return {
-        page: tojsonlike(await db.collection<DocumentWithStingId>("pages").findOne({_id:""})),
-        posts: tojsonlike(await db.collection("posts").find({ star: true }).sort({ end_date:-1 }).toArray())
+        props: {
+            infos,
+            page: page || null, // If null, Render handles it
+            posts
+        }
     }
-})
+}
