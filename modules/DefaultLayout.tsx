@@ -10,7 +10,6 @@ export function DefaultLayout({ children }: { children: any }) {
         <NavBar />
         <Header />
         <Spacer />
-        <script defer data-domain="domy.sh" src="https://plausible.domy.sh/js/script.js"></script>
         <Container>
             {children}
         </Container>
