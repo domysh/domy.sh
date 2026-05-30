@@ -42,6 +42,7 @@ export type Post = {
     end_date: string
     showMonthStart?: boolean
     showMonthEnd?: boolean
+    ongoing?: boolean
 }
 
 export type PageInfo = {

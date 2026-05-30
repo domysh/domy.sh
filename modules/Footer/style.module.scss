@@ -14,14 +14,14 @@
 .footer_content {
     display: flex;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
     
     @include media-breakpoint-up(xxl) {
-        max-width: 1500px;
+        max-width: 1600px;
     }
 }
 

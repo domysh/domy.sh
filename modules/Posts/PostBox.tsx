@@ -50,11 +50,16 @@ export const CategoryButton = ({ category }: { category?: Category }) => {
     </OverlayTrigger>
 }
 
-export const PostDate = ({ post_date, post_end_date, showOnlyYearStart, showOnlyYearEnd }: { post_date: string, post_end_date: string, showOnlyYearStart?: boolean, showOnlyYearEnd?: boolean }) => {
+export const PostDate = ({ post_date, post_end_date, showOnlyYearStart, showOnlyYearEnd, ongoing }: { post_date: string, post_end_date: string, showOnlyYearStart?: boolean, showOnlyYearEnd?: boolean, ongoing?: boolean }) => {
     const date_str = getStrDate(post_date, showOnlyYearStart);
     let date_str_end = null;
-    let end_date = getStrDate(post_end_date, showOnlyYearEnd, post_date)
-    date_str_end = end_date == "" ? "" : ` - ${end_date}`
+
+    if (ongoing) {
+        date_str_end = " - Now"
+    } else {
+        let end_date = getStrDate(post_end_date, showOnlyYearEnd, post_date)
+        date_str_end = end_date == "" ? "" : ` - ${end_date}`
+    }
 
     return <div className={style.date}>
         {date_str}
@@ -64,7 +69,7 @@ export const PostDate = ({ post_date, post_end_date, showOnlyYearStart, showOnly
 
 export const PostBox = ({ post }: { post: Post }) => {
 
-    const date = <PostDate post_date={post.date} post_end_date={post.end_date} showOnlyYearStart={!post.showMonthStart} showOnlyYearEnd={!post.showMonthEnd} />
+    const date = <PostDate post_date={post.date} post_end_date={post.end_date} showOnlyYearStart={!post.showMonthStart} showOnlyYearEnd={!post.showMonthEnd} ongoing={post.ongoing} />
     const currentCategory = getCategory(post.category)
     const categoryContent = <CategoryButton category={currentCategory} />
     const star = <Star star={post.star} />

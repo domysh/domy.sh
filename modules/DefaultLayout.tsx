@@ -10,7 +10,7 @@ export function DefaultLayout({ children }: { children: any }) {
         <NavBar />
         <Header />
         <Spacer />
-        <Container style={{ flexGrow: 1 }}>
+        <Container style={{ flexGrow: 1, maxWidth: "1500px" }}>
             {children}
         </Container>
         <Footer />

@@ -2,8 +2,8 @@
 title: 'Cyberchallenge [Organizer]'
 category: cybersec
 star: true
-date: '2021-12-31T23:00:00.000Z'
-end_date: '2024-12-31T23:00:00.000Z'
+date: '2021-12-30T23:00:00.000Z'
+end_date: '2026-12-30T23:00:00.000Z'
 id: cyberchallenge-organizer
 showMonthStart: false
 showMonthEnd: false
