@@ -2,6 +2,14 @@
 @use "sass:color";
 
 @import "~bootstrap/scss/bootstrap";
+
+@font-face {
+  font-family: 'Twemoji';
+  src: url('/fonts/twemoji.woff2') format('woff2');
+  font-display: swap;
+  unicode-range: U+2000-2BFF, U+FE0F, U+1F000-1FAFF;
+}
+
 $underline-color: $secondary-color;
 $primary-accent: $primary-color;
 
@@ -46,13 +54,6 @@ code {
     color: #F99;
     padding: 4px;
     border-radius: 6px;
-}
-
-img.twemoji {
-    height: 1em;
-    width: 1em;
-    margin: 0 .05em 0 .1em;
-    vertical-align: -0.1em;
 }
 
 .nav-link {

@@ -5,7 +5,6 @@ import style from "./style.module.scss"
 import { Category, Post } from "../interfaces"
 import { getCategory, MdPost } from "../utils"
 import { categoryIconColor, fakeIcon } from "."
-import { EmojiRender } from "../EmojiRender"
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
@@ -73,7 +72,7 @@ export const PostBox = ({ post }: { post: Post }) => {
     const currentCategory = getCategory(post.category)
     const categoryContent = <CategoryButton category={currentCategory} />
     const star = <Star star={post.star} />
-    const description = <EmojiRender><MdPost>{post.description}</MdPost></EmojiRender>
+    const description = <MdPost>{post.description}</MdPost>
 
     return <div className={style.box} id={post.id}>
         <div className={style.head}>
