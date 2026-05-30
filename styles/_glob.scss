@@ -19,16 +19,35 @@
     @extend .center-flex;
     align-items: left;
 }
+// Color Palette
+$bg-color: #0A0F1A;
+$primary-color: #6366F1; // Indigo
+$secondary-color: #06B6D4; // Cyan
+$text-primary: #F8FAFC;
+$text-secondary: #94A3B8;
 
+$main-color: $bg-color; // Fallback for legacy compatibility
 
-$main-color: #111;
+@mixin glassmorphism($blur: 10px, $opacity: 0.2) {
+    background: rgba(255, 255, 255, $opacity);
+    backdrop-filter: blur($blur);
+    -webkit-backdrop-filter: blur($blur);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@mixin glassmorphism_dark($blur: 10px, $opacity: 0.4) {
+    background: rgba(0, 0, 0, $opacity);
+    backdrop-filter: blur($blur);
+    -webkit-backdrop-filter: blur($blur);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
 
 @mixin title {
-    font-family: 'Anton', sans-serif;
+    font-family: var(--font-outfit), sans-serif;
 }
 
 @mixin normal_font {
-    font-family: 'Nunito', sans-serif;
+    font-family: var(--font-outfit), sans-serif;
 }
 
 .small-margin-container{

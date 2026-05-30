@@ -9,28 +9,31 @@ import { MetaInfo } from "../interfaces";
 export const Header = ({ meta }: { meta?: MetaInfo }) => {
   const infos = meta ? { meta } : useContext(InfosContext)
 
-  const background_img = infos.meta.header_img ?
-    `/uploads/${infos.meta.header_img}` :
-    "/img/header-back.jpg"
   return (<>
-    <Row className={`${style.header} g-0`} style={{
-      backgroundImage: `url(${background_img})`,
-      backgroundPosition: "center",
-      backgroundSize: "cover",
-    }} >
-      <div className={style.darklayer} />
-      <Col xs={12} md={8} lg={6} className={style.text}>
-        {infos.meta.name}
-        <div className={style.subtitle}>{infos.meta.description}</div>
-        <SocialIcons className={style.social} />
-      </Col>
-      <Col md={4} lg={6} className={style.profile_image}>
-        {infos.meta.profile_img ?
-          <img
-            src={`/uploads/${infos.meta.profile_img}`}
-            alt="Profile Image" />
-          : null}
-      </Col>
+    <Row className={`${style.header} g-0`}>
+      <div className={style.gradient_bg} />
+      
+      <div className={style.content_wrapper}>
+        <div className={style.glass_card}>
+          <Col className={style.profile_col}>
+            {infos.meta.profile_img ?
+              <div className={style.profile_image_wrapper}>
+                <img
+                  src={`/uploads/${infos.meta.profile_img}`}
+                  alt="Profile Image" 
+                  className={style.profile_img} />
+              </div>
+              : null}
+          </Col>
+          <Col className={style.text_col}>
+            <div className={style.text}>
+              {infos.meta.name}
+              <div className={style.subtitle}>{infos.meta.description}</div>
+              <SocialIcons className={style.social} />
+            </div>
+          </Col>
+        </div>
+      </div>
     </Row>
   </>);
 }

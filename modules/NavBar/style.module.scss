@@ -1,16 +1,179 @@
 @use "../../styles/glob" as *;
 
-.navbar{
-    padding: 5px 0;
-    @extend .small-margin-container;
+.floating_nav {
+    position: fixed;
+    z-index: 1000;
+    max-width: 900px;
+    margin: 20px auto !important;
+    border-radius: 50px;
+    padding: 10px 20px;
+    top: 0;
+    left: 0;
+    right: 0;
+    transition: background 0.4s ease-in-out, border 0.4s ease-in-out, box-shadow 0.4s ease-in-out, backdrop-filter 0.4s ease-in-out;
+    
+    @include media-breakpoint-up(xl) {
+        max-width: 1100px;
+        padding: 12px 30px;
+    }
+    
+    @include media-breakpoint-up(xxl) {
+        max-width: 1400px;
+        padding: 15px 40px;
+    }
+    
+    @include media-breakpoint-down(lg) {
+        top: auto;
+        bottom: 20px;
+        max-width: 90%;
+        margin: 0 auto !important;
+        border-radius: 50px;
+        padding: 10px 0;
+    }
 }
 
-.onBottom{
-    background: rgba(16,16,16,0.95) !important;
-}
-.onTop{
-    background: rgba(0,0,0,0.2) !important;
+.onBottom {
+    @include glassmorphism_dark(20px, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    
+    @include media-breakpoint-down(lg) {
+        background: rgba($bg-color, 0.95) !important;
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    }
 }
 
+.onTop {
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    box-shadow: none;
+    
+    @include media-breakpoint-down(lg) {
+        background: rgba($bg-color, 0.95) !important;
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    }
+}
 
+.nav_scroll_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    
+    @include media-breakpoint-down(lg) {
+        justify-content: flex-start;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        padding: 0 15px; // Provides safe space so links aren't flush with device edges
+        
+        // This safely centers the items when they don't overflow, but allows scrolling when they do
+        &::before, &::after {
+            content: '';
+            margin: auto;
+        }
+
+        scrollbar-width: none; // Firefox
+        &::-webkit-scrollbar { 
+            display: none; // Chrome/Safari
+        }
+    }
+}
+
+.nav_link {
+    color: $text-primary;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    
+    @include media-breakpoint-down(lg) {
+        padding: 12px 20px;
+        font-size: 1.1rem;
+    }
+    
+    &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: $text-primary;
+    }
+    
+    &.active {
+        background: rgba($primary-color, 0.2);
+        color: $secondary-color !important;
+    }
+}
+
+.scroll_wrapper {
+    position: relative;
+    width: 100%;
+    border-radius: 50px;
+}
+
+.scroll_fade_left, .scroll_fade_right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 80px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+    
+    @include media-breakpoint-up(lg) {
+        display: none;
+    }
+}
+
+.scroll_fade_left {
+    left: 0;
+    background: linear-gradient(to right, rgba($bg-color, 0.95) 30%, transparent);
+    justify-content: flex-start;
+    padding-left: 10px;
+    border-top-left-radius: 50px;
+    border-bottom-left-radius: 50px;
+}
+
+.scroll_fade_right {
+    right: 0;
+    background: linear-gradient(to left, rgba($bg-color, 0.95) 30%, transparent);
+    justify-content: flex-end;
+    padding-right: 10px;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+}
+
+.scroll_btn {
+    pointer-events: auto;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    
+    i {
+        font-size: 0.9rem;
+    }
+    
+    &:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: scale(1.1);
+    }
+    &:active {
+        transform: scale(0.95);
+    }
+}
 

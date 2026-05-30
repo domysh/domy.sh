@@ -1,9 +1,9 @@
 @use "glob" as *;
+@use "sass:color";
 
 @import "~bootstrap/scss/bootstrap";
-
-
-$underline-color: #1a76bd;
+$underline-color: $secondary-color;
+$primary-accent: $primary-color;
 
 * {
     box-sizing: border-box;
@@ -15,43 +15,21 @@ body,
     margin: 0;
     padding: 0;
     width: 100%;
-    background-color: $main-color;
-    color: #FFF;
-    @include normal_font();
+    background-color: $bg-color;
+    color: $text-primary;
     word-break: break-word;
 }
+
 
 a {
     text-decoration: none;
     color: $underline-color;
-
-    & {
-        position: relative;
-    }
-
-    &::before {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        width: 0;
-        height: 2px;
-        background-color: $underline-color;
-        transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-        &:hover::before {
-            left: 0;
-            right: auto;
-            width: 100%;
-        }
-    }
+    transition: color 0.2s ease, opacity 0.2s ease;
 
     &:hover {
-        color: $underline-color;
+        color: color.adjust($underline-color, $lightness: 15%);
+        opacity: 0.85;
     }
-
 }
 
 img {

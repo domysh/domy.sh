@@ -7,16 +7,14 @@ import { getPage, getPages, getPublicInfo } from '../lib/api'
 
 
 const Render = ({ page, infos }: { page: Page, infos: PublicInfo }) => {
-    return (<Infos infos={infos}>
-        <DefaultLayout>
+    return (<>
             <Head>
                 <meta name="description" content={page.description} />
             </Head>
             <h1 style={{ textAlign: "center" }}>{page.name}</h1>
             <hr style={{ margin: "50px 0px" }} />
             <ReactMarkdown>{page.content}</ReactMarkdown>
-        </DefaultLayout>
-    </Infos>)
+    </>)
 }; export default Render;
 
 export const getStaticPaths = async () => {

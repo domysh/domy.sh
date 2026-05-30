@@ -1,16 +1,65 @@
 @use "../../styles/glob" as *;
 
-.box{
-    padding: 20px;
+.grid_container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
     margin: 40px 0;
-    cursor: pointer;
 }
 
-.title{
+.link_wrapper {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.box {
+    @include glassmorphism_dark(15px, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 25px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    
+    &:hover {
+        transform: translateY(-5px);
+        background: rgba($bg-color, 0.6);
+        border: 1px solid rgba($primary-color, 0.4);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba($primary-color, 0.2);
+        
+        .icon_wrapper {
+            transform: scale(1.1) rotate(5deg);
+        }
+    }
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
     margin-bottom: 15px;
 }
 
-.description{
-    text-align: left;
+.icon_wrapper {
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
 }
 
+.title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.description {
+    text-align: left;
+    color: $text-secondary;
+    line-height: 1.6;
+    flex-grow: 1;
+}

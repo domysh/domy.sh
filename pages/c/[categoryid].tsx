@@ -13,8 +13,7 @@ const Render = ({ infos, posts, categoryid }: { infos: PublicInfo, posts: Post[]
     if (currentCategory == null) {
         return <Error404 />
     }
-    return (<Infos infos={infos}>
-        <DefaultLayout>
+    return (<>
             <Head>
                 <meta name="description" content={currentCategory.description} />
                 <meta property="og:description" content={currentCategory.description} />
@@ -27,8 +26,7 @@ const Render = ({ infos, posts, categoryid }: { infos: PublicInfo, posts: Post[]
                     There are no posts for this category!
                 </h1> : ""}
             <PostList posts={posts} />
-        </DefaultLayout>
-    </Infos>)
+    </>)
 }; export default Render
 
 export const getStaticPaths = async () => {

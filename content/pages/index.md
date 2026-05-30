@@ -1,13 +1,14 @@
 ---
 name: Home Page
 description: >-
-  Welcome to my portfolio, here there are contacts and important results, and
-  experiences that I have done. Visit this page for discover more.
+  Welcome to my portfolio. Discover my professional experience, core projects, and contact information.
 highlighted: false
 id: ''
 ---
 
-# Hey there! 
-I'm Domingo Dirutigliano and I'm a computer engineering student and cybersecurity enthusiast.
-In this website are collected various information about me, and about the activities and projects I carry out.
-If you want know more specific information visit the categories section [here](/c/), otherwise in this page, you can find my main goals and project with a small description and some link to visit.
+# Hey there! 👋
+I'm **Domingo Dirutigliano**, a Computer Engineering student, Software Developer, and Cybersecurity enthusiast.
+
+This website serves as a collection of my professional journey, highlighting the projects I've built, the systems I've secured, and the technical challenges I've overcome.
+
+Feel free to explore my specific skills and experiences in the [Categories section](/c/). Alternatively, you can browse this page to see a curated overview of my main goals, featured projects, and links to my work.

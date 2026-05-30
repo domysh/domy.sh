@@ -58,7 +58,7 @@ export const PostDate = ({ post_date, post_end_date, showOnlyYearStart, showOnly
 
     return <div className={style.date}>
         {date_str}
-        <div className={style.datend}>{date_str_end}</div>
+        {date_str_end && <div className={style.datend}>{date_str_end}</div>}
     </div>
 }
 

@@ -10,12 +10,14 @@ export const Footer = () => {
     const infos = useContext(InfosContext)
     return (<> <Spacer />
     <Container fluid className={style.main_footer}>
-        <div className={style.social_wrapper}>
-            <SocialIcons />
-        </div>
-        <div className={style.text_spacer} />
-        <div className={style.text}>
-            <ReactMarkdown children={infos.meta.footer} />
+        <div className={style.footer_content}>
+            <div className={style.social_wrapper}>
+                <SocialIcons />
+            </div>
+            <div className={style.text_spacer} />
+            <div className={style.text}>
+                <ReactMarkdown children={infos.meta.footer} />
+            </div>
         </div>
     </Container>
     </>);

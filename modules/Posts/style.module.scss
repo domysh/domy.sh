@@ -41,8 +41,19 @@
 }
 
 .date{
-    font-weight: bold;
-    border-bottom: 1px solid #FFF;
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: #FFF;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 4px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
 }
 
 .datend{

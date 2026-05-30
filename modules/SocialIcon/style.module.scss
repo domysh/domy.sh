@@ -1,29 +1,34 @@
 @use "../../styles/glob" as *;
 
-.link{
-    width: 38px;
-    height: 38px;
+.link {
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
-    transition: all .1s;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     @extend .center-flex;
-    > *{
-        transition: all .1s;
-        font-size: 20px;
+    
+    > * {
+        transition: transform 0.3s ease;
+        font-size: 22px;
     }
 
-    &:hover{
-        opacity: .8;
+    &:hover {
+        transform: translateY(-4px) scale(1.1);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
     }
+    
     @extend .no-undeline-animation;
 }
 
-.list{
+.list {
+    display: flex;
     flex-flow: row wrap;
-    @extend .center-flex;
-    > *{
+    align-items: center;
+    gap: 16px;
+    
+    > * {
         text-decoration: none;
-        margin: 8px;
+        margin: 0;
     }
 }
-
-

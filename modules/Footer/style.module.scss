@@ -1,10 +1,28 @@
 @use "../../styles/glob" as *;
 
-.main_footer{
-    background-color: #0A0A0A;
-    @extend .center-flex;
+@use "sass:color";
+
+.main_footer {
+    background-color: color.adjust($bg-color, $lightness: -2%);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    
+    @include media-breakpoint-down(lg) {
+        padding-bottom: 90px;
+    }
+}
+
+.footer_content {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
     flex-wrap: wrap;
+    align-items: center;
     justify-content: center;
+    
+    @include media-breakpoint-up(xxl) {
+        max-width: 1500px;
+    }
 }
 
 .footer_spacer{

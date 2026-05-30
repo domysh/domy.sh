@@ -14,8 +14,7 @@ const Render = ({ page, posts, infos }: { infos: PublicInfo, page?: Page, posts:
         description = page.description
         content = page.content
     }
-    return (<Infos infos={infos}>
-        <DefaultLayout>
+    return (<>
             <Head>
                 <meta name="description" content={description} />
                 <meta property="og:description" content={description} />
@@ -23,8 +22,7 @@ const Render = ({ page, posts, infos }: { infos: PublicInfo, page?: Page, posts:
             <ReactMarkdown>{content}</ReactMarkdown>
             {posts.length == 0 ? "" : <hr />}
             <PostList posts={posts} />
-        </DefaultLayout>
-    </Infos>)
+    </>)
 }; export default Render
 
 export const getStaticProps = async () => {

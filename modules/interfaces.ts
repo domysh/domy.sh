@@ -11,7 +11,6 @@ export type MetaInfo = {
     description: string
     site_name: string
     footer: string
-    header_img?: string
     profile_img?: string
 }
 

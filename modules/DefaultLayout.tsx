@@ -6,13 +6,13 @@ import { NavBar } from './NavBar'
 import { Spacer } from './utils'
 
 export function DefaultLayout({ children }: { children: any }) {
-    return <>
+    return <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         <NavBar />
         <Header />
         <Spacer />
-        <Container>
+        <Container style={{ flexGrow: 1 }}>
             {children}
         </Container>
         <Footer />
-    </>
+    </div>
 }

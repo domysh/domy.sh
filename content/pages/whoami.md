@@ -1,27 +1,29 @@
 ---
 name: About Me
-description: Find more information about me, my general skills and experiences.
+description: Discover more about my background, technical skills, and professional experiences.
 highlighted: true
 id: whoami
 ---
 
 ## 👤 $ ~/ >> whoami_
-> I'm Domingo Dirutigliano, I live in Apulia, in Italy and I'm a developer and ethical hacker 💾.
- 
+> I'm **Domingo Dirutigliano**, a Software Developer and Ethical Hacker based in Apulia, Italy 💾.
 
-## 💻 $ ~/software_developper/ >> _
-> I started studing IT self-taught and continued in a technical institute which also offered me a more general and disciplined preparation. Every opportunity to start a project becomes for me an extra activity, you can see some small/big projects on my [github](https://github.com/domysh) but also on the page of our CTF team where I created some of the main projects of [Pwnzer0tt1](https://github.com/pwnzer0tt1). Currently I'm studing at [Polytechnic of Bari](https://www.poliba.it) Computer engineering.
-These are some thecnologies that I used for many projects
-- Python - The language most used by me, with which I developed software for the management of the NAO robot, also used in the field of hacking, web development and also in the development of traditional applications and for some job experiences
-- Java + Kotlin + Spring - Used in Nextome in a job experience and also for personal projects
-- C/C++ - Mainly used in schools, but extensively studied thanks to various computer security and programming competitions
-- HTML CSS JS - Classic web languages, basic for the creation of websites
-- Typescript/Javascript (React): Discovered and studied my myself, also during the building of this website (written using nextjs, [source code](https://github.com/DomySh/domy.sh)) and many other web-based projects
-- MongoDB and RDBMS (SQL, MySQL): I studied RDBMS at school, including database design and SQL language. Also I discovered and learned by myself mongoDB, used in many projects of mine.
-- Docker: The security but also the maintainability of the applications is the first thing I care a lot, in particular "if an app isn't dockerized, can't be launchable", I take this as fundamental requirement.
+## 💻 $ ~/software_developer/ >> _
+> My journey in IT began as a self-taught programmer, which laid a strong foundation before I formalized my education at a technical institute. I thrive on bringing ideas to life, treating every new project as an opportunity to learn and innovate. You can explore a variety of my personal projects on my [GitHub](https://github.com/domysh), as well as the core infrastructure and tools I've built for our CTF team, [Pwnzer0tt1](https://github.com/pwnzer0tt1). Currently, I am pursuing a degree in Computer Engineering at the [Polytechnic of Bari](https://www.poliba.it).
+
+Here are some of the core technologies I specialize in:
+- **Python**: My primary language. I've used it extensively for developing management software for the NAO robot, building web backends, crafting hacking tools, and driving various professional job experiences.
+- **Java & Kotlin (Spring)**: Leveraged heavily during my professional tenure at Nextome and across several personal backend architectures.
+- **C/C++**: Deeply studied and applied in academic environments, as well as in competitive programming and low-level binary exploitation contexts.
+- **HTML, CSS, & Vanilla JS**: The foundational web trio, essential for any robust frontend development.
+- **TypeScript & React (Next.js)**: Self-taught and highly utilized in modern web applications, including the very architecture of this portfolio (check out the [source code](https://github.com/DomySh/domy.sh)).
+- **Databases (SQL, MySQL, MongoDB)**: Experienced in relational database design and SQL from my formal studies, complemented by self-taught expertise in NoSQL solutions like MongoDB for flexible, scalable projects.
+- **Docker**: I treat application maintainability and environment consistency as absolute priorities. For me, "if an app isn't dockerized, it isn't ready to deploy."
 
 ## 💾 $ ~/hacking/ >> _
-> I learned the basics of cybersecurity thanks to the Cyberchallenge 2020 project which, in addition to teaching me, also introduced me in this area that I had not yet explored. Thanks to this I met many cybersecurity experts with whom I collaborate to participate in various CTF competitions that expand and increase the knowledge in this area that has captured me a lot. After that, i continued following cybersecurity CTF competitions, and continued to partecipate to different project and competition. I became one of the main organizer of CyberChallenge at [Polytechnic of Bari](https://www.poliba.it) manly for binary exploitation. I never had a work experience in this field and I'm open to opportunities that could let me in this field. You can find more information in the [cybersecurity section](/c/cybersec) of this website.
+> My entry into the world of cybersecurity began with the CyberChallenge 2020 project. This intensive program not only taught me the fundamentals of ethical hacking but also connected me with a network of cybersecurity experts. Together, we frequently collaborate and compete in various CTF (Capture The Flag) competitions, constantly pushing the boundaries of our knowledge. 
+
+> Building on that foundation, I have remained deeply involved in the CTF scene and eventually became one of the lead organizers for CyberChallenge at the [Polytechnic of Bari](https://www.poliba.it), specializing in binary exploitation. I am highly passionate about this field and am actively open to professional opportunities where I can apply my security expertise. You can find more details in the [Cybersecurity Section](/c/cybersec) of this website.
 
 ## 🎓 $ ~/learning/ >> _
-> I studied IT in a technical institute with a great path and great experiences in the I.I.S.S. Luigi dell'Erba in Castellana Grotte. Now I'm studing university studing Computer engineering at the Polytechnic of Bari to get the degree with the curriculum in systems and IT applications.
+> I built a rigorous technical foundation at the I.I.S.S. Luigi dell'Erba in Castellana Grotte, which provided me with invaluable hands-on experiences. I am currently advancing my academic career at the Polytechnic of Bari, studying Computer Engineering with a specialized curriculum in Systems and IT Applications.
