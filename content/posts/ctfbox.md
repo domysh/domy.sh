@@ -1,7 +1,7 @@
 ---
 title: CTFBox
 category: cybersec
-star: true
+star: false
 date: 2024-01-01T23:00:00.000Z
 end_date: 2024-01-01T23:00:00.000Z
 id: ctfbox

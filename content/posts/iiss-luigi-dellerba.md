@@ -1,7 +1,7 @@
 ---
 title: IISS Luigi Dell'Erba
 category: instruction
-star: true
+star: false
 date: 2017-08-31T22:00:00.000Z
 end_date: 2022-06-30T22:00:00.000Z
 id: iiss-luigi-dellerba

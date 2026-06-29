@@ -1,7 +1,7 @@
 ---
 title: Poliba - Computer engineer
 category: instruction
-star: true
+star: false
 date: 2022-09-30T22:00:00.000Z
 end_date: 2025-06-30T22:00:00.000Z
 id: poliba-computer-engineer
