@@ -81,7 +81,7 @@ Options:
   -h, --help                Show this help
 
 Steps:
-  firewall   Disable firewalld and cockpit (Fedora/RHEL family, systemd only)
+  firewall   Stop, disable and uninstall firewalld and cockpit (Fedora/RHEL family)
   packages   Install ${BASE_PACKAGES[*]}
   keys       Add $KEYS_URL to ~/.ssh/authorized_keys
   docker     Install Docker with get.docker.com
@@ -104,6 +104,15 @@ EOF
 have() { command -v "$1" >/dev/null 2>&1; }
 
 has_systemd() { [ -d /run/systemd/system ] && have systemctl; }
+
+in_container() {
+    if have systemd-detect-virt; then
+        systemd-detect-virt -cq
+    else
+        [ -f /.dockerenv ] || [ -f /run/.containerenv ] \
+            || grep -qa 'container=' /proc/1/environ 2>/dev/null
+    fi
+}
 
 as_root() {
     if [ "$EUID" -eq 0 ]; then "$@"; else sudo "$@"; fi
@@ -218,7 +227,7 @@ pkg_name() {
 
 step_desc() {
     case "$1" in
-        firewall) echo "Disable firewalld and cockpit" ;;
+        firewall) echo "Stop, disable and uninstall firewalld and cockpit" ;;
         packages) echo "Install base packages (${BASE_PACKAGES[*]})" ;;
         keys)     echo "Add $KEYS_URL to ~$TARGET_USER/.ssh/authorized_keys" ;;
         docker)   echo "Install Docker" ;;
@@ -229,22 +238,34 @@ step_desc() {
 }
 
 step_firewall() {
-    if ! has_systemd; then
-        info "systemd is not running (container?), nothing to disable"
+    local unit pkgs=()
+    if has_systemd; then
+        for unit in firewalld.service cockpit.socket cockpit.service; do
+            systemctl list-unit-files --no-legend "$unit" 2>/dev/null | grep -q . || continue
+            if as_root systemctl disable --now "$unit" >/dev/null 2>&1; then
+                ok "Stopped and disabled $unit"
+            else
+                warn "Could not stop $unit"
+            fi
+        done
+    else
+        info "systemd is not running (container?), no services to stop"
+    fi
+
+    have rpm || { err "rpm not found"; return 1; }
+    mapfile -t pkgs < <(rpm -qa --qf '%{NAME}\n' firewalld 'cockpit*' 2>/dev/null | sort -u)
+    if [ "${#pkgs[@]}" -eq 0 ]; then
+        ok "firewalld and cockpit are not installed"
         return 0
     fi
-    local unit
-    for unit in firewalld.service cockpit.socket cockpit.service; do
-        if systemctl list-unit-files --no-legend "$unit" 2>/dev/null | grep -q .; then
-            if as_root systemctl disable --now "$unit" >/dev/null 2>&1; then
-                ok "Disabled $unit"
-            else
-                warn "Could not disable $unit"
-            fi
-        else
-            info "$unit not installed"
-        fi
-    done
+    info "Removing: ${pkgs[*]}"
+    as_root "$PM" remove -y -q "${pkgs[@]}" >/dev/null 2>&1
+    mapfile -t pkgs < <(rpm -qa --qf '%{NAME}\n' firewalld 'cockpit*' 2>/dev/null)
+    if [ "${#pkgs[@]}" -gt 0 ]; then
+        err "Still installed: ${pkgs[*]}"
+        return 1
+    fi
+    ok "firewalld and cockpit uninstalled"
 }
 
 step_packages() {
@@ -465,6 +486,49 @@ step_zsh() {
     fi
 }
 
+NB_SHIM_DIR="/usr/local/lib/netbird-shim"
+
+# For interactive SSH sessions NetBird runs `setsid -w -c login ...` when
+# login comes from util-linux. -c steals the terminal (TIOCSCTTY), which needs
+# CAP_SYS_ADMIN in the host namespace: in unprivileged containers (LXC) it fails
+# with "setsid: failed to set the controlling terminal: Operation not permitted".
+# NetBird already starts the command as session leader of the pty, so a setsid
+# that only runs the command is enough. It goes in the PATH of NetBird only.
+netbird_setsid_shim() {
+    cat <<'EOF'
+#!/bin/sh
+# Installed by domy.sh/setup.sh, see netbird_container_fix there
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --) shift; break ;;
+        -*) shift ;;
+        *) break ;;
+    esac
+done
+exec "$@"
+EOF
+}
+
+netbird_container_fix() {
+    local dropin_dir=/etc/systemd/system/netbird.service.d dropin
+    as_root mkdir -p "$NB_SHIM_DIR" \
+        && netbird_setsid_shim | as_root tee "$NB_SHIM_DIR/setsid" >/dev/null \
+        && as_root chmod 755 "$NB_SHIM_DIR/setsid" \
+        || return 1
+
+    has_systemd && systemctl list-unit-files --no-legend netbird.service 2>/dev/null | grep -q . \
+        || return 0
+
+    dropin="$(printf '[Service]\nEnvironment="PATH=%s:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"\n' "$NB_SHIM_DIR")"
+    if [ "$(cat "$dropin_dir/container-ssh.conf" 2>/dev/null)" != "$dropin" ]; then
+        as_root mkdir -p "$dropin_dir" \
+            && printf '%s\n' "$dropin" | as_root tee "$dropin_dir/container-ssh.conf" >/dev/null \
+            && as_root systemctl daemon-reload \
+            && as_root systemctl restart netbird.service \
+            || return 1
+    fi
+}
+
 step_netbird() {
     ensure_cmd curl || return 1
 
@@ -479,6 +543,14 @@ step_netbird() {
         have netbird || { err "netbird not found after the install"; return 1; }
     fi
 
+    if in_container; then
+        if netbird_container_fix; then
+            ok "Applied the container fix for NetBird SSH sessions"
+        else
+            warn "Could not apply the container fix: interactive NetBird SSH may fail"
+        fi
+    fi
+
     if [ -z "$NB_SETUP_KEY" ]; then
         warn "No setup key given: NetBird is installed but not connected. Run:"
         warn "  sudo netbird up --management-url $NB_MANAGEMENT_URL --setup-key <KEY> ${NB_UP_FLAGS[*]}"
@@ -487,7 +559,7 @@ step_netbird() {
 
     if ! has_systemd && ! as_root netbird status >/dev/null 2>&1; then
         info "systemd is not running: starting the NetBird daemon in background"
-        as_root sh -c 'nohup netbird service run >/var/log/netbird.log 2>&1 &'
+        as_root env PATH="$NB_SHIM_DIR:$PATH" sh -c 'nohup netbird service run >/var/log/netbird.log 2>&1 &'
         sleep 3
     fi
 
