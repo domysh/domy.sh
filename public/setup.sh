@@ -488,12 +488,15 @@ step_zsh() {
 
 NB_SHIM_DIR="/usr/local/lib/netbird-shim"
 
-# For interactive SSH sessions NetBird runs `setsid -w -c login ...` when
-# login comes from util-linux. -c steals the terminal (TIOCSCTTY), which needs
-# CAP_SYS_ADMIN in the host namespace: in unprivileged containers (LXC) it fails
-# with "setsid: failed to set the controlling terminal: Operation not permitted".
-# NetBird already starts the command as session leader of the pty, so a setsid
-# that only runs the command is enough. It goes in the PATH of NetBird only.
+# For interactive SSH sessions NetBird runs `setsid -w -c login -f USER ...`
+# when login comes from util-linux. In unprivileged containers (LXC) this breaks:
+# - `setsid -c` steals the terminal (TIOCSCTTY), which needs CAP_SYS_ADMIN in the
+#   host namespace: "setsid: failed to set the controlling terminal"
+# - running login directly isn't enough: its vhangup() makes NetBird's read of
+#   the pty fail with EIO, and the session stays blank
+# NetBird already starts the command as session leader of the pty, so the shim
+# opens the login shell with `su -` instead, which doesn't hang up the terminal.
+# It goes in the PATH of NetBird only.
 netbird_setsid_shim() {
     cat <<'EOF'
 #!/bin/sh
@@ -505,6 +508,14 @@ while [ $# -gt 0 ]; do
         *) break ;;
     esac
 done
+if [ "${1##*/}" = login ] && command -v su >/dev/null 2>&1; then
+    user="" prev=""
+    for arg in "$@"; do
+        [ "$prev" = -f ] && user="$arg"
+        prev="$arg"
+    done
+    [ -n "$user" ] && exec su - "$user"
+fi
 exec "$@"
 EOF
 }
