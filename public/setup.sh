@@ -487,6 +487,26 @@ step_zsh() {
 }
 
 NB_SHIM_DIR="/usr/local/lib/netbird-shim"
+NB_SELINUX_MODULE="netbird-ssh-login"
+
+# NetBird runs as unconfined_service_t and, for interactive SSH sessions, login
+# moves to the user's context (unconfined_t) before running the shell. The
+# targeted policy doesn't allow that transition: "root: no shell: Permission
+# denied". Allow just that. https://github.com/netbirdio/netbird/issues/4931
+netbird_selinux_fix() {
+    have semodule || { err "semodule not found"; return 1; }
+    if as_root semodule -l 2>/dev/null | awk '{print $1}' | grep -qx "$NB_SELINUX_MODULE"; then
+        return 0
+    fi
+    local tmp rc
+    tmp="$(mktemp -d)" || return 1
+    echo '(allow unconfined_service_t unconfined_t (process (transition)))' >"$tmp/$NB_SELINUX_MODULE.cil"
+    chmod 755 "$tmp"
+    as_root semodule -i "$tmp/$NB_SELINUX_MODULE.cil"
+    rc=$?
+    rm -rf "$tmp"
+    return "$rc"
+}
 
 # For interactive SSH sessions NetBird runs `setsid -w -c login -f USER ...`
 # when login comes from util-linux. In unprivileged containers (LXC) this breaks:
@@ -552,6 +572,14 @@ step_netbird() {
         curl -fsSL https://pkgs.netbird.io/install.sh | as_root env SKIP_UI_APP=true sh \
             || warn "The NetBird installer reported errors"
         have netbird || { err "netbird not found after the install"; return 1; }
+    fi
+
+    if have selinuxenabled && selinuxenabled; then
+        if netbird_selinux_fix; then
+            ok "SELinux: allowed shells for NetBird SSH sessions"
+        else
+            warn "Could not install the SELinux module: interactive NetBird SSH may fail"
+        fi
     fi
 
     if in_container; then
