@@ -31,9 +31,11 @@ fi
 set -uo pipefail
 
 KEYS_URL="https://github.com/domysh.keys"
-NB_MANAGEMENT_URL="${NB_MANAGEMENT_URL:-https://vpn.domy.sh}"
+NB_DEFAULT_MANAGEMENT_URL="https://vpn.domy.sh"
+NB_MANAGEMENT_URL="${NB_MANAGEMENT_URL:-}"
 NB_SETUP_KEY="${NB_SETUP_KEY:-}"
-NB_UP_FLAGS=(
+NB_SSH=0
+NB_SSH_FLAGS=(
     --allow-server-ssh
     --enable-ssh-local-port-forwarding
     --enable-ssh-remote-port-forwarding
@@ -43,7 +45,7 @@ NB_UP_FLAGS=(
 )
 BASE_PACKAGES=(git neovim zsh btop netcat curl wget ripgrep tmux less more nft iptables)
 
-STEPS=(firewall packages keys docker python zsh netbird)
+STEPS=(firewall packages keys ssh docker python zsh netbird)
 
 export PATH="$PATH:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin"
 
@@ -72,7 +74,10 @@ Usage: setup.sh [options]
 Options:
   -y, --yes                 Don't ask anything: run every step not skipped
   -k, --setup-key KEY       NetBird setup key (or env NB_SETUP_KEY)
-  -m, --management-url URL  NetBird management URL (default: $NB_MANAGEMENT_URL)
+  -m, --management-url URL  NetBird management URL (or env NB_MANAGEMENT_URL)
+                            (default: $NB_DEFAULT_MANAGEMENT_URL)
+      --netbird-ssh         Also enable the NetBird SSH server (off by default:
+                            the ssh step sets up OpenSSH instead)
   -u, --user USER           User to configure (ssh keys, zsh, uv)
                             (default: \$SUDO_USER or the current user)
       --only STEP[,STEP]    Run only these steps
@@ -84,6 +89,7 @@ Steps:
   firewall   Stop, disable and uninstall firewalld and cockpit (Fedora/RHEL family)
   packages   Install ${BASE_PACKAGES[*]}
   keys       Add $KEYS_URL to ~/.ssh/authorized_keys
+  ssh        Install and enable the OpenSSH server (key-only login)
   docker     Install Docker with get.docker.com
   python     Install uv and create ~/.venv (used by the .zshrc)
   zsh        Install oh-my-zsh, write ~/.zshrc, set zsh as login shell
@@ -95,6 +101,7 @@ If there is no terminal to ask on, the defaults are used.
 Examples:
   sh <(curl -fsSL $SETUP_URL)
   sh <(curl -fsSL $SETUP_URL) -y -k XXXXXXXX
+  sh <(curl -fsSL $SETUP_URL) -y -k XXXXXXXX -m https://netbird.example.com
   sh <(curl -fsSL $SETUP_URL) -y --skip docker,netbird
 EOF
 }
@@ -216,6 +223,7 @@ pkg_name() {
         zypper:netcat)          echo netcat-openbsd ;;
         dnf:netcat|yum:netcat)  echo nmap-ncat ;;
         apt:more)               echo bsdextrautils ;;
+        pacman:openssh-server)  echo openssh ;;
         *:more)                 echo util-linux ;;
         *:nft)                  echo nftables ;;
         dnf:iptables|yum:iptables|pacman:iptables) echo iptables-nft ;;
@@ -230,10 +238,11 @@ step_desc() {
         firewall) echo "Stop, disable and uninstall firewalld and cockpit" ;;
         packages) echo "Install base packages (${BASE_PACKAGES[*]})" ;;
         keys)     echo "Add $KEYS_URL to ~$TARGET_USER/.ssh/authorized_keys" ;;
+        ssh)      echo "Install and enable the OpenSSH server" ;;
         docker)   echo "Install Docker" ;;
         python)   echo "Install uv and create ~$TARGET_USER/.venv" ;;
         zsh)      echo "Install oh-my-zsh + .zshrc for $TARGET_USER" ;;
-        netbird)  echo "Install NetBird and join $NB_MANAGEMENT_URL" ;;
+        netbird)  echo "Install NetBird and join ${NB_MANAGEMENT_URL:-a management server}$([ "$NB_SSH" -eq 1 ] && echo " (with NetBird SSH)")" ;;
     esac
 }
 
@@ -329,6 +338,69 @@ step_keys() {
 
     have restorecon && as_root restorecon -R "$ssh_dir" >/dev/null 2>&1
     ok "Added $added new key(s) to $ak"
+}
+
+SSHD_CONF="/etc/ssh/sshd_config.d/10-domy-sh.conf"
+
+step_ssh() {
+    if ! have sshd; then
+        info "Installing the OpenSSH server"
+        pm_install "$(pkg_name openssh-server)" >/dev/null && have sshd || return 1
+    fi
+
+    local conf unit=""
+    conf=$'# Managed by domy.sh/setup.sh\nPermitRootLogin prohibit-password\nPubkeyAuthentication yes'
+    if as_user test -s "$TARGET_HOME/.ssh/authorized_keys"; then
+        conf+=$'\nPasswordAuthentication no\nKbdInteractiveAuthentication no'
+    else
+        warn "$TARGET_USER has no authorized_keys: password login stays enabled"
+    fi
+
+    grep -qiE '^[[:space:]]*Include[[:space:]]+/etc/ssh/sshd_config\.d' /etc/ssh/sshd_config 2>/dev/null \
+        || warn "sshd_config doesn't include sshd_config.d: $SSHD_CONF will be ignored"
+
+    # Host keys and /run/sshd (Debian) are usually created on the first start,
+    # sshd -t needs them now
+    as_root ssh-keygen -A >/dev/null 2>&1
+    [ "$PM" != apt ] || as_root mkdir -p /run/sshd
+
+    local changed=0
+    if [ "$(cat "$SSHD_CONF" 2>/dev/null)" != "$conf" ]; then
+        as_root mkdir -p "${SSHD_CONF%/*}" \
+            && printf '%s\n' "$conf" | as_root tee "$SSHD_CONF" >/dev/null \
+            || return 1
+        changed=1
+    fi
+    if ! as_root sshd -t; then
+        err "Invalid sshd configuration, removing $SSHD_CONF"
+        as_root rm -f "$SSHD_CONF"
+        return 1
+    fi
+    ok "sshd configured: key-only root login ($SSHD_CONF)"
+
+    if ! has_systemd; then
+        warn "systemd is not running: sshd has to be started manually"
+        return 0
+    fi
+    # Debian/Ubuntu call it ssh (sshd is an alias there), the others sshd
+    for unit in ssh sshd; do
+        systemctl list-unit-files --no-legend "$unit.service" 2>/dev/null | grep -qv alias && break
+        unit=""
+    done
+    [ -n "$unit" ] || { err "No ssh/sshd systemd unit found"; return 1; }
+
+    if systemctl is-enabled -q "$unit.socket" 2>/dev/null; then
+        # Socket activation (Ubuntu): sshd starts on the first connection
+        as_root systemctl start "$unit.socket" || { err "Could not start $unit.socket"; return 1; }
+        [ "$changed" -eq 0 ] || as_root systemctl try-restart "$unit.service"
+        ok "OpenSSH server listening ($unit.socket)"
+        return 0
+    fi
+    as_root systemctl enable --now "$unit.service" >/dev/null 2>&1 || { err "Could not start $unit"; return 1; }
+    if [ "$changed" -eq 1 ]; then
+        as_root systemctl restart "$unit.service" || { err "Could not restart $unit"; return 1; }
+    fi
+    ok "OpenSSH server running ($unit.service)"
 }
 
 step_docker() {
@@ -540,6 +612,23 @@ exec "$@"
 EOF
 }
 
+# Undo the fixes above when NetBird SSH isn't wanted (left by older runs)
+netbird_ssh_fixes_remove() {
+    local dropin=/etc/systemd/system/netbird.service.d/container-ssh.conf removed=0
+    if [ -e "$dropin" ] || [ -d "$NB_SHIM_DIR" ]; then
+        as_root rm -rf "$NB_SHIM_DIR" "$dropin" && removed=1
+        as_root rmdir "${dropin%/*}" 2>/dev/null # only if nothing else is in there
+        if has_systemd; then
+            as_root systemctl daemon-reload && as_root systemctl try-restart netbird.service
+        fi
+    fi
+    if have semodule && as_root semodule -l 2>/dev/null | awk '{print $1}' | grep -qx "$NB_SELINUX_MODULE"; then
+        as_root semodule -r "$NB_SELINUX_MODULE" >/dev/null 2>&1 && removed=1
+    fi
+    [ "$removed" -eq 1 ] && ok "Removed the NetBird SSH fixes of previous runs"
+    return 0
+}
+
 netbird_container_fix() {
     local dropin_dir=/etc/systemd/system/netbird.service.d dropin
     as_root mkdir -p "$NB_SHIM_DIR" \
@@ -574,25 +663,30 @@ step_netbird() {
         have netbird || { err "netbird not found after the install"; return 1; }
     fi
 
-    if have selinuxenabled && selinuxenabled; then
-        if netbird_selinux_fix; then
-            ok "SELinux: allowed shells for NetBird SSH sessions"
-        else
-            warn "Could not install the SELinux module: interactive NetBird SSH may fail"
+    local up_flags=(--allow-server-ssh=false)
+    if [ "$NB_SSH" -eq 1 ]; then
+        up_flags=("${NB_SSH_FLAGS[@]}")
+        if have selinuxenabled && selinuxenabled; then
+            if netbird_selinux_fix; then
+                ok "SELinux: allowed shells for NetBird SSH sessions"
+            else
+                warn "Could not install the SELinux module: interactive NetBird SSH may fail"
+            fi
         fi
-    fi
-
-    if in_container; then
-        if netbird_container_fix; then
-            ok "Applied the container fix for NetBird SSH sessions"
-        else
-            warn "Could not apply the container fix: interactive NetBird SSH may fail"
+        if in_container; then
+            if netbird_container_fix; then
+                ok "Applied the container fix for NetBird SSH sessions"
+            else
+                warn "Could not apply the container fix: interactive NetBird SSH may fail"
+            fi
         fi
+    else
+        netbird_ssh_fixes_remove
     fi
 
     if [ -z "$NB_SETUP_KEY" ]; then
         warn "No setup key given: NetBird is installed but not connected. Run:"
-        warn "  sudo netbird up --management-url $NB_MANAGEMENT_URL --setup-key <KEY> ${NB_UP_FLAGS[*]}"
+        warn "  sudo netbird up --management-url $NB_MANAGEMENT_URL --setup-key <KEY> ${up_flags[*]}"
         return 0
     fi
 
@@ -602,7 +696,7 @@ step_netbird() {
         sleep 3
     fi
 
-    as_root netbird up --management-url "$NB_MANAGEMENT_URL" --setup-key "$NB_SETUP_KEY" "${NB_UP_FLAGS[@]}" \
+    as_root netbird up --management-url "$NB_MANAGEMENT_URL" --setup-key "$NB_SETUP_KEY" "${up_flags[@]}" \
         || return 1
     ok "NetBird connected to $NB_MANAGEMENT_URL"
 }
@@ -630,6 +724,7 @@ main() {
             --setup-key=*) NB_SETUP_KEY="${1#*=}" ;;
             -m|--management-url) NB_MANAGEMENT_URL="${2:?--management-url needs a value}"; shift ;;
             --management-url=*) NB_MANAGEMENT_URL="${1#*=}" ;;
+            --netbird-ssh) NB_SSH=1 ;;
             -u|--user) TARGET_USER="${2:?--user needs a value}"; shift ;;
             --user=*) TARGET_USER="${1#*=}" ;;
             --only) only="${2:?--only needs a value}"; shift ;;
@@ -689,9 +784,13 @@ main() {
         fi
     done
 
-    if [ "${STEP_ON[netbird]}" -eq 1 ] && [ -z "$NB_SETUP_KEY" ] && [ "$interactive" -eq 1 ]; then
-        NB_SETUP_KEY="$(ask_value "NetBird setup key (empty = install only):")"
+    if [ "${STEP_ON[netbird]}" -eq 1 ] && [ "$interactive" -eq 1 ]; then
+        [ -n "$NB_MANAGEMENT_URL" ] \
+            || NB_MANAGEMENT_URL="$(ask_value "NetBird management URL [$NB_DEFAULT_MANAGEMENT_URL]:")"
+        [ -n "$NB_SETUP_KEY" ] \
+            || NB_SETUP_KEY="$(ask_value "NetBird setup key (empty = install only):")"
     fi
+    NB_MANAGEMENT_URL="${NB_MANAGEMENT_URL:-$NB_DEFAULT_MANAGEMENT_URL}"
 
     title "Plan"
     for s in "${STEPS[@]}"; do
