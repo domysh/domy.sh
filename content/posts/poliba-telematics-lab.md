@@ -10,8 +10,7 @@ showMonthStart: true
 showMonthEnd: true
 ---
 
-**Network Simulation Software Developer at Polytechnic of Bari - Telematics Lab**. 
+**Research Software Engineer at Polytechnic of Bari - Telematics Lab**. 
 
-Designing and developing a next-generation mobile network emulation and simulation framework for V2V scenarios involving satellites within a 5G environment.
-
-Project Repository: [https://github.com/telematics-lab/IoD_Sim](https://github.com/telematics-lab/IoD_Sim)
+- **IoD_Sim NTN extension**: extending IoD_Sim, an open-source discrete-event simulation platform built on ns-3 and 5G-LENA, to enable Non-Terrestrial Network (NTN) communications between Low Earth Orbit (LEO) satellite constellations and terrestrial vehicles. Project Repository: [https://github.com/telematics-lab/IoD_Sim](https://github.com/telematics-lab/IoD_Sim)
+- **Network Digital Twin & Intent-Based Orchestrator for Quantum-HPC & 5G NTN**: multi-domain orchestration platform and Network Digital Twin (NDT) bridging Quantum (QPU) and classical compute nodes across terrestrial SDN and 5G Non-Terrestrial Networks (NTN). Features an autonomous Agentic Intent Loop that ingests real-time telemetry into the Digital Twin to validate declarative intents, predict link dynamics, and execute closed-loop SDN routing policies.
