@@ -23,6 +23,7 @@ function MyApp({ Component, pageProps }) {
       }
     `}</style>
     <Head>
+      <link rel="icon" type="image/svg+xml" href="/logo.svg" />
       <link rel="icon" type="image/png" sizes="196x196" href="/favicon-196.png" />
       <meta itemProp="image" content="/favicon-196.png" />
       <link itemProp="image" href="/favicon-196.png" />
